@@ -22,6 +22,7 @@
 #ifndef __PANGO_ATTRIBUTES_H__
 #define __PANGO_ATTRIBUTES_H__
 
+#include "pango-macros.h"
 #include <pango/pango-font.h>
 #include <glib-object.h>
 
@@ -285,6 +286,7 @@ void               pango_attr_iterator_get_font (PangoAttrIterator     *iterator
 GSList *          pango_attr_iterator_get_attrs (PangoAttrIterator     *iterator);
 
 
+PANGO_EXTERN
 gboolean pango_parse_markup (const char                 *markup_text,
 			     int                         length,
 			     gunichar                    accel_marker,

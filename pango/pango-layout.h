@@ -22,6 +22,7 @@
 #ifndef __PANGO_LAYOUT_H__
 #define __PANGO_LAYOUT_H__
 
+#include "pango-macros.h"
 #include <pango/pango-attributes.h>
 #include <pango/pango-context.h>
 #include <pango/pango-glyph-item.h>
@@ -89,6 +90,7 @@ struct _PangoLayoutLine
  */
 
 GType        pango_layout_get_type       (void) G_GNUC_CONST;
+PANGO_EXTERN
 PangoLayout *pango_layout_new            (PangoContext   *context);
 PangoLayout *pango_layout_copy           (PangoLayout    *src);
 
@@ -98,6 +100,7 @@ void           pango_layout_set_attributes (PangoLayout    *layout,
 					    PangoAttrList  *attrs);
 PangoAttrList *pango_layout_get_attributes (PangoLayout    *layout);
 
+PANGO_EXTERN
 void           pango_layout_set_text       (PangoLayout    *layout,
 					    const char     *text,
 					    int             length);
@@ -105,6 +108,7 @@ const char    *pango_layout_get_text       (PangoLayout    *layout);
 
 gint           pango_layout_get_character_count (PangoLayout *layout);
 
+PANGO_EXTERN
 void           pango_layout_set_markup     (PangoLayout    *layout,
 					    const char     *markup,
 					    int             length);
@@ -115,33 +119,41 @@ void           pango_layout_set_markup_with_accel (PangoLayout    *layout,
 						   gunichar        accel_marker,
 						   gunichar       *accel_char);
 
+PANGO_EXTERN
 void           pango_layout_set_font_description (PangoLayout                *layout,
 						  const PangoFontDescription *desc);
 
 const PangoFontDescription *pango_layout_get_font_description (PangoLayout *layout);
 
+PANGO_EXTERN
 void           pango_layout_set_width            (PangoLayout                *layout,
 						  int                         width);
 int            pango_layout_get_width            (PangoLayout                *layout);
+PANGO_EXTERN
 void           pango_layout_set_height           (PangoLayout                *layout,
 						  int                         height);
 int            pango_layout_get_height           (PangoLayout                *layout);
+PANGO_EXTERN
 void           pango_layout_set_wrap             (PangoLayout                *layout,
 						  PangoWrapMode               wrap);
 PangoWrapMode  pango_layout_get_wrap             (PangoLayout                *layout);
 gboolean       pango_layout_is_wrapped           (PangoLayout                *layout);
+PANGO_EXTERN
 void           pango_layout_set_indent           (PangoLayout                *layout,
 						  int                         indent);
 int            pango_layout_get_indent           (PangoLayout                *layout);
 void           pango_layout_set_spacing          (PangoLayout                *layout,
 						  int                         spacing);
 int            pango_layout_get_spacing          (PangoLayout                *layout);
+PANGO_EXTERN
 void           pango_layout_set_justify          (PangoLayout                *layout,
 						  gboolean                    justify);
 gboolean       pango_layout_get_justify          (PangoLayout                *layout);
+PANGO_EXTERN
 void           pango_layout_set_auto_dir         (PangoLayout                *layout,
 						  gboolean                    auto_dir);
 gboolean       pango_layout_get_auto_dir         (PangoLayout                *layout);
+PANGO_EXTERN
 void           pango_layout_set_alignment        (PangoLayout                *layout,
 						  PangoAlignment              alignment);
 PangoAlignment pango_layout_get_alignment        (PangoLayout                *layout);
@@ -151,10 +163,12 @@ void           pango_layout_set_tabs             (PangoLayout                *la
 
 PangoTabArray* pango_layout_get_tabs             (PangoLayout                *layout);
 
+PANGO_EXTERN
 void           pango_layout_set_single_paragraph_mode (PangoLayout                *layout,
 						       gboolean                    setting);
 gboolean       pango_layout_get_single_paragraph_mode (PangoLayout                *layout);
 
+PANGO_EXTERN
 void               pango_layout_set_ellipsize (PangoLayout        *layout,
 					       PangoEllipsizeMode  ellipsize);
 PangoEllipsizeMode pango_layout_get_ellipsize (PangoLayout        *layout);
@@ -162,6 +176,7 @@ gboolean           pango_layout_is_ellipsized (PangoLayout        *layout);
 
 int      pango_layout_get_unknown_glyphs_count (PangoLayout    *layout);
 
+PANGO_EXTERN
 void     pango_layout_context_changed (PangoLayout    *layout);
 guint    pango_layout_get_serial      (PangoLayout    *layout);
 
@@ -196,6 +211,7 @@ gboolean pango_layout_xy_to_index          (PangoLayout    *layout,
 					    int             y,
 					    int            *index_,
 					    int            *trailing);
+PANGO_EXTERN
 void     pango_layout_get_extents          (PangoLayout    *layout,
 					    PangoRectangle *ink_rect,
 					    PangoRectangle *logical_rect);

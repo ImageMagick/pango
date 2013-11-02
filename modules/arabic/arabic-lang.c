@@ -25,6 +25,7 @@
 #include "config.h"
 #include <string.h>
 
+#define PANGO_MODULE_PREFIX _pango_arabic_lang
 #include "pango-engine.h"
 #include "pango-break.h"
 

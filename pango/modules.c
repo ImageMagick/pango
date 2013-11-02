@@ -450,6 +450,7 @@ process_module_file (FILE *module_file, const gchar *module_file_dir)
 	  switch (i)
 	    {
 	    case 0:
+#if defined(LIBDIR)
 	      if (!g_path_is_absolute (tmp_buf->str)
 #ifdef __APPLE__
 	          && strncmp (tmp_buf->str, "@executable_path/", 17)
@@ -467,6 +468,7 @@ process_module_file (FILE *module_file, const gchar *module_file_dir)
 		  g_string_assign (tmp_buf, abs_file_name);
 		  g_free ((gpointer) abs_file_name);
 		}
+#endif
 	      pair->module = find_or_create_module (tmp_buf->str);
 	      break;
 	    case 1:
@@ -563,11 +565,15 @@ read_modules (void)
       files[0] = g_build_filename (pango_get_sysconf_subdirectory (),
                                    "pango.modules",
                                    NULL);
+#if defined(LIBDIR)
       files[1] = g_build_filename (pango_get_lib_subdirectory (),
                                    MODULE_VERSION,
                                    "modules.cache",
                                    NULL);
       files[2] = NULL;
+#else
+      files[1] = NULL;
+#endif
     }
   else
     files = pango_split_file_list (file_str);

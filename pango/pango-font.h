@@ -22,6 +22,7 @@
 #ifndef __PANGO_FONT_H__
 #define __PANGO_FONT_H__
 
+#include "pango-macros.h"
 #include <pango/pango-coverage.h>
 #include <pango/pango-types.h>
 
@@ -109,6 +110,7 @@ PangoFontDescription *pango_font_description_copy_static (const PangoFontDescrip
 guint                 pango_font_description_hash        (const PangoFontDescription  *desc) G_GNUC_PURE;
 gboolean              pango_font_description_equal       (const PangoFontDescription  *desc1,
 							  const PangoFontDescription  *desc2) G_GNUC_PURE;
+PANGO_EXTERN
 void                  pango_font_description_free        (PangoFontDescription        *desc);
 void                  pango_font_descriptions_free       (PangoFontDescription       **descs,
 							  int                          n_descs);
@@ -130,6 +132,7 @@ PangoWeight          pango_font_description_get_weight        (const PangoFontDe
 void                 pango_font_description_set_stretch       (PangoFontDescription *desc,
 							       PangoStretch          stretch);
 PangoStretch         pango_font_description_get_stretch       (const PangoFontDescription *desc) G_GNUC_PURE;
+PANGO_EXTERN
 void                 pango_font_description_set_size          (PangoFontDescription *desc,
 							       gint                  size);
 gint                 pango_font_description_get_size          (const PangoFontDescription *desc) G_GNUC_PURE;
@@ -155,6 +158,7 @@ gboolean pango_font_description_better_match (const PangoFontDescription *desc,
 					      const PangoFontDescription *old_match,
 					      const PangoFontDescription *new_match) G_GNUC_PURE;
 
+PANGO_EXTERN
 PangoFontDescription *pango_font_description_from_string (const char                  *str);
 char *                pango_font_description_to_string   (const PangoFontDescription  *desc);
 char *                pango_font_description_to_filename (const PangoFontDescription  *desc);

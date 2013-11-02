@@ -127,8 +127,8 @@ pango_version_check (int required_major,
 
   if (required_major < PANGO_VERSION_MAJOR)
     return "Pango version too new (major mismatch)";
-  if (required_effective_micro < pango_effective_micro - PANGO_BINARY_AGE)
-    return "Pango version too new (micro mismatch)";
+//  if (required_effective_micro < pango_effective_micro - PANGO_BINARY_AGE)
+//    return "Pango version too new (micro mismatch)";
   if (required_effective_micro > pango_effective_micro)
     return "Pango version too old (micro mismatch)";
   return NULL;
@@ -695,6 +695,7 @@ pango_config_key_get (const char *key)
 
 static HMODULE pango_dll; /* MT-safe */
 
+#ifndef _LIB
 BOOL WINAPI
 DllMain (HINSTANCE hinstDLL,
 	 DWORD     fdwReason,
@@ -709,6 +710,7 @@ DllMain (HINSTANCE hinstDLL,
 
   return TRUE;
 }
+#endif
 
 #endif
 
@@ -771,9 +773,11 @@ pango_get_lib_subdirectory (void)
       /* If we are running against an uninstalled copy of the Pango DLL,
        * use the compile-time installation prefix.
        */
+#if defined(LIBDIR)
       if (g_str_has_suffix (root, "\\.libs"))
 	tmp_result = g_strdup (LIBDIR "/pango");
       else
+#endif
 	tmp_result = g_build_filename (root, "lib\\pango", NULL);
       g_free (root);
 #else
@@ -1124,7 +1128,8 @@ pango_extents_to_pixels (PangoRectangle *inclusive,
 
 
 
-
+
+
 /*********************************************************
  * Some internal functions for handling PANGO_ATTR_SHAPE *
  ********************************************************/
