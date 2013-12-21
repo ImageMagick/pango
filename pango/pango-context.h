@@ -71,6 +71,7 @@ PangoFontMetrics *pango_context_get_metrics   (PangoContext                 *con
 
 void                      pango_context_set_font_description (PangoContext               *context,
 							      const PangoFontDescription *desc);
+PANGO_EXTERN
 PangoFontDescription *    pango_context_get_font_description (PangoContext               *context);
 PangoLanguage            *pango_context_get_language         (PangoContext               *context);
 PANGO_EXTERN
@@ -84,6 +85,7 @@ PANGO_EXTERN
 void                      pango_context_set_base_gravity     (PangoContext               *context,
 							      PangoGravity                gravity);
 PangoGravity              pango_context_get_base_gravity     (PangoContext               *context);
+PANGO_EXTERN
 PangoGravity              pango_context_get_gravity          (PangoContext               *context);
 PANGO_EXTERN
 void                      pango_context_set_gravity_hint     (PangoContext               *context,

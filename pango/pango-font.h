@@ -105,6 +105,7 @@ typedef enum {
 
 GType                 pango_font_description_get_type    (void) G_GNUC_CONST;
 PangoFontDescription *pango_font_description_new         (void);
+PANGO_EXTERN
 PangoFontDescription *pango_font_description_copy        (const PangoFontDescription  *desc);
 PangoFontDescription *pango_font_description_copy_static (const PangoFontDescription  *desc);
 guint                 pango_font_description_hash        (const PangoFontDescription  *desc) G_GNUC_PURE;
@@ -117,18 +118,23 @@ void                  pango_font_descriptions_free       (PangoFontDescription  
 
 void                 pango_font_description_set_family        (PangoFontDescription *desc,
 							       const char           *family);
+PANGO_EXTERN
 void                 pango_font_description_set_family_static (PangoFontDescription *desc,
 							       const char           *family);
 const char          *pango_font_description_get_family        (const PangoFontDescription *desc) G_GNUC_PURE;
+PANGO_EXTERN
 void                 pango_font_description_set_style         (PangoFontDescription *desc,
 							       PangoStyle            style);
 PangoStyle           pango_font_description_get_style         (const PangoFontDescription *desc) G_GNUC_PURE;
+PANGO_EXTERN
 void                 pango_font_description_set_variant       (PangoFontDescription *desc,
 							       PangoVariant          variant);
 PangoVariant         pango_font_description_get_variant       (const PangoFontDescription *desc) G_GNUC_PURE;
+PANGO_EXTERN
 void                 pango_font_description_set_weight        (PangoFontDescription *desc,
 							       PangoWeight           weight);
 PangoWeight          pango_font_description_get_weight        (const PangoFontDescription *desc) G_GNUC_PURE;
+PANGO_EXTERN
 void                 pango_font_description_set_stretch       (PangoFontDescription *desc,
 							       PangoStretch          stretch);
 PangoStretch         pango_font_description_get_stretch       (const PangoFontDescription *desc) G_GNUC_PURE;

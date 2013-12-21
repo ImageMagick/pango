@@ -94,8 +94,10 @@ PANGO_EXTERN
 PangoLayout *pango_layout_new            (PangoContext   *context);
 PangoLayout *pango_layout_copy           (PangoLayout    *src);
 
+PANGO_EXTERN
 PangoContext  *pango_layout_get_context    (PangoLayout    *layout);
 
+PANGO_EXTERN
 void           pango_layout_set_attributes (PangoLayout    *layout,
 					    PangoAttrList  *attrs);
 PangoAttrList *pango_layout_get_attributes (PangoLayout    *layout);
@@ -218,6 +220,7 @@ void     pango_layout_get_extents          (PangoLayout    *layout,
 void     pango_layout_get_pixel_extents    (PangoLayout    *layout,
 					    PangoRectangle *ink_rect,
 					    PangoRectangle *logical_rect);
+PANGO_EXTERN
 void     pango_layout_get_size             (PangoLayout    *layout,
 					    int            *width,
 					    int            *height);
@@ -268,8 +271,10 @@ typedef struct _PangoLayoutIter PangoLayoutIter;
 
 GType            pango_layout_iter_get_type (void) G_GNUC_CONST;
 
+PANGO_EXTERN
 PangoLayoutIter *pango_layout_get_iter  (PangoLayout     *layout);
 PangoLayoutIter *pango_layout_iter_copy (PangoLayoutIter *iter);
+PANGO_EXTERN
 void             pango_layout_iter_free (PangoLayoutIter *iter);
 
 int              pango_layout_iter_get_index  (PangoLayoutIter *iter);
@@ -305,6 +310,7 @@ void pango_layout_iter_get_line_yrange     (PangoLayoutIter *iter,
 void pango_layout_iter_get_layout_extents  (PangoLayoutIter *iter,
 					    PangoRectangle  *ink_rect,
 					    PangoRectangle  *logical_rect);
+PANGO_EXTERN
 int  pango_layout_iter_get_baseline        (PangoLayoutIter *iter);
 
 G_END_DECLS
