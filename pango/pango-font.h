@@ -104,6 +104,7 @@ typedef enum {
 #define PANGO_TYPE_FONT_DESCRIPTION (pango_font_description_get_type ())
 
 GType                 pango_font_description_get_type    (void) G_GNUC_CONST;
+PANGO_EXTERN
 PangoFontDescription *pango_font_description_new         (void);
 PANGO_EXTERN
 PangoFontDescription *pango_font_description_copy        (const PangoFontDescription  *desc);
