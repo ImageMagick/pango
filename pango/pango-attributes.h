@@ -22,6 +22,7 @@
 #ifndef __PANGO_ATTRIBUTES_H__
 #define __PANGO_ATTRIBUTES_H__
 
+#include "pango-macros.h"
 #include <pango/pango-font.h>
 #include <glib-object.h>
 
@@ -455,10 +456,12 @@ PangoAttribute *pango_attr_variant_new       (PangoVariant                varian
 PangoAttribute *pango_attr_stretch_new       (PangoStretch                stretch);
 PangoAttribute *pango_attr_font_desc_new     (const PangoFontDescription *desc);
 
+PANGO_EXTERN
 PangoAttribute *pango_attr_underline_new           (PangoUnderline underline);
 PangoAttribute *pango_attr_underline_color_new     (guint16        red,
 						    guint16        green,
 						    guint16        blue);
+PANGO_EXTERN
 PangoAttribute *pango_attr_strikethrough_new       (gboolean       strikethrough);
 PangoAttribute *pango_attr_strikethrough_color_new (guint16        red,
 						    guint16        green,
@@ -467,6 +470,7 @@ PangoAttribute *pango_attr_strikethrough_color_new (guint16        red,
 PangoAttribute *pango_attr_rise_new          (int                         rise);
 PangoAttribute *pango_attr_scale_new         (double                      scale_factor);
 PangoAttribute *pango_attr_fallback_new      (gboolean                    enable_fallback);
+PANGO_EXTERN
 PangoAttribute *pango_attr_letter_spacing_new (int                        letter_spacing);
 
 PangoAttribute *pango_attr_shape_new           (const PangoRectangle       *ink_rect,
@@ -484,10 +488,13 @@ PangoAttribute *pango_attr_foreground_alpha_new (guint16 alpha);
 PangoAttribute *pango_attr_background_alpha_new (guint16 alpha);
 
 GType              pango_attr_list_get_type      (void) G_GNUC_CONST;
+PANGO_EXTERN
 PangoAttrList *    pango_attr_list_new           (void);
 PangoAttrList *    pango_attr_list_ref           (PangoAttrList  *list);
+PANGO_EXTERN
 void               pango_attr_list_unref         (PangoAttrList  *list);
 PangoAttrList *    pango_attr_list_copy          (PangoAttrList  *list);
+PANGO_EXTERN
 void               pango_attr_list_insert        (PangoAttrList  *list,
 						  PangoAttribute *attr);
 void               pango_attr_list_insert_before (PangoAttrList  *list,
@@ -520,6 +527,7 @@ void               pango_attr_iterator_get_font (PangoAttrIterator     *iterator
 GSList *          pango_attr_iterator_get_attrs (PangoAttrIterator     *iterator);
 
 
+PANGO_EXTERN
 gboolean pango_parse_markup (const char                 *markup_text,
 			     int                         length,
 			     gunichar                    accel_marker,

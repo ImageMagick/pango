@@ -145,8 +145,8 @@ pango_version_check (int required_major,
 
   if (required_major < PANGO_VERSION_MAJOR)
     return "Pango version too new (major mismatch)";
-  if (required_effective_micro < pango_effective_micro - PANGO_BINARY_AGE)
-    return "Pango version too new (micro mismatch)";
+//  if (required_effective_micro < pango_effective_micro - PANGO_BINARY_AGE)
+//    return "Pango version too new (micro mismatch)";
   if (required_effective_micro > pango_effective_micro)
     return "Pango version too old (micro mismatch)";
   return NULL;
@@ -585,65 +585,6 @@ pango_config_key_get (const char *key)
 {
   return NULL;
 }
-
-/**
- * pango_get_sysconf_subdirectory:
- *
- * Returns the name of the "pango" subdirectory of SYSCONFDIR
- * (which is set at compile time).
- *
- * Return value: the Pango sysconf directory. The returned string should
- * not be freed.
- *
- * Deprecated: 1.38
- */
-const char *
-pango_get_sysconf_subdirectory (void)
-{
-  static const gchar *result = NULL; /* MT-safe */
-
-  if (g_once_init_enter (&result))
-    {
-      const char *tmp_result = NULL;
-      const char *sysconfdir = g_getenv ("PANGO_SYSCONFDIR");
-      if (sysconfdir != NULL)
-	tmp_result = g_build_filename (sysconfdir, "pango", NULL);
-      else
-	tmp_result = SYSCONFDIR "/pango";
-      g_once_init_leave(&result, tmp_result);
-    }
-  return result;
-}
-
-/**
- * pango_get_lib_subdirectory:
- *
- * Returns the name of the "pango" subdirectory of LIBDIR
- * (which is set at compile time).
- *
- * Return value: the Pango lib directory. The returned string should
- * not be freed.
- *
- * Deprecated: 1.38
- */
-const char *
-pango_get_lib_subdirectory (void)
-{
-  static const gchar *result = NULL; /* MT-safe */
-
-  if (g_once_init_enter (&result))
-    {
-      const gchar *tmp_result = NULL;
-      const char *libdir = g_getenv ("PANGO_LIBDIR");
-      if (libdir != NULL)
-	tmp_result = g_build_filename (libdir, "pango", NULL);
-      else
-	tmp_result = LIBDIR "/pango";
-      g_once_init_leave(&result, tmp_result);
-    }
-  return result;
-}
-
 
 static gboolean
 parse_int (const char *word,

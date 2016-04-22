@@ -22,6 +22,7 @@
 #ifndef __PANGO_FONTMAP_H__
 #define __PANGO_FONTMAP_H__
 
+#include "pango-macros.h"
 #include <pango/pango-font.h>
 #include <pango/pango-fontset.h>
 
@@ -51,6 +52,7 @@ G_BEGIN_DECLS
 typedef struct _PangoContext PangoContext;
 
 GType         pango_font_map_get_type       (void) G_GNUC_CONST;
+PANGO_EXTERN
 PangoContext * pango_font_map_create_context (PangoFontMap               *fontmap);
 PangoFont *   pango_font_map_load_font     (PangoFontMap                 *fontmap,
 					    PangoContext                 *context,
