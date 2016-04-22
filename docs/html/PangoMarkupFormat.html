@@ -2,18 +2,18 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Pango Reference Manual: Text Attribute Markup</title>
+<title>Text Attribute Markup: Pango Reference Manual</title>
 <meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="Pango Reference Manual">
 <link rel="up" href="pango.html" title="Basic Pango Interfaces">
 <link rel="prev" href="pango-Tab-Stops.html" title="Tab Stops">
 <link rel="next" href="pango-Layout-Objects.html" title="Layout Objects">
-<meta name="generator" content="GTK-Doc V1.19.1 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.25.1 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
-<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="10"><tr valign="middle">
-<td width="100%" align="left"></td>
+<table class="navigation" id="top" width="100%" summary="Navigation header" cellpadding="2" cellspacing="5"><tr valign="middle">
+<td width="100%" align="left" class="shortcuts"></td>
 <td><a accesskey="h" href="index.html"><img src="home.png" width="16" height="16" border="0" alt="Home"></a></td>
 <td><a accesskey="u" href="pango.html"><img src="up.png" width="16" height="16" border="0" alt="Up"></a></td>
 <td><a accesskey="p" href="pango-Tab-Stops.html"><img src="left.png" width="16" height="16" border="0" alt="Prev"></a></td>
@@ -27,7 +27,7 @@
 <p>Text Attribute Markup — Simple
 markup language to encode text with attributes</p>
 </td>
-<td valign="top" align="right"></td>
+<td class="gallery_image" valign="top" align="right"></td>
 </tr></table></div>
 <div class="refsect1">
 <a name="PangoMarkupFormatLanguage"></a><h2>Pango Text Attribute Markup Language</h2>
@@ -47,8 +47,8 @@ The solution is to include the text attributes in the string to be
 translated. Pango provides this feature with a small markup language.
 You can parse a marked-up string into the string text plus a
 <a class="link" href="pango-Text-Attributes.html#PangoAttrList">PangoAttrList</a> using either of
-<a class="link" href="pango-Text-Attributes.html#pango-parse-markup" title="pango_parse_markup ()">pango_parse_markup()</a> or
-<a class="link" href="pango-Text-Attributes.html#pango-markup-parser-new" title="pango_markup_parser_new ()">pango_markup_parser_new()</a>.
+<a class="link" href="pango-Text-Attributes.html#pango-parse-markup" title="pango_parse_markup ()">pango_parse_markup()</a> or
+<a class="link" href="pango-Text-Attributes.html#pango-markup-parser-new" title="pango_markup_parser_new ()">pango_markup_parser_new()</a>.
 </p>
 <p>
 A simple example of a marked-up string might be:
@@ -60,7 +60,7 @@ such as numeric character entities such as &amp;#169; for © can
 be used too.
 </p>
 <p>
-The root tag of a marked-up document is &lt;markup&gt;, but <a class="link" href="pango-Text-Attributes.html#pango-parse-markup" title="pango_parse_markup ()">pango_parse_markup()</a> allows you to
+The root tag of a marked-up document is &lt;markup&gt;, but <a class="link" href="pango-Text-Attributes.html#pango-parse-markup" title="pango_parse_markup ()">pango_parse_markup()</a> allows you to
 omit this tag, so you will most likely never need to use it. The most
 general markup tag is &lt;span&gt;, then there are some convenience
 tags. &lt;span&gt; has the following attributes:
@@ -77,7 +77,7 @@ tags. &lt;span&gt; has the following attributes:
 <td><p><span class="term">font<a href="#ftn.since_1_21" class="footnote" name="since_1_21"><sup class="footnote">[1]</sup></a>, </span><span class="term">font_desc</span></p></td>
 <td><p>
 A font description string, such as "Sans Italic 12". See
-<a class="link" href="pango-Fonts.html#pango-font-description-from-string" title="pango_font_description_from_string ()">pango_font_description_from_string()</a>
+<a class="link" href="pango-Fonts.html#pango-font-description-from-string" title="pango_font_description_from_string ()">pango_font_description_from_string()</a>
 for a description of the format of the string representation . Note that any 
 other span attributes will override this description. So if you have 
 "Sans Italic" and also a style="normal" attribute, you will get Sans normal, 
@@ -130,17 +130,42 @@ One of 'ultracondensed', 'extracondensed', 'condensed',
 </p></td>
 </tr>
 <tr>
+<td><p><span class="term">font_features<a href="#ftn.since_1_38" class="footnote" name="since_1_38"><sup class="footnote">[2]</sup></a></span></p></td>
+<td><p>
+A comma separated list of OpenType font feature settings, in the same
+syntax as accepted by CSS. E.g: <code class="literal">font_features='dlig=1, -kern, afrc on'</code>
+</p></td>
+</tr>
+<tr>
 <td><p><span class="term">foreground, </span><span class="term">fgcolor<a href="PangoMarkupFormat.html#ftn.since_1_21" class="footnoteref"><sup class="footnoteref">[1]</sup></a>, </span><span class="term">color</span></p></td>
 <td><p>
-An RGB color specification such as '#00FF00' or a color name such as 
-'red'
+An RGB color specification such as '#00FF00' or a color name such as
+'red'.
+Since 1.38, an RGBA color specification such as '#00FF007F' will
+be interpreted as specifying both a foreground color and foreground alpha.
 </p></td>
 </tr>
 <tr>
 <td><p><span class="term">background, </span><span class="term">bgcolor<a href="PangoMarkupFormat.html#ftn.since_1_21" class="footnoteref"><sup class="footnoteref">[1]</sup></a></span></p></td>
 <td><p>
-An RGB color specification such as '#00FF00' or a color name such as 
-'red'
+An RGB color specification such as '#00FF00' or a color name such as
+'red'.
+Since 1.38, an RGBA color specification such as '#00FF007F' will
+be interpreted as specifying both a background color and background alpha.
+</p></td>
+</tr>
+<tr>
+<td><p><span class="term">alpha, </span><span class="term">fgalpha<a href="PangoMarkupFormat.html#ftn.since_1_38" class="footnoteref"><sup class="footnoteref">[2]</sup></a></span></p></td>
+<td><p>
+An alpha value for the foreground color, either a plain integer between 1 and 65536
+or a percentage value like '50%'.
+</p></td>
+</tr>
+<tr>
+<td><p><span class="term">background_alpha, </span><span class="term">bgalpha<a href="PangoMarkupFormat.html#ftn.since_1_38" class="footnoteref"><sup class="footnoteref">[2]</sup></a></span></p></td>
+<td><p>
+An alpha value for the background color, either a plain integer between 1 and 65536
+or a percentage value like '50%'.
 </p></td>
 </tr>
 <tr>
@@ -292,10 +317,10 @@ Underline
 <div class="footnotes">
 <br><hr style="width:100; text-align:left;margin-left: 0">
 <div id="ftn.since_1_21" class="footnote"><p><a href="#since_1_21" class="para"><sup class="para">[1] </sup></a>Since 1.21</p></div>
+<div id="ftn.since_1_38" class="footnote"><p><a href="#since_1_38" class="para"><sup class="para">[2] </sup></a>Since 1.38</p></div>
 </div>
 </div>
 <div class="footer">
-<hr>
-          Generated by GTK-Doc V1.19.1</div>
+<hr>Generated by GTK-Doc V1.25.1</div>
 </body>
 </html>

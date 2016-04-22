@@ -22,7 +22,7 @@
   <Configuration
    Name="Debug_FC|Win32"
    ConfigurationType="2"
-   InheritedPropertySheets=".\pango.vsprops"
+   InheritedPropertySheets=".\pango-build-defines.vsprops"
    CharacterSet="2"
    >
    <Tool
@@ -31,8 +31,8 @@
    <Tool
     Name="VCCLCompilerTool"
     Optimization="0"
-    AdditionalIncludeDirectories=".;..\"
-    PreprocessorDefinitions="_DEBUG;$(PangoDefines);HAVE_GLIB;HAVE_STDINT_H=1"
+    AdditionalIncludeDirectories="$(PangoFT2Incs)"
+    PreprocessorDefinitions="_DEBUG;$(PangoDefines);$(PangoFT2CFlags)"
     MinimalRebuild="true"
     BasicRuntimeChecks="3"
     RuntimeLibrary="3"
@@ -42,20 +42,20 @@
    />
    <Tool
     Name="VCLinkerTool"
-    AdditionalDependencies="fontconfig.lib freetype.lib"
+    AdditionalDependencies="$(PangoFT2Libs)"
     OutputFile="$(OutDir)\$(PangoDllPrefix)$(ProjectName)$(PangoDllSuffix).dll"
     LinkIncremental="2"
     ModuleDefinitionFile="..\..\..\pango\pangoft2.def"
     GenerateDebugInformation="true"
     SubSystem="2"
-    ImportLibrary="$(TargetDir)$(ProjectName)-$(PangoApiVersion).lib"
+    ImportLibrary="$(TargetDir)$(ProjectName)-$(ApiVersion).lib"
     TargetMachine="1"
    />
   </Configuration>
   <Configuration
    Name="Release_FC|Win32"
    ConfigurationType="2"
-   InheritedPropertySheets=".\pango.vsprops"
+   InheritedPropertySheets=".\pango-build-defines.vsprops"
    CharacterSet="2"
    >
    <Tool
@@ -63,8 +63,8 @@
    />
    <Tool
     Name="VCCLCompilerTool"
-    AdditionalIncludeDirectories=".;..\"
-    PreprocessorDefinitions="$(PangoDefines);HAVE_GLIB;HAVE_STDINT_H=1"
+    AdditionalIncludeDirectories="$(PangoFT2Incs)"
+    PreprocessorDefinitions="$(PangoDefines);$(PangoFT2CFlags)"
     RuntimeLibrary="2"
     UsePrecompiledHeader="0"
     WarningLevel="3"
@@ -72,29 +72,29 @@
    />
    <Tool
     Name="VCLinkerTool"
-    AdditionalDependencies="fontconfig.lib freetype.lib"
+    AdditionalDependencies="$(PangoFT2Libs)"
     OutputFile="$(OutDir)\$(PangoDllPrefix)$(ProjectName)$(PangoDllSuffix).dll"
-    LinkIncremental="2"
+    LinkIncremental="1"
     ModuleDefinitionFile="..\..\..\pango\pangoft2.def"
     GenerateDebugInformation="true"
     SubSystem="2"
     OptimizeReferences="2"
     EnableCOMDATFolding="2"
-    ImportLibrary="$(TargetDir)$(ProjectName)-$(PangoApiVersion).lib"
+    ImportLibrary="$(TargetDir)$(ProjectName)-$(ApiVersion).lib"
     TargetMachine="1"
    />
   </Configuration>
   <Configuration
    Name="Debug_FC|x64"
-   InheritedPropertySheets=".\pango.vsprops"
+   InheritedPropertySheets=".\pango-build-defines.vsprops"
    ConfigurationType="2"
    CharacterSet="2"
    >
    <Tool
     Name="VCCLCompilerTool"
     Optimization="0"
-    AdditionalIncludeDirectories=".;..\"
-    PreprocessorDefinitions="_DEBUG;$(PangoDefines);HAVE_GLIB;HAVE_STDINT_H=1"
+    AdditionalIncludeDirectories="$(PangoFT2Incs)"
+    PreprocessorDefinitions="_DEBUG;$(PangoDefines);$(PangoFT2CFlags)"
     MinimalRebuild="true"
     BasicRuntimeChecks="3"
     RuntimeLibrary="3"
@@ -104,26 +104,26 @@
    />
    <Tool
     Name="VCLinkerTool"
-    AdditionalDependencies="fontconfig.lib freetype.lib"
+    AdditionalDependencies="$(PangoFT2Libs)"
     OutputFile="$(OutDir)\$(PangoDllPrefix)$(ProjectName)$(PangoDllSuffix).dll"
     LinkIncremental="2"
     ModuleDefinitionFile="..\..\..\pango\pangoft2.def"
     GenerateDebugInformation="true"
     SubSystem="2"
-    ImportLibrary="$(TargetDir)$(ProjectName)-$(PangoApiVersion).lib"
+    ImportLibrary="$(TargetDir)$(ProjectName)-$(ApiVersion).lib"
     TargetMachine="17"
    />
   </Configuration>
   <Configuration
    Name="Release_FC|x64"
-   InheritedPropertySheets=".\pango.vsprops"
+   InheritedPropertySheets=".\pango-build-defines.vsprops"
    ConfigurationType="2"
    CharacterSet="2"
    >
    <Tool
     Name="VCCLCompilerTool"
-    AdditionalIncludeDirectories=".;..\"
-    PreprocessorDefinitions="$(PangoDefines);HAVE_GLIB;HAVE_STDINT_H=1"
+    AdditionalIncludeDirectories="$(PangoFT2Incs)"
+    PreprocessorDefinitions="$(PangoDefines);$(PangoFT2CFlags)"
     RuntimeLibrary="2"
     UsePrecompiledHeader="0"
     WarningLevel="3"
@@ -131,15 +131,15 @@
    />
    <Tool
     Name="VCLinkerTool"
-    AdditionalDependencies="fontconfig.lib freetype.lib"
+    AdditionalDependencies="$(PangoFT2Libs)"
     OutputFile="$(OutDir)\$(PangoDllPrefix)$(ProjectName)$(PangoDllSuffix).dll"
-    LinkIncremental="2"
+    LinkIncremental="1"
     ModuleDefinitionFile="..\..\..\pango\pangoft2.def"
     GenerateDebugInformation="true"
     SubSystem="2"
     OptimizeReferences="2"
     EnableCOMDATFolding="2"
-    ImportLibrary="$(TargetDir)$(ProjectName)-$(PangoApiVersion).lib"
+    ImportLibrary="$(TargetDir)$(ProjectName)-$(ApiVersion).lib"
     TargetMachine="17"
    />
   </Configuration>
@@ -168,23 +168,17 @@
    Filter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"
    UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
    >
-   <File RelativePath="..\..\..\modules\basic\basic-fc.c">
-    <FileConfiguration Name="Debug_FC|Win32"><Tool Name="VCCLCompilerTool" PreprocessorDefinitions="PANGO_MODULE_PREFIX=_pango_basic_fc" /></FileConfiguration>
-    <FileConfiguration Name="Release_FC|Win32"><Tool Name="VCCLCompilerTool" PreprocessorDefinitions="PANGO_MODULE_PREFIX=_pango_basic_fc" /></FileConfiguration>
-    <FileConfiguration Name="Debug_FC|x64"><Tool Name="VCCLCompilerTool" PreprocessorDefinitions="PANGO_MODULE_PREFIX=_pango_basic_fc" /></FileConfiguration>
-    <FileConfiguration Name="Release_FC|x64"><Tool Name="VCCLCompilerTool" PreprocessorDefinitions="PANGO_MODULE_PREFIX=_pango_basic_fc" /></FileConfiguration>
-   </File>
- <File RelativePath="..\..\..\pango\pangofc-font.c" />
- <File RelativePath="..\..\..\pango\pangofc-fontmap.c" />
- <File RelativePath="..\..\..\pango\pangofc-decoder.c" />
- <File RelativePath="..\..\..\pango\pangoft2.c" />
- <File RelativePath="..\..\..\pango\module-defs-fc.c" />
- <File RelativePath="..\..\..\pango\pangoft2-fontmap.c" />
- <File RelativePath="..\..\..\pango\pangoft2-render.c" />
- <File RelativePath="..\..\..\pango\pango-ot-buffer.c" />
- <File RelativePath="..\..\..\pango\pango-ot-info.c" />
- <File RelativePath="..\..\..\pango\pango-ot-ruleset.c" />
- <File RelativePath="..\..\..\pango\pango-ot-tag.c" />
+   <File RelativePath="..\..\..\pango\pangofc-font.c" />
+   <File RelativePath="..\..\..\pango\pangofc-fontmap.c" />
+   <File RelativePath="..\..\..\pango\pangofc-decoder.c" />
+   <File RelativePath="..\..\..\pango\pangofc-shape.c" />
+   <File RelativePath="..\..\..\pango\pangoft2.c" />
+   <File RelativePath="..\..\..\pango\pangoft2-fontmap.c" />
+   <File RelativePath="..\..\..\pango\pangoft2-render.c" />
+   <File RelativePath="..\..\..\pango\pango-ot-buffer.c" />
+   <File RelativePath="..\..\..\pango\pango-ot-info.c" />
+   <File RelativePath="..\..\..\pango\pango-ot-ruleset.c" />
+   <File RelativePath="..\..\..\pango\pango-ot-tag.c" />
   </Filter>
  </Files>
 </VisualStudioProject>

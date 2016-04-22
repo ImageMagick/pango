@@ -29,9 +29,41 @@ G_BEGIN_DECLS
 typedef struct _PangoAnalysis PangoAnalysis;
 typedef struct _PangoItem PangoItem;
 
-/* TODO: if more flags are needed, turn this into a real PangoAnalysisFlags enum */
+/**
+ * PANGO_ANALYSIS_FLAG_CENTERED_BASELINE:
+ *
+ * Whether the segment should be shifted to center around the baseline.
+ * Used in vertical writing directions mostly.
+ *
+ * Since: 1.16
+ */
 #define PANGO_ANALYSIS_FLAG_CENTERED_BASELINE (1 << 0)
 
+/**
+ * PANGO_ANALYSIS_FLAG_IS_ELLIPSIS:
+ *
+ * This flag is used to mark runs that hold ellipsized text,
+ * in an ellipsized layout.
+ *
+ * Since: 1.36.7
+ */
+#define PANGO_ANALYSIS_FLAG_IS_ELLIPSIS (1 << 1)
+
+/**
+ * PangoAnalysis:
+ * @shape_engine: the engine for doing rendering-system-dependent processing.
+ * @lang_engine: the engine for doing rendering-system-independent processing.
+ * @font: the font for this segment.
+ * @level: the bidirectional level for this segment.
+ * @gravity: the glyph orientation for this segment (A #PangoGravity).
+ * @flags: boolean flags for this segment (currently only one) (Since: 1.16).
+ * @script: the detected script for this segment (A #PangoScript) (Since: 1.18).
+ * @language: the detected language for this segment.
+ * @extra_attrs: extra attributes for this segment.
+ *
+ * The #PangoAnalysis structure stores information about
+ * the properties of a segment of text.
+ */
 struct _PangoAnalysis
 {
   PangoEngineShape *shape_engine;
@@ -48,6 +80,15 @@ struct _PangoAnalysis
   GSList *extra_attrs;
 };
 
+/**
+ * PangoItem:
+ * @offset: byte offset of the start of this item in text.
+ * @length: length of this item in bytes.
+ * @num_chars: number of Unicode characters in the item.
+ * @analysis: analysis results for the item.
+ *
+ * The #PangoItem structure stores information about a segment of text.
+ */
 struct _PangoItem
 {
   gint offset;

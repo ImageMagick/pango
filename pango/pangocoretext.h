@@ -23,8 +23,7 @@
 #ifndef __PANGOCORETEXT_H__
 #define __PANGOCORETEXT_H__
 
-#include <pango/pango-context.h>
-#include <pango/pango-font.h>
+#include <pango/pango.h>
 #include <Carbon/Carbon.h>
 
 G_BEGIN_DECLS
@@ -38,6 +37,12 @@ typedef struct _PangoCoreTextFontClass    PangoCoreTextFontClass;
 
 #if defined(PANGO_ENABLE_ENGINE) || defined(PANGO_ENABLE_BACKEND)
 
+/**
+ * PANGO_RENDER_TYPE_CORE_TEXT:
+ *
+ * A string constant identifying the CoreText renderer. The associated quark (see
+ * g_quark_from_string()) is used to identify the renderer in pango_find_map().
+ */
 #define PANGO_RENDER_TYPE_CORE_TEXT "PangoRenderCoreText"
 
 #ifdef PANGO_ENABLE_BACKEND

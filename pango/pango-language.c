@@ -133,6 +133,15 @@ pango_language_free (PangoLanguage *language G_GNUC_UNUSED)
   return; /* nothing */
 }
 
+/**
+ * PangoLanguage:
+ *
+ * The #PangoLanguage structure is used to
+ * represent a language.
+ *
+ * #PangoLanguage pointers can be efficiently
+ * copied and compared with each other.
+ */
 G_DEFINE_BOXED_TYPE (PangoLanguage, pango_language,
                      pango_language_copy,
                      pango_language_free);
@@ -196,7 +205,26 @@ _pango_get_lc_ctype (void)
   CFArrayRef languages;
   CFStringRef language;
   gchar ret[16];
+  gchar *p;
 
+  /* Take the same approach as done for Windows above. First we check
+   * if somebody tried to set the locale through environment variables.
+   */
+  p = getenv ("LC_ALL");
+  if (p != NULL)
+    return g_strdup (p);
+
+  p = getenv ("LC_CTYPE");
+  if (p != NULL)
+    return g_strdup (p);
+
+  p = getenv ("LANG");
+  if (p != NULL)
+    return g_strdup (p);
+
+  /* If the environment variables are not set, determine the locale
+   * through the platform-native API.
+   */
   languages = CFLocaleCopyPreferredLanguages ();
   language = CFArrayGetValueAtIndex (languages, 0);
 
@@ -210,7 +238,14 @@ _pango_get_lc_ctype (void)
 
   return g_strdup (ret);
 #else
-  return g_strdup (setlocale (LC_CTYPE, NULL));
+  {
+    gchar *lc_ctype = setlocale (LC_CTYPE, NULL);
+
+    if (lc_ctype)
+      return g_strdup (lc_ctype);
+    else
+      return g_strdup ("C");
+  }
 #endif
 }
 
@@ -285,7 +320,7 @@ pango_language_get_default (void)
  * Use pango_language_get_default() if you want to get the #PangoLanguage for
  * the current locale of the process.
  *
- * Return value: (transfer none): an opaque pointer to a
+ * Return value: (transfer none) (nullable): an opaque pointer to a
  *               #PangoLanguage structure, or %NULL if @language was
  *               %NULL.  The returned pointer will be valid forever
  *               after, and should not be freed.
@@ -352,7 +387,7 @@ const char *
 
 /**
  * pango_language_matches:
- * @language: a language tag (see pango_language_from_string()),
+ * @language: (nullable): a language tag (see pango_language_from_string()),
  *            %NULL is allowed and matches nothing but '*'
  * @range_list: a list of language ranges, separated by ';', ':',
  *   ',', or space characters.
@@ -526,7 +561,7 @@ static const LangInfo lang_texts[] = {
 
 /**
  * pango_language_get_sample_string:
- * @language: a #PangoLanguage, or %NULL
+ * @language: (nullable): a #PangoLanguage, or %NULL
  *
  * Get a string that is representative of the characters needed to
  * render a particular language.
@@ -603,12 +638,12 @@ pango_language_get_sample_string (PangoLanguage *language)
  * The pango_language_includes_script() function uses this function
  * internally.
  *
- * Return value: (array length=num_scripts): An array of #PangoScript
- * values, with the number of entries in the array stored in
- * @num_scripts, or %NULL if Pango does not have any information about
- * this particular language tag (also the case if @language is %NULL).
- * The returned array is owned by Pango and should not be modified or
- * freed.
+ * Return value: (array length=num_scripts) (nullable): An array of
+ * #PangoScript values, with the number of entries in the array stored
+ * in @num_scripts, or %NULL if Pango does not have any information
+ * about this particular language tag (also the case if @language is
+ * %NULL).  The returned array is owned by Pango and should not be
+ * modified or freed.
  
  * Since: 1.22
  **/
@@ -647,7 +682,7 @@ pango_language_get_scripts (PangoLanguage *language,
 
 /**
  * pango_language_includes_script:
- * @language: a #PangoLanguage, or %NULL
+ * @language: (nullable): a #PangoLanguage, or %NULL
  * @script: a #PangoScript
  *
  * Determines if @script is one of the scripts used to
@@ -830,7 +865,7 @@ out:
  * choose a default language for %PANGO_SCRIPT_HAN when setting
  * context language is not feasible.
  *
- * Return value: a #PangoLanguage that is representative
+ * Return value: (nullable): a #PangoLanguage that is representative
  * of the script, or %NULL if no such language exists.
  *
  * Since: 1.4

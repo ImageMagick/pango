@@ -53,6 +53,15 @@
  * of the copyright holder.
  */
 
+/**
+ * SECTION:scripts
+ * @short_description:Identifying writing systems and languages
+ * @title:Scripts and Languages
+ *
+ * The functions in this section are used to identify the writing
+ * system, or <firstterm>script</firstterm> of individual characters
+ * and of ranges within a larger text string.
+ */
 #include "config.h"
 #include <stdlib.h>
 #include <string.h>
@@ -65,7 +74,7 @@
  * @ch: a Unicode character
  *
  * Looks up the #PangoScript for a particular character (as defined by
- * Unicode Standard Annex #24). No check is made for @ch being a
+ * Unicode Standard Annex \#24). No check is made for @ch being a
  * valid Unicode character; if you pass in invalid character, the
  * result is undefined.
  *
@@ -112,8 +121,8 @@ _pango_script_iter_init (PangoScriptIter *iter,
  * @length: length of @text, or -1 if @text is nul-terminated.
  *
  * Create a new #PangoScriptIter, used to break a string of
- * Unicode into runs by text. No copy is made of @text, so
- * the caller needs to make sure it remains valid until
+ * Unicode text into runs by Unicode script. No copy is made of
+ * @text, so the caller needs to make sure it remains valid until
  * the iterator is freed with pango_script_iter_free().
  *
  * Return value: the new script iterator, initialized
@@ -257,7 +266,7 @@ pango_script_iter_next (PangoScriptIter *iter)
       PangoScript sc;
       int pair_index;
 
-      sc = pango_script_for_unichar (ch);
+      sc = g_unichar_get_script (ch);
       if (sc != PANGO_SCRIPT_COMMON)
 	pair_index = -1;
       else

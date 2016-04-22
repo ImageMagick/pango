@@ -4,6 +4,7 @@ TEST_TEXTS =			\
 	test-arabic.txt		\
 	test-chinese.txt	\
 	test-devanagari.txt	\
+	test-feature-tag.markup \
 	test-gurmukhi.txt	\
 	test-hebrew.txt		\
 	test-ipa.txt		\
@@ -26,8 +27,6 @@ TEST_TEXTS =			\
 EXTRA_DIST =			\
 	$(TEST_TEXTS)
 
-CLEANFILES = pangorc
-
 INCLUDES =				\
 	-I$(top_srcdir)			\
 	$(PANGO_DEBUG_FLAGS)		\
@@ -35,6 +34,7 @@ INCLUDES =				\
 	$(XFT_CFLAGS)			\
 	$(CAIRO_CFLAGS)			\
 	$(FREETYPE_CFLAGS)		\
+	$(FONTCONFIG_CFLAGS)		\
 	$(X_CFLAGS)
 
 #########################################################
@@ -54,7 +54,8 @@ pango_view_SOURCES +=					\
 	viewer-pangoft2.c
 pango_view_LDADD +=					\
 	../pango/libpangoft2-$(PANGO_API_VERSION).la	\
-	$(FREETYPE_LIBS)
+	$(FREETYPE_LIBS)				\
+	$(FONTCONFIG_LIBS)
 endif
 if HAVE_XFT
 pango_view_SOURCES +=					\
@@ -80,7 +81,7 @@ endif
 
 MAINTAINERCLEANFILES = pango-view.1.in
 EXTRA_DIST += pango-view.1.in
-CLEANFILES += pango-view.1
+CLEANFILES = pango-view.1
 
 nodist_man_MANS = pango-view.1
 
@@ -99,10 +100,5 @@ pango-view.1: pango-view$(EXEEXT)
 	cp $(srcdir)/pango-view.1.in $@
 
 #########################################################
-
-BUILT_SOURCES = pangorc
-
-pangorc: $(srcdir)/../modules/pangorc
-	cp $(srcdir)/../modules/pangorc $@
 
 -include $(top_srcdir)/git.mk

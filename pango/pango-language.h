@@ -22,7 +22,6 @@
 #ifndef __PANGO_LANGUAGE_H__
 #define __PANGO_LANGUAGE_H__
 
-#include "pango-macros.h"
 #include <glib.h>
 #include <glib-object.h>
 
@@ -30,10 +29,14 @@ G_BEGIN_DECLS
 
 typedef struct _PangoLanguage PangoLanguage;
 
+/**
+ * PANGO_TYPE_LANGUAGE:
+ *
+ * The #GObject type for #PangoLanguage.
+ */
 #define PANGO_TYPE_LANGUAGE (pango_language_get_type ())
 
 GType          pango_language_get_type    (void) G_GNUC_CONST;
-PANGO_EXTERN
 PangoLanguage *pango_language_from_string (const char *language);
 
 const char    *pango_language_to_string   (PangoLanguage *language) G_GNUC_CONST;

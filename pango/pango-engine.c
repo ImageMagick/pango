@@ -19,6 +19,51 @@
  * Boston, MA 02111-1307, USA.
  */
 
+/**
+ * SECTION:engines
+ * @short_description:Language-specific and rendering-system-specific processing
+ * @title:Engines
+ *
+ * Pango utilizes a module architecture in which the language-specific
+ * and render-system-specific components are provided by loadable
+ * modules. Each loadable module supplies one or more
+ * <firstterm>engines</firstterm>.  Each <firstterm>engine</firstterm>
+ * has an associated <firstterm>engine type</firstterm> and
+ * <firstterm>render type</firstterm>. These two types are represented by strings.
+ *
+ * Each dynamically-loaded module exports several functions which provide
+ * the public API. These functions are script_engine_list(),
+ * script_engine_init() and script_engine_exit, and
+ * script_engine_create(). The latter three functions are used when
+ * creating engines from the module at run time, while the first
+ * function is used when building a catalog of all available modules.
+ *
+ * Deprecated: 1.38
+ */
+/**
+ * SECTION:pango-engine-lang
+ * @short_description:Rendering-system independent script engines
+ * @title:PangoEngineLang
+ * @stability:Unstable
+ *
+ * The <firstterm>language engines</firstterm> are rendering-system independent
+ * engines that determine line, word, and character breaks for character strings.
+ * These engines are used in pango_break().
+ *
+ * Deprecated: 1.38
+ */
+/**
+ * SECTION:pango-engine-shape
+ * @short_description:Rendering-system dependent script engines
+ * @title:PangoEngineShape
+ * @stability:Unstable
+ *
+ * The <firstterm>shape engines</firstterm> are rendering-system dependent
+ * engines that convert character strings into glyph strings.
+ * These engines are used in pango_shape().
+ *
+ * Deprecated: 1.38
+ */
 #include "config.h"
 
 #include "pango-engine.h"
@@ -58,7 +103,6 @@ pango_engine_shape_real_covers (PangoEngineShape *engine G_GNUC_UNUSED,
 				PangoLanguage    *language,
 				gunichar          wc)
 {
-
   PangoCoverage *coverage = pango_font_get_coverage (font, language);
   PangoCoverageLevel result = pango_coverage_get (coverage, wc);
 
@@ -109,8 +153,8 @@ _pango_engine_shape_covers (PangoEngineShape *engine,
 			    PangoLanguage    *language,
 			    gunichar          wc)
 {
-  g_return_val_if_fail (PANGO_IS_ENGINE_SHAPE (engine), PANGO_COVERAGE_NONE);
-  g_return_val_if_fail (PANGO_IS_FONT (font), PANGO_COVERAGE_NONE);
+  if (G_UNLIKELY (!engine || !font))
+    return PANGO_COVERAGE_NONE;
 
   return PANGO_ENGINE_SHAPE_GET_CLASS (engine)->covers (engine,
 							font,

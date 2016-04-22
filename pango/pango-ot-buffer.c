@@ -82,7 +82,7 @@ pango_ot_buffer_clear (PangoOTBuffer *buffer)
  * @cluster: the cluster that this glyph belongs to
  *
  * Appends a glyph to a #PangoOTBuffer, with @properties identifying which
- * features should be applied on this glyph.  See pango_ruleset_add_feature().
+ * features should be applied on this glyph.  See pango_ot_ruleset_add_feature().
  *
  * Since: 1.4
  **/
@@ -134,8 +134,10 @@ pango_ot_buffer_set_zero_width_marks (PangoOTBuffer     *buffer,
 /**
  * pango_ot_buffer_get_glyphs
  * @buffer: a #PangoOTBuffer
- * @glyphs: location to store the array of glyphs, or %NULL
- * @n_glyphs: location to store the number of glyphs, or %NULL
+ * @glyphs: (array length=n_glyphs) (out) (optional): location to
+ *   store the array of glyphs, or %NULL
+ * @n_glyphs: (out) (optional): location to store the number of
+ *   glyphs, or %NULL
  *
  * Gets the glyph array contained in a #PangoOTBuffer.  The glyphs are
  * owned by the buffer and should not be freed, and are only valid as long

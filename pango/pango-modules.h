@@ -33,6 +33,19 @@ typedef struct _PangoMapEntry PangoMapEntry;
 
 typedef struct _PangoIncludedModule PangoIncludedModule;
 
+/**
+ * PangoIncludedModule:
+ * @list: a function that lists the engines defined in this module.
+ * @init: a function to initialize the module.
+ * @exit: a function to finalize the module.
+ * @create: a function to create an engine, given the engine name.
+ *
+ * The #PangoIncludedModule structure for a statically linked module
+ * contains the functions that would otherwise be loaded from a dynamically
+ * loaded module.
+ *
+ * Deprecated: 1.38
+ */
 struct _PangoIncludedModule
 {
   void (*list) (PangoEngineInfo **engines,
@@ -42,15 +55,19 @@ struct _PangoIncludedModule
   PangoEngine *(*create) (const char       *id);
 };
 
+G_DEPRECATED
 PangoMap *     pango_find_map        (PangoLanguage       *language,
 				      guint                engine_type_id,
 				      guint                render_type_id);
+G_DEPRECATED
 PangoEngine *  pango_map_get_engine  (PangoMap            *map,
 				      PangoScript          script);
+G_DEPRECATED
 void           pango_map_get_engines (PangoMap            *map,
 				      PangoScript          script,
 				      GSList             **exact_engines,
 				      GSList             **fallback_engines);
+G_DEPRECATED
 void           pango_module_register (PangoIncludedModule *module);
 
 #endif /* PANGO_ENABLE_BACKEND */

@@ -32,8 +32,6 @@
 
 #include <pango/pangocairo.h>
 
-#undef VERBOSE
-
 static void verbose (const char *format, ...) G_GNUC_PRINTF (1, 2);
 static void
 verbose (const char *format, ...)
@@ -70,9 +68,14 @@ const char *test_texts[] =
     "AAAA\nBBBB\nCCCC\n",
     "DDDD\rEEEE\rFFFF\r",
     "GGGG\r\nHHHH\r\nIIII\r\n",
+    "asdf",
     NULL
   };
 
+/* char iteration test:
+ *  - Total num of iterations match number of chars
+ *  - GlyphString's index_to_x positions match those returned by the Iter
+ */
 static void
 iter_char_test (PangoLayout *layout)
 {
@@ -154,10 +157,6 @@ iter_char_test (PangoLayout *layout)
   pango_layout_iter_free (iter);
 }
 
-/* char iteration test:
- *  - Total num of iterations match number of chars
- *  - GlyphString's index_to_x positions match those returned by the Iter
- */
 static void
 iter_cluster_test (PangoLayout *layout)
 {
@@ -213,10 +212,13 @@ test_layout_iter (void)
   const char  **ptext;
   PangoFontMap *fontmap;
   PangoContext *context;
+  PangoFontDescription *font_desc;
   PangoLayout  *layout;
 
   fontmap = pango_cairo_font_map_get_default ();
   context = pango_font_map_create_context (fontmap);
+  font_desc = pango_font_description_from_string ("cantarell 11");
+  pango_context_set_font_description (context, font_desc);
 
   layout = pango_layout_new (context);
   pango_layout_set_width (layout, LAYOUT_WIDTH);
@@ -234,6 +236,60 @@ test_layout_iter (void)
     }
 
   g_object_unref (layout);
+  g_object_unref (context);
+}
+
+static void
+test_glyphitem_iter (void)
+{
+  PangoFontMap *fontmap;
+  PangoContext *context;
+  PangoFontDescription *font_desc;
+  PangoLayout  *layout;
+  PangoLayoutLine *line;
+  const char *text;
+  GSList *l;
+
+  fontmap = pango_cairo_font_map_get_default ();
+  context = pango_font_map_create_context (fontmap);
+  font_desc = pango_font_description_from_string ("cantarell 11");
+  pango_context_set_font_description (context, font_desc);
+
+  layout = pango_layout_new (context);
+  /* This shouldn't form any ligatures. */
+  pango_layout_set_text (layout, "test تست", -1);
+  text = pango_layout_get_text (layout);
+
+  line = pango_layout_get_line (layout, 0);
+  for (l = line->runs; l; l = l->next)
+  {
+    PangoGlyphItem *run = l->data;
+    int direction;
+
+    for (direction = 0; direction < 2; direction++)
+    {
+      PangoGlyphItemIter iter;
+      gboolean have_cluster;
+
+
+      for (have_cluster = direction ?
+	     pango_glyph_item_iter_init_start (&iter, run, text) :
+	     pango_glyph_item_iter_init_end (&iter, run, text);
+	   have_cluster;
+	   have_cluster = direction ?
+	     pango_glyph_item_iter_next_cluster (&iter) :
+	     pango_glyph_item_iter_prev_cluster (&iter))
+      {
+        verbose ("start index %d end index %d\n", iter.start_index, iter.end_index);
+        g_assert (iter.start_index < iter.end_index);
+        g_assert (iter.start_index + 2 >= iter.end_index);
+        g_assert (iter.start_char + 1 == iter.end_char);
+      }
+    }
+  }
+
+  g_object_unref (layout);
+  g_object_unref (context);
 }
 
 int
@@ -242,6 +298,7 @@ main (int argc, char *argv[])
   g_test_init (&argc, &argv, NULL);
 
   g_test_add_func ("/layout/iter", test_layout_iter);
+  g_test_add_func ("/layout/glyphitem-iter", test_glyphitem_iter);
 
   return g_test_run ();
 }

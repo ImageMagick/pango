@@ -33,16 +33,16 @@ G_DEFINE_BOXED_TYPE (PangoColor, pango_color,
 
 /**
  * pango_color_copy:
- * @src: color to copy, may be %NULL
+ * @src: (nullable): color to copy, may be %NULL
  *
  * Creates a copy of @src, which should be freed with
  * pango_color_free(). Primarily used by language bindings,
  * not that useful otherwise (since colors can just be copied
  * by assignment in C).
  *
- * Return value: the newly allocated #PangoColor, which should
- *               be freed with pango_color_free(), or %NULL
- *               if @src was %NULL.
+ * Return value: (nullable): the newly allocated #PangoColor, which
+ *               should be freed with pango_color_free(), or %NULL if
+ *               @src was %NULL.
  **/
 PangoColor*
 pango_color_copy (const PangoColor *src)
@@ -61,7 +61,7 @@ pango_color_copy (const PangoColor *src)
 
 /**
  * pango_color_free:
- * @color: an allocated #PangoColor, may be %NULL
+ * @color: (nullable): an allocated #PangoColor, may be %NULL
  *
  * Frees a color allocated by pango_color_copy().
  **/
@@ -205,43 +205,55 @@ hex (const char *spec,
   return TRUE;
 }
 
-/**
- * pango_color_parse:
- * @color: a #PangoColor structure in which to store the result, or %NULL
- * @spec: a string specifying the new color
- *
- * Fill in the fields of a color from a string specification. The
- * string can either one of a large set of standard names. (Taken
- * from the X11 <filename>rgb.txt</filename> file), or it can be a hex value in the
- * form '&num;rgb' '&num;rrggbb' '&num;rrrgggbbb' or '&num;rrrrggggbbbb' where
- * 'r', 'g' and 'b' are hex digits of the red, green, and blue
- * components of the color, respectively. (White in the four
- * forms is '&num;fff' '&num;ffffff' '&num;fffffffff' and '&num;ffffffffffff')
- *
- * Return value: %TRUE if parsing of the specifier succeeded,
- *   otherwise false.
- **/
+
+/* Like pango_color_parse, but allow strings of the form
+ * '&num;rgba', '&num;rrggbbaa', '&num;rrrrggggbbbbaaaa',
+ * if alpha is not NULL. If no alpha component is found
+ * in the string, *alpha is set to 0.
+ */
 gboolean
-pango_color_parse (PangoColor *color,
-		   const char *spec)
+_pango_color_parse_with_alpha (PangoColor *color,
+                               guint16    *alpha,
+		               const char *spec)
 {
   g_return_val_if_fail (spec != NULL, FALSE);
+
+  if (alpha)
+    *alpha = 0;
 
   if (spec[0] == '#')
     {
       size_t len;
-      unsigned int r, g, b;
+      unsigned int r, g, b, a;
+      gboolean has_alpha;
 
       spec++;
       len = strlen (spec);
-      if (len % 3 || len < 3 || len > 12)
-	return FALSE;
-
-      len /= 3;
+      switch (len)
+        {
+        case 3:
+        case 6:
+        case 9:
+        case 12:
+          len /= 3;
+          has_alpha = FALSE;
+          break;
+        case 4:
+        case 8:
+        case 16:
+          if (!alpha)
+            return FALSE;
+          len /= 4;
+          has_alpha = TRUE;
+          break;
+        default:
+	  return FALSE;
+        }
 
       if (!hex (spec, len, &r) ||
 	  !hex (spec + len, len, &g) ||
-	  !hex (spec + len * 2, len, &b))
+	  !hex (spec + len * 2, len, &b) ||
+          (has_alpha && !hex (spec + len * 3, len, &a)))
 	return FALSE;
 
       if (color)
@@ -261,6 +273,18 @@ pango_color_parse (PangoColor *color,
 	  color->green = g;
 	  color->blue  = b;
 	}
+
+      if (alpha && has_alpha)
+        {
+	  int bits = len * 4;
+          a <<= 16 - bits;
+	  while (bits < 16)
+	    {
+              a |= (a >> bits);
+	      bits *= 2;
+	    }
+          *alpha = a;
+        }
     }
   else
     {
@@ -268,4 +292,28 @@ pango_color_parse (PangoColor *color,
 	return FALSE;
     }
   return TRUE;
+}
+/**
+ * pango_color_parse:
+ * @color: (nullable): a #PangoColor structure in which to store the
+ *   result, or %NULL
+ * @spec: a string specifying the new color
+ *
+ * Fill in the fields of a color from a string specification. The
+ * string can either one of a large set of standard names. (Taken
+ * from the CSS <ulink url="http://dev.w3.org/csswg/css-color/#named-colors">specification</ulink>), or it can be a hexadecimal
+ * value in the
+ * form '&num;rgb' '&num;rrggbb' '&num;rrrgggbbb' or '&num;rrrrggggbbbb' where
+ * 'r', 'g' and 'b' are hex digits of the red, green, and blue
+ * components of the color, respectively. (White in the four
+ * forms is '&num;fff' '&num;ffffff' '&num;fffffffff' and '&num;ffffffffffff')
+ *
+ * Return value: %TRUE if parsing of the specifier succeeded,
+ *   otherwise false.
+ **/
+gboolean
+pango_color_parse (PangoColor *color,
+		   const char *spec)
+{
+  return _pango_color_parse_with_alpha (color, NULL, spec);
 }

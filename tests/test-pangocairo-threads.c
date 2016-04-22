@@ -5,9 +5,9 @@
 
 #define WIDTH 100
 #define HEIGHT 100
-const char *text = "The quick brown fox jumped over the lazy dog!";
+const char *text = "Hamburgerfonts\nวิวิวิวิวิวิ\nبهداد";
 
-int num_iters = 100;
+int num_iters = 200;
 
 GMutex mutex;
 
@@ -68,7 +68,7 @@ thread_func (gpointer data)
 int
 main (int argc, char **argv)
 {
-  int num_threads = 100;
+  int num_threads = 10;
   int i;
   GPtrArray *threads = g_ptr_array_new ();
   GPtrArray *surfaces = g_ptr_array_new ();

@@ -1,3 +1,4000 @@
+commit 8daf1de02f8ac7e05b4788dcd6a209ef06e6e03a
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Mon Apr 11 11:20:11 2016 -0400
+
+    1.40.1
+
+ NEWS         | 5 +++++
+ configure.ac | 2 +-
+ 2 files changed, 6 insertions(+), 1 deletion(-)
+
+commit a40771dec851ea338f2113b459bc2c9983ac386d
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Sat Mar 26 09:36:00 2016 -0700
+
+    Bug 764089 - PangoWin32FontMap Memory Leak
+
+    Add finalizers to PangoWin32FontMap
+
+    Patch from Geoffrey Yerem.
+
+    Part of https://bugzilla.gnome.org/show_bug.cgi?id=764089
+
+ pango/pangowin32-fontmap.c | 56
+ +++++++++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 53 insertions(+), 3 deletions(-)
+
+commit dd76b439506c650aa48ae160811c5ec4b8b7447d
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Sat Mar 26 09:23:38 2016 -0700
+
+    Use $PKG_CONFIG instead of pkg-config consistently
+
+    Fixes https://bugzilla.gnome.org/show_bug.cgi?id=764191
+
+ configure.ac | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit d974f879bacc4f2a09b08997227c90b4348961a2
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Tue Mar 22 18:21:54 2016 -0400
+
+    1.40.0
+
+ NEWS         | 5 +++++
+ configure.ac | 2 +-
+ 2 files changed, 6 insertions(+), 1 deletion(-)
+
+commit 70496056909faa41b368dbbe22cd144eaa07d22b
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Fri Mar 11 18:21:15 2016 -0800
+
+    Don't treat U+1680 OGHAM SPACE MARK as whitespace
+
+    Unicode says: "U+1680 ogham space mark is unusual in that it is
+    generally
+    rendered with a visible horizontal line, rather than being blank."
+
+ pango/pango-context.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit c228f6978e09af7c91ce954262c9e0f85496e76f
+Author: Chun-wei Fan <fanchunwei@src.gnome.org>
+Date:   Wed Mar 2 12:35:33 2016 +0800
+
+    MSVC builds: Re-arrange GLib include paths
+
+    We ought to include the platform-neutral headers first...
+
+ build/win32/vs10/pango-build-defines.props  | 2 +-
+ build/win32/vs9/pango-build-defines.vsprops | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+commit 6c81be9ef621bebcb33b9e2e2d86c7b09cc00322
+Author: Khaled Hosny <khaledhosny@eglug.org>
+Date:   Sun Feb 14 13:58:43 2016 +0400
+
+    Fix typo in pango_layout_xy_to_index() docs
+
+    It was referring to itself for further description, but I assume the
+    intent was to refer to pango_layout_line_x_to_index().
+
+ pango/pango-layout.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 8b9ced50e5d2c5797de0095366955d10ebc2c231
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Mon Dec 14 08:38:40 2015 -0500
+
+    1.39.0
+
+ NEWS | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+commit 3596ddf1533def56a979914c4fbfe14344179873
+Author: Krzesimir Nowak <qdlacz@gmail.com>
+Date:   Mon Dec 14 14:14:36 2015 +0100
+
+    Fix copy-paste mistake
+
+ pango/pango-script.h | 58
+ ++++++++++++++++++++++++++--------------------------
+ 1 file changed, 29 insertions(+), 29 deletions(-)
+
+commit f72413304c4027f0e2b988b1def937311533da53
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Mon Dec 14 07:48:43 2015 -0500
+
+    Add api index for 1.40 API
+
+ docs/pango-docs.sgml | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+commit f1cecd866a05d4a619d4a494b2bb97b6cec3c4e9
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Mon Dec 14 07:48:05 2015 -0500
+
+    Bump version to 1.39
+
+ configure.ac | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit 625bce890dae8aa97ee7fd8e27458374d2feaf26
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Mon Dec 14 07:44:44 2015 -0500
+
+    Update PangoScript to Unicode 8.0
+
+    This brings us back in sync with GUnicodeScript.
+
+ pango/pango-script.h | 64
+ +++++++++++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 63 insertions(+), 1 deletion(-)
+
+commit bd7038c3c03154ecb10e93183f8783b15422faa3
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Mon Dec 14 07:37:32 2015 -0500
+
+    Update pango-script-lang-table.h
+
+    No changes here.
+
+ pango/pango-script-lang-table.h | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+commit dfc6fb3e46d134e6dc567303974e7f0f3eea51fa
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Mon Dec 14 07:36:58 2015 -0500
+
+    gen-script-lang-table: Fix compiler warnings
+
+ tools/gen-script-for-lang.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
+
+commit db3d4d4c6edbd46b41a40b1550a413b1935b2926
+Author: Chun-wei Fan <fanchunwei@src.gnome.org>
+Date:   Thu Nov 12 15:35:50 2015 +0800
+
+    MSVC 2010+ builds: Do not explicitly use /LTCG
+
+    This partially reverts 03e60dc.
+
+    As we now ensure that items using GResources and GConstructors
+    are always
+    referenced so that the linker does not optimize them out in a default
+    Release build, we no longer need to enforce the use of /LTCG, so
+    /LTCG:incremental will work as well.
+
+ build/win32/vs10/pango.vcxprojin      | 2 --
+ build/win32/vs10/pangocairo.vcxprojin | 5 -----
+ build/win32/vs10/pangoft2.vcxprojin   | 2 --
+ build/win32/vs10/pangowin32.vcxprojin | 2 --
+ 4 files changed, 11 deletions(-)
+
+commit 03e60dc1c1f94345ed92aca4d9a6a2f17e48f690
+Author: Chun-wei Fan <fanchunwei@src.gnome.org>
+Date:   Fri Oct 23 09:52:40 2015 +0800
+
+    MSVC release builds: Ensure that /LTCG is used
+
+    MSVC 2015 changed its default link-time code generation setting to
+    /LTCG:incremental, which causes problems if /opt:noref is to be used,
+    meaning that some code will be optimized out by the linker.
+
+    Avoid this situtation here by enforcing the use of /LTCG for MSVC
+    2010+
+    builds.
+
+ build/win32/vs10/pango.vcxprojin      | 10 ++++++----
+ build/win32/vs10/pangocairo.vcxprojin | 21 +++++++++++++--------
+ build/win32/vs10/pangoft2.vcxprojin   | 10 ++++++----
+ build/win32/vs10/pangowin32.vcxprojin | 10 ++++++----
+ 4 files changed, 31 insertions(+), 20 deletions(-)
+
+commit 39c8cfcc614f8901d347a047b3295a06082cbfee
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Thu Oct 22 14:20:47 2015 -0200
+
+    Add note re threadsafe libthai
+
+ pango/break-thai.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+commit a05219011b26703e6da7bc6e799d1e1322a60ed3
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Mon Oct 12 15:13:30 2015 -0400
+
+    1.38.1
+
+ NEWS         | 6 ++++++
+ configure.ac | 2 +-
+ 2 files changed, 7 insertions(+), 1 deletion(-)
+
+commit 50b39c378e20e7db91ad67e4dc367276f6e49f5a
+Author: Chun-wei Fan <fanchunwei@src.gnome.org>
+Date:   Thu Oct 8 18:41:40 2015 +0800
+
+    MSVC projects: Ensure files have UNIX line endings
+
+    ...except for the .sln and the README.txt files, to ease
+    maintainenance.
+
+ build/win32/vs10/pango-build-defines.props    | 106
+ +++++++++++++-------------
+ build/win32/vs10/pango-ignore-fc.props        |   2 +-
+ build/win32/vs10/pango-install-bin.props      |   2 +-
+ build/win32/vs10/pango-install.propsin        |   2 +-
+ build/win32/vs10/pango-install.vcxproj        |   2 +-
+ build/win32/vs10/pango.vcxproj.filtersin      |   2 +-
+ build/win32/vs10/pango.vcxprojin              |   2 +-
+ build/win32/vs10/pangocairo.vcxproj.filtersin |   2 +-
+ build/win32/vs10/pangocairo.vcxprojin         |   2 +-
+ build/win32/vs10/pangoft2.vcxproj.filtersin   |   2 +-
+ build/win32/vs10/pangoft2.vcxprojin           |   2 +-
+ build/win32/vs10/pangowin32.vcxproj.filtersin |   2 +-
+ build/win32/vs10/pangowin32.vcxprojin         |   2 +-
+ 13 files changed, 65 insertions(+), 65 deletions(-)
+
+commit 18fe29478c263cf57ed408b153a76f30a934261d
+Author: Chun-wei Fan <fanchunwei@src.gnome.org>
+Date:   Thu Oct 8 18:36:05 2015 +0800
+
+    MSVC builds: Update PangoFT2-related items
+
+    Fix the projects, and consolidate repeated items into the property
+    sheets,
+    as they now need to compile and link against HarfBuzz.  Also remove
+    unnecessary lines from the PangoFT2 and PangoCairo project files.
+
+ build/win32/vs10/pango-build-defines.props  | 10 +++++++++-
+ build/win32/vs10/pangocairo.vcxprojin       | 16 ++++------------
+ build/win32/vs10/pangoft2.vcxprojin         | 24 ++++++++++++------------
+ build/win32/vs9/pango-build-defines.vsprops | 14 +++++++++++++-
+ build/win32/vs9/pangocairo.vcprojin         | 25
+ +++++++++----------------
+ build/win32/vs9/pangoft2.vcprojin           | 24 ++++++++++++------------
+ 6 files changed, 59 insertions(+), 54 deletions(-)
+
+commit 8f335578eb47fffb20647881622b994144054387
+Author: Chun-wei Fan <fanchunwei@src.gnome.org>
+Date:   Thu Oct 8 18:05:47 2015 +0800
+
+    MSVC builds: Clean up PangoWin32 projects a bit
+
+    Remove unneeded AdditionalIncludeDirectories directive.
+
+ build/win32/vs10/pangowin32.vcxprojin | 1 -
+ build/win32/vs9/pangowin32.vcprojin   | 1 -
+ 2 files changed, 2 deletions(-)
+
+commit 91fe6f1c79c70a0d23cf80d9163b259b105cb4c3
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Sat Oct 3 23:42:28 2015 -0400
+
+    testattributes: Make it work with --enable-debug=no
+
+    g_assert gets neutered by --enable-debug=no, which is not what
+    we want in tests. Use g_assert_true instead.
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=755126
+
+ tests/testattributes.c | 22 +++++++++++-----------
+ 1 file changed, 11 insertions(+), 11 deletions(-)
+
+commit e9fe4746f777772655011a7fedf93d420bd16c66
+Author: Manuel Bachmann <manuel.bachmann@iot.bzh>
+Date:   Sat Oct 3 16:48:46 2015 +0200
+
+    Build: Require HarfBuzz 0.9.30
+
+    Pango uses the HB_VERSION_ATLEAST macro, but it was only
+    defined in HarfBuzz 0.9.30. Thus, compiling with an older
+    version fails.
+
+    Signed-off-by: Manuel Bachmann <manuel.bachmann@iot.bzh>
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=756015
+
+ configure.ac | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 5c3882bbe994a1f42e12aeaa259b90ae3c55bef9
+Author: Chun-wei Fan <fanchunwei@src.gnome.org>
+Date:   Fri Sep 25 12:54:26 2015 +0800
+
+    build/Makefile-newvs.am: Update Comments for Usage
+
+    Update the notes that this is also used for Visual Studio 2015
+    support,
+    and correct the MSVC_VER_LONG for MSVC 2015, which is 14, not 2015.
+
+    Also add a note that this can be used for other projects that have
+    Visual Studio build support.
+
+ build/Makefile-newvs.am | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+commit a21d7688b95ae62034962bfc1e34801935dd670a
+Author: Chun-wei Fan <fanchunwei@src.gnome.org>
+Date:   Fri Sep 25 15:33:02 2015 +0800
+
+    Build: Make Makefile.msvcproj A Bit More Generic
+
+    Handle also the situation where $(srcdir) == $(top_srcdir), so
+    that this
+    can also be used in cases like librsvg and gobject-introspection.
+
+ build/Makefile.msvcproj | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+commit 29a712f1af7bbb15bdc9d7e09cbf58517edf8c15
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Mon Sep 21 09:26:52 2015 -0400
+
+    1.38.0
+
+ NEWS         | 5 +++++
+ configure.ac | 4 ++--
+ 2 files changed, 7 insertions(+), 2 deletions(-)
+
+commit 31f9d97598a7862bb93245fcace341b5a6dfeba0
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Mon Sep 21 09:26:16 2015 -0400
+
+    docs: Add PANGO_ANALYSIS_FLAG_IS_ELLIPSIS
+
+ docs/pango-sections.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+commit 7c9614ca60741a44e6fde0c24fc6a9c8560b302b
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Mon Sep 14 13:30:58 2015 -0400
+
+    1.37.5
+
+ NEWS         | 3 +++
+ configure.ac | 2 +-
+ 2 files changed, 4 insertions(+), 1 deletion(-)
+
+commit bbe896872189d6afb30f2fb6bec44e64eedc52ef
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Sun Sep 13 11:28:33 2015 -0400
+
+    Avoid some overhead in itemize_state_process_run
+
+    Avoid determining the Unicode type repeatedly. Instead,
+    just get the type once and filter out the classes we want.
+
+ pango/pango-context.c | 19 +++++++++----------
+ 1 file changed, 9 insertions(+), 10 deletions(-)
+
+commit 0bb2b5f4cf2264591657d2e0aead00955f9deb64
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Sun Sep 13 11:26:19 2015 -0400
+
+    Avoid some overhead in pango_default_break
+
+    We already have the Unicode type, so we can determine
+    isspace without doing the full type determination again.
+
+ pango/break.c | 18 ++++++++++++++----
+ 1 file changed, 14 insertions(+), 4 deletions(-)
+
+commit 0de37310ff335d49d8003dfb4008932142ec2bde
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Sat Sep 12 18:13:40 2015 -0400
+
+    Use g_unichar_get_script directly
+
+    Instead of going through a wrapper.
+
+ pango/break.c        | 2 +-
+ pango/pango-script.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+commit 9681fa2ca8dfeb570471a3828e5b6aee4253025c
+Author: Chun-wei Fan <fanchunwei@src.gnome.org>
+Date:   Wed Sep 9 12:02:34 2015 +0800
+
+    MSVC Builds: "Add" MSVC 2015 Project Files
+
+    This "adds" Visual Studio 2015 projects in the way that we did before:
+    copy the Visual Studio 2010 projects and replacing the items in there
+    as necessary.
+
+    Oh, this does pass 'make -jN distcheck' :)
+
+ build/Makefile-newvs.am      | 22 +++++++++++++---------
+ build/win32/Makefile.am      |  3 ++-
+ build/win32/vs11/Makefile.am |  4 +---
+ build/win32/vs12/Makefile.am |  4 +---
+ build/win32/vs14/Makefile.am | 26 ++++++++++++++++++++++++++
+ configure.ac                 |  1 +
+ 6 files changed, 44 insertions(+), 16 deletions(-)
+
+commit c0e56e5af9e00137de1eb603ac1625332176f407
+Author: Chun-wei Fan <fanchunwei@src.gnome.org>
+Date:   Fri Sep 4 18:08:46 2015 +0800
+
+    MSVC Builds: Rename testsrules_msvc.mak
+
+    Rename this to detectenv-msvc.mak to be consistent with the other
+    GNOME
+    projects that support MSVC builds, and clean that file up a bit.
+
+ build/Makefile.am                  |  2 +-
+ build/detectenv-msvc.mak           | 65
+ ++++++++++++++++++++++++++++++++++
+ build/pango-introspection-msvc.mak |  3 +-
+ build/testsrules_msvc.mak          | 72
+ --------------------------------------
+ 4 files changed, 67 insertions(+), 75 deletions(-)
+
+commit 7402dfe837bde0cfc2bdb1ab30f1ce7e9822a8f7
+Author: Chun-wei Fan <fanchunwei@src.gnome.org>
+Date:   Fri Sep 4 16:44:22 2015 +0800
+
+    pango/pango-renderer.c: Fix Build
+
+    Some compilers insist on using a number for a guint16 return type,
+    and does
+    not like using NULL in place of 0, so fix this.
+
+ pango/pango-renderer.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit a092a2997071e7f39660bbee3688869ce45b12fe
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Tue Sep 1 12:31:43 2015 -0400
+
+    Give testcases distinct names
+
+    GLib enforces this now.
+
+ tests/testiter.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit eb38f7e799f9aee9a3150291cae7f90007f606af
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Tue Sep 1 12:24:51 2015 -0400
+
+    1.37.4
+
+ configure.ac | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 991e280c9affc6e5da8b35888b7ae74d2b0d0088
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Tue Sep 1 12:21:23 2015 -0400
+
+    Only use finer harfbuzz clusters when they work
+
+    Harfbuzz 1.0.2 had errors in this area that gave us crashes
+    in the testsuite (testiter). Therefore, only use this feature with
+    Harfbuzz 1.0.3 or newer.
+
+ pango/pangofc-shape.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 3f58b49182a117caadc0fcddeff39ce29ca8d397
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Tue Sep 1 16:40:34 2015 +0100
+
+    Protect against bugs in HarfBuzz's (non-)monotone cluster values
+
+    "Fixes" https://bugzilla.gnome.org/show_bug.cgi?id=541608
+
+    Real fix went to HarfBuzz.
+
+ pango/pango-glyph-item.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+commit ec00fb5d78cd9ba996859db924119ffaa54938e0
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Tue Sep 1 13:33:57 2015 +0100
+
+    [test] Use latin-only font
+
+    Exposes an assertion failure:
+    https://bugzilla.gnome.org/show_bug.cgi?id=541608
+
+ tests/testiter.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+commit 40a96ff4cb86ebcd7a9025ed73b5c754a9d314c8
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Tue Sep 1 13:31:32 2015 +0100
+
+    Add assertion to glyph-item-iter
+
+    Part of https://bugzilla.gnome.org/show_bug.cgi?id=541608
+
+ pango/pango-glyph-item.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+commit d1326d373687d034467d1d1d547f2977b967d349
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Mon Aug 31 16:53:58 2015 -0400
+
+    Updates for 3.17.4
+
+ NEWS | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+commit eee80865680a946a38389f07a2fb0f3854394a8b
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Sat Aug 15 12:34:09 2015 -0400
+
+    Add more markup tests
+
+ tests/markups/fail-5.expected | 1 +
+ tests/markups/fail-5.markup   | 1 +
+ 2 files changed, 2 insertions(+)
+
+commit aa12788659f2a65314bdcc005d50105a5f4a63cd
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Fri Aug 21 16:27:31 2015 +0100
+
+    Improve justify_cluster() some more
+
+    Much better now.
+
+    Now I see issues in justify_words() again :(.
+
+ pango/pango-layout.c | 55
+ ++++++++++++++++++++++++++++++++++++++--------------
+ 1 file changed, 40 insertions(+), 15 deletions(-)
+
+commit c7bca3b1431e50e8f01e4d4f952b38dee86ec0fd
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Fri Aug 21 15:20:02 2015 +0100
+
+    Fix bug in previous commit
+
+ pango/pango-layout.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 79c7874ad58d32c2b265c725d5e7e81504046595
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Fri Aug 21 14:36:20 2015 +0100
+
+    Fix justify_clusters()
+
+    Was totally b0rked.  Much better now.  Should be good enough...
+
+ pango/pango-layout.c | 82
+ ++++++++++++++++++++++++++++------------------------
+ 1 file changed, 45 insertions(+), 37 deletions(-)
+
+commit d0d140b0180bfe2c2278f34f5a649a2e7d9f4fa2
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Fri Aug 21 13:53:34 2015 +0100
+
+    Remove remaining uses of g_utf8_strlen()
+
+ pango/break-thai.c          | 7 ++++---
+ pango/pangocoretext-shape.c | 2 +-
+ pango/pangowin32-shape.c    | 3 ++-
+ 3 files changed, 7 insertions(+), 5 deletions(-)
+
+commit bf500a961f0cbdb1f5b3ac9bb71080e7613df23d
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Fri Aug 21 13:35:32 2015 +0100
+
+    Fix offset calculation for justify
+
+    Bug 753772 - Justify option inserts spaces in wrong positions
+    https://bugzilla.gnome.org/show_bug.cgi?id=753772
+
+    Went unnoticed for 8 years...
+
+ pango/pango-layout.c | 34 ++++++++++++++++++++++++++++------
+ 1 file changed, 28 insertions(+), 6 deletions(-)
+
+commit cc3df43e9703cc4765358ae4e9e67c8199d5c37c
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Fri Aug 21 13:31:45 2015 +0100
+
+    Fix crasher in justify code
+
+    Ouch!
+
+ pango/pango-layout.c | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
+
+commit 702e7cf1a336fed40bb2d89acc3c02b097c8bf84
+Author: Khaled Hosny <khaledhosny@eglug.org>
+Date:   Tue Aug 4 04:23:15 2015 +0200
+
+    Port two minor bidi bug fixes from FriBidi 0.19.6
+
+ pango/mini-fribidi/fribidi.c | 18 ++++++++++++------
+ 1 file changed, 12 insertions(+), 6 deletions(-)
+
+commit 927585ea24482ec880fc8e1dcb63eade313f6d46
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Tue Aug 18 19:55:13 2015 +0100
+
+    Serialize call to th_brk()
+
+    Libthai is not threadsafe (thought it probably can easily be made
+    to be).
+    As such, add mutex around th_brk() calls.
+
+    test-pangocairo-threads passes again.
+
+ pango/break-thai.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+commit f5c12f8d8f39f405426e6cef153f91cdfe409710
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Tue Aug 18 19:34:08 2015 +0100
+
+    [test] Add Thai and Arabic to test-pangocairo-threads
+
+    Apparently libthai is not threadsafe.  This crashes
+    right away if libthai is enabled...
+
+ tests/test-pangocairo-threads.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 40e1a245ee95781a4d8eb41ad246a4a733dbfab5
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Tue Aug 18 15:56:14 2015 +0100
+
+    Bug 753167 - Pango script crashes
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=753167
+
+ pango/pangoft2-fontmap.c | 17 +++++++----------
+ 1 file changed, 7 insertions(+), 10 deletions(-)
+
+commit 3ea523f9da45c68eeab29d2d98f6a1972d0f2682
+Author: Khaled Hosny <khaledhosny@eglug.org>
+Date:   Tue Aug 18 16:21:26 2015 +0200
+
+    Use finer HarfBuzz cluster level
+
+    So that we can set attributes (e.g. colors) to the marks and their
+    bases
+    indecently.
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=541608
+
+ pango/pangofc-shape.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+commit 25976af86f2db722eb75c8d3015888cd5cad2efb
+Author: Khaled Hosny <khaledhosny@eglug.org>
+Date:   Tue Aug 18 16:04:16 2015 +0200
+
+    Use grapheme boundaries in justify_clusters()
+
+    Instead of relying on the fact that marks have the same cluster number
+    as their bases, which will change in the next commit.
+
+ pango/pango-layout.c | 77
+ +++++++++++++++++++++++++++++++---------------------
+ 1 file changed, 46 insertions(+), 31 deletions(-)
+
+commit 8971ffd1e953341e18b8303e787a16263d68c50b
+Author: Chun-wei Fan <fanchunwei@src.gnome.org>
+Date:   Mon Aug 17 19:05:30 2015 +0800
+
+    MSVC Introspection Builds: Remove GCC Requirement
+
+    G-I has been updated to not require a Windows GCC installation
+    anymore to generate the .gir files, so update the NMake Makefiles
+    that are used for this purpose.
+
+ build/introspection-msvc.mak       | 16 +---------------
+ build/pango-introspection-msvc.mak |  2 +-
+ 2 files changed, 2 insertions(+), 16 deletions(-)
+
+commit d8e5525d84a441c66d4b1fbf06d5f1a3947150d6
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Fri Aug 14 23:24:59 2015 -0400
+
+    fix distcheck
+
+ pango/pango.def | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+commit 402beb208c09a789f58743c6233a09a8d5942a3c
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Fri Aug 14 23:20:19 2015 -0400
+
+    1.37.3
+
+ NEWS         | 6 ++++++
+ configure.ac | 2 +-
+ 2 files changed, 7 insertions(+), 1 deletion(-)
+
+commit a2095b02d71a62a32e39fd4ca3c5c92457cdead7
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Fri Aug 14 23:18:25 2015 -0400
+
+    Add a testcase for font-features in markup
+
+ tests/markup-parse.c           | 3 +++
+ tests/markups/valid-9.expected | 8 ++++++++
+ tests/markups/valid-9.markup   | 1 +
+ 3 files changed, 12 insertions(+)
+
+commit 9a2b0f07225aaf69b33494ce7de62c814cff6b59
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Fri Aug 14 22:43:36 2015 -0400
+
+    Add some tests for markup with alpha
+
+ tests/markup-parse.c           |  6 ++++++
+ tests/markups/fail-2.expected  |  1 +
+ tests/markups/fail-2.markup    |  1 +
+ tests/markups/fail-3.expected  |  1 +
+ tests/markups/fail-3.markup    |  1 +
+ tests/markups/fail-4.expected  |  1 +
+ tests/markups/fail-4.markup    |  1 +
+ tests/markups/valid-5.expected | 20 ++++++++++++++++++++
+ tests/markups/valid-5.markup   |  4 ++++
+ tests/markups/valid-6.expected | 23 +++++++++++++++++++++++
+ tests/markups/valid-6.markup   |  4 ++++
+ tests/markups/valid-7.expected | 12 ++++++++++++
+ tests/markups/valid-7.markup   |  2 ++
+ tests/markups/valid-8.expected | 24 ++++++++++++++++++++++++
+ tests/markups/valid-8.markup   |  4 ++++
+ 15 files changed, 105 insertions(+)
+
+commit 194f4668b32a86993d969bccfed59186c08f63dd
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Fri Aug 14 22:51:46 2015 -0400
+
+    Allow rgba colors in markup
+
+    For foreground and background colors, allow #rrggbbaa to specify
+    a color with alpha. This will be returned as two attributes, for
+    color and alpha. underline_color and strikethrough_color are still
+    limited to #rrggbb, with no alpha component.
+
+ docs/pango_markup.sgml | 12 ++++---
+ pango/pango-color.c    | 98
+ ++++++++++++++++++++++++++++++++++++--------------
+ pango/pango-markup.c   | 22 +++++++++---
+ 3 files changed, 97 insertions(+), 35 deletions(-)
+
+commit c9809629caf8ceda767b81b1aacfb045e3514119
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Tue Aug 11 15:49:27 2015 -0400
+
+    Support alpha in markup
+
+    Support alpha and background_alpha attributes on span elements.
+    The value can either be a plain integer between 1 and 65536 or
+    a percentage like 50%.
+
+ docs/pango_markup.sgml | 20 +++++++++++-
+ pango/pango-markup.c   | 88
+ ++++++++++++++++++++++++++++++++++++++++++++++++--
+ 2 files changed, 104 insertions(+), 4 deletions(-)
+
+commit 9f44c20b3ca62f0de2cc9adc64c14109174c3a8a
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Tue Aug 11 15:39:22 2015 -0400
+
+    Add alpha support to PangoCairoRenderer
+
+    Make PangoCairoRenderer use cairo_set_source_rgba() to apply
+    colors with alpha. Note that this means we are only using the
+    alpha if the corresponding color has been set.
+
+ pango/pangocairo-render.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
+
+commit 884db27321c7eb381fbec23fa445cc481bf546b7
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Tue Aug 11 15:35:21 2015 -0400
+
+    Add alpha support to PangoRenderer
+
+    Add pango_renderer_get/set_alpha to allow associating alpha
+    values with the various colors. The alpha is stored as a value
+    between 0 and 65536, with 0 meaning 'unset'.
+
+ docs/pango-sections.txt |  2 ++
+ pango/pango-renderer.c  | 70
+ +++++++++++++++++++++++++++++++++++++++++++++++++
+ pango/pango-renderer.h  |  6 +++++
+ 3 files changed, 78 insertions(+)
+
+commit 5dd3585270746fd88b267d06ce20eb9c19cab5e5
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Tue Aug 11 15:48:25 2015 -0400
+
+    Add attribute types for fg and bg alpha
+
+    Add attributes types for foreground and background alpha.
+
+ docs/pango-sections.txt  |  2 ++
+ pango/pango-attributes.c | 48
+ ++++++++++++++++++++++++++++++++++++++++++++++++
+ pango/pango-attributes.h |  8 +++++++-
+ 3 files changed, 57 insertions(+), 1 deletion(-)
+
+commit 6489105c20bdebc720c223894d947fd5e3cebe49
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Tue Aug 11 20:30:27 2015 -0400
+
+    Document PANGO_ATTR_FONT_FEATURES
+
+ pango/pango-attributes.h | 1 +
+ 1 file changed, 1 insertion(+)
+
+commit 3463c0d118da131b01179fc432e04a4400fc767b
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Sat Aug 8 16:12:24 2015 +0200
+
+    Fix pango_glyph_item_iter_prev() around last cluster
+
+    It was combining the last two clusters.  Ouch!
+
+    Test added already.  Passes now.
+
+ pango/pango-glyph-item.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+commit acbd5a6d4d92715263b3e99113caa7ac7a002776
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Sat Aug 8 16:10:36 2015 +0200
+
+    Add test for glyphitem-iter
+
+    Fails right now.  Fix coming.
+
+ tests/testiter.c | 52
+ ++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 52 insertions(+)
+
+commit e8e825e5ac38384687635e86c2389a0790a3349e
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Sat Aug 8 15:01:27 2015 +0200
+
+    Minor
+
+ tests/testiter.c | 11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
+
+commit 7aa0aa0aabaf08e2500b7e267010a42d36918ce9
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Thu Jul 30 13:31:06 2015 -0400
+
+    Document font_features support in markup
+
+ docs/pango_markup.sgml | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+commit 868f18257ff3ee6e3271cce50d4aed87fa7a972e
+Author: Rico Tzschichholz <ricotz@ubuntu.com>
+Date:   Wed Jul 22 11:27:44 2015 +0200
+
+    pango: Add missing fontconfig linker flags
+
+ pango/Makefile.am | 2 ++
+ 1 file changed, 2 insertions(+)
+
+commit 8aa675544df0552345175d02e00261deb2e6dcaa
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Mon Jul 20 23:01:08 2015 -0400
+
+    1.37.2
+
+ NEWS         | 5 +++++
+ configure.ac | 2 +-
+ 2 files changed, 6 insertions(+), 1 deletion(-)
+
+commit ee36b26eddcbbc169660de188b4804e21194c530
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Fri Jul 17 20:36:47 2015 -0400
+
+    Silence a few coverity warnings
+
+    coverity says: Using uninitialized value "index2". It didn't
+    notice that the only time we can reach the index = index2
+    assignment with index2 still uninitialized is when we are
+    never going to look at index again.
+
+ tests/test-layout.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+commit 65214f2c8a7e968ed2bc6d9cc66fecbc5de7c0f5
+Author: Chun-wei Fan <fanchunwei@src.gnome.org>
+Date:   Mon Jul 13 17:19:24 2015 +0800
+
+    README.win32: Update Information for Builds
+
+    Since module functions are now built into the main Pango DLLs,
+    indicate so in README.win32, although it does not make any difference
+    in the Visual Studio builds on the surface, as modules are already
+    built into the main DLLs for such builds.
+
+    Also update the information on the Visual Studio versions supported
+    by the project files.
+
+ README.win32 | 15 ++++++---------
+ 1 file changed, 6 insertions(+), 9 deletions(-)
+
+commit d3fd4b7b5ea6c8fa56aa36235db76a6eef7ec0a6
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Fri Jun 26 11:41:34 2015 -0700
+
+    Don't use hb_glib_get_unicode_funcs()
+
+    HarfBuzz buffer comes with a properly set up Unicode funcs
+    these days.  So, trust it.
+
+ pango/pangofc-shape.c | 15 ++-------------
+ 1 file changed, 2 insertions(+), 13 deletions(-)
+
+commit 248e9f40cb756bda098ed778ea30b52468a7b3e0
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Mon Jun 22 08:18:22 2015 -0400
+
+    1.37.1
+
+ NEWS | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+commit 684ad511842194ce6428ea26f6eeab0df9f6c78c
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Mon Jun 22 09:00:54 2015 -0400
+
+    Add new symbol to .def
+
+ pango/pango.def | 1 +
+ 1 file changed, 1 insertion(+)
+
+commit 747fbdb28b7f10265ff1bbbbc456163a3d2506b1
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Mon Jun 22 08:13:33 2015 -0400
+
+    Minor documentation update
+
+ pango/fonts.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 9732a98819e83ea3b9d20c06181a946711d2f54d
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Sat Jun 20 17:57:47 2015 -0700
+
+    Add test-feature-tag.markup
+
+ pango-view/test-feature-tag.markup | 130
+ +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 130 insertions(+)
+
+commit 2d40f62bbcfe19fa1714feb24dd1359847ef19e6
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Fri Jun 19 09:32:50 2015 -0400
+
+    Bump version to 1.37.1
+
+    This is so I can require a bleeding-edge pango in GTK+ for
+    a font feature demo.
+
+ configure.ac | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit ba53f29f7c2c105becb898d6417a4c160b7fc1e5
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Thu Jun 18 11:49:40 2015 -0700
+
+    Bug 738505 - Add fontfeatures support in PangoAttributes and markup
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=738505
+
+    Patch from Matthias Clasen, based on early patch from Akira TAGOH.
+
+    There's room for improvement in how this is done, but it works now
+    for simple cases, which is what most people will be using it for.
+
+    Finally!
+
+ docs/pango-sections.txt  |  2 ++
+ pango-view/Makefile.am   |  1 +
+ pango/pango-attributes.c | 51
+ +++++++++++++++++++++++++++++++++++++-----------
+ pango/pango-attributes.h | 21 +++++++++++++++++++-
+ pango/pango-layout.c     |  5 +++++
+ pango/pango-markup.c     | 12 ++++++++++--
+ pango/pangofc-shape.c    | 39 ++++++++++++++++++++++++++++++++++++
+ 7 files changed, 117 insertions(+), 14 deletions(-)
+
+commit dfe7ec760e08485520668ed1e2585c85545fc013
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Sun Jun 7 11:08:13 2015 -0700
+
+    Bug 750463 - hexboxes broken for some combining characters
+
+    Round lsb.
+
+ pango/pangocairo-render.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
+
+commit b66375a1cce0f33a565ec3c4a3dc83bbf6ceb640
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Fri Jun 5 14:33:54 2015 -0700
+
+    Bug 750463 - hexboxes broken for some combining characters
+
+ pango/pangocairo-render.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+commit 5e5b6f9388a12803a94fc90fc01c53bca51315ac
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Thu Jun 4 11:40:31 2015 -0700
+
+    Bug 750383 - Issue in ellipsization when line space is mentioned
+
+ pango/pango-layout.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+commit 5ff42dc22274177321ccc698d9388460a2628d2a
+Author: Kristian Rietveld <kris@loopnest.org>
+Date:   Fri May 29 22:12:27 2015 +0200
+
+    coretext: handle locale set through environment variables
+
+ pango/pango-language.c | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
+
+commit ea326fdf0d2c12ef0d4c58882b795caa3f0050bc
+Author: Kristian Rietveld <kris@loopnest.org>
+Date:   Fri May 29 21:33:21 2015 +0200
+
+    coretext: guard for unset language
+
+    Fixes bug #750017
+
+ pango/pangocoretext-fontmap.c | 28 ++++++++++++++++++----------
+ 1 file changed, 18 insertions(+), 10 deletions(-)
+
+commit 01a609cd7b0fbd4b01c73f5e737a4722e65e5969
+Author: Javier Jardón <jjardon@gnome.org>
+Date:   Wed May 27 18:37:05 2015 +0100
+
+    1.37.0
+
+ NEWS | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+
+commit 8f7d44b499a1ff6165fa1386e4dd1fbd5a7c726f
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Sun May 24 21:33:29 2015 -0400
+
+    Fix an error in font weight conversion
+
+    The fallback code for conversion from fontconfig font weights
+    to PangoWeight was mixing up PANGO_WEIGHT_SEMILIGHT and
+    PANGO_WEIGHT_LIGHT.
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=749635
+
+ pango/pangofc-fontmap.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit ef54df4895e1dfebbaa95c92114e8258dc18eda2
+Author: Khaled Hosny <khaledhosny@eglug.org>
+Date:   Sun May 17 12:28:30 2015 +0200
+
+    Fix other used of “Deprecated: 1.38”
+
+    Follow-up of the previous commit.
+
+ pango/modules.c       |  8 ++++----
+ pango/pango-engine.c  |  6 +++---
+ pango/pango-engine.h  | 34 +++++++++++++++++-----------------
+ pango/pango-fontmap.c |  2 +-
+ pango/pango-modules.h |  2 +-
+ 5 files changed, 26 insertions(+), 26 deletions(-)
+
+commit c2f0c7b73942721d1ab04a223ed0d75178973f7d
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Sat May 16 17:07:27 2015 -0400
+
+    Update deprecation versions
+
+    The common practice is to name the first stable version in which
+    a function is deprecated. Following that here and mark things
+    as deprecated in 1.38.
+
+ pango/pango-utils.c | 24 ++++++++++++------------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
+
+commit fafc7915334be2dc7eb3952ea0598865a2246eff
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Mon May 11 18:09:32 2015 -0700
+
+    Overflow, etc, fixes for pangoft2
+
+    Ugh.  With 64-bit machines, weird things were happening inside
+    MIN/MAX()
+    when one of the arguments was unsigned...
+
+ pango/pangoft2-render.c | 22 +++++++++++-----------
+ 1 file changed, 11 insertions(+), 11 deletions(-)
+
+commit 061633100aa120262db2acf9486bb590b2e0862e
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Mon May 11 17:16:40 2015 -0700
+
+    Fix PangoFc with non-identity scale matrix (again!)
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=700592
+
+ examples/cairosimple.c | 31 +++++++++++-----
+ pango/pangofc-shape.c  | 98
+ +++++++++++++++++++++++++++++++++++---------------
+ 2 files changed, 91 insertions(+), 38 deletions(-)
+
+commit f79b50df9d6116759cca5b043692e8d67e3c0984
+Author: Khaled Hosny <khaledhosny@eglug.org>
+Date:   Mon Apr 13 23:40:38 2015 +0200
+
+    Deprecate much of pango-utils.h
+
+    These all are general utility functions that do not belong to
+    Pango’s
+    public interface. Most of them are unused internally now, the few ones
+    that are still used should be made private at some point.
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=682840
+
+ pango/pango-utils.c | 16 ++++++++++++++++
+ pango/pango-utils.h |  8 ++++++++
+ 2 files changed, 24 insertions(+)
+
+commit 733f1edc6f3a5e01fc9b0e661fcb61f288d800af
+Author: Руслан Ижбулатов <lrn1986@gmail.com>
+Date:   Fri May 8 22:55:39 2015 +0000
+
+    Give -I$(top_builddir) to documentation
+
+    This allows the docscanner to find pango/pango-enum-types.h
+
+ docs/Makefile.am | 1 +
+ 1 file changed, 1 insertion(+)
+
+commit bc83ef791d091d91133b4d9c59fb5c758ce7aec2
+Author: Kristian Rietveld <kris@loopnest.org>
+Date:   Wed May 6 20:22:31 2015 +0200
+
+    coretext: ensure weight is always initialized
+
+ pango/pangocoretext-fontmap.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 61dd7da69458e8443343eb71d7336b458f834700
+Author: Kristian Rietveld <kris@loopnest.org>
+Date:   Sun Apr 26 23:15:19 2015 +0200
+
+    coretext: use public function to obtain cascade list if available
+
+    We use a compile-time check: if compiling for platforms 10.8 or
+    higher,
+    use the public function, otherwise use the undocumented function.
+
+    Fixes bug 737813.
+
+ pango/pangocoretext-fontmap.c | 23 +++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
+
+commit 5b3103d6718af6263a8aa4610e7ac56221399215
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Tue May 5 17:27:23 2015 -0700
+
+    Minor doc fix
+
+ pango/pango-font.h       | 1 +
+ pango/pango-glyph-item.h | 2 ++
+ pango/pango-glyph.h      | 5 +++++
+ pango/pango-item.h       | 4 ++++
+ 4 files changed, 12 insertions(+)
+
+commit c923660d8f58ccfa43cf158a42460d4efe566de2
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Tue May 5 17:27:23 2015 -0700
+
+    Minor doc fix
+
+ pango/pango-attributes.c | 2 +-
+ pango/pango-layout.h     | 3 +++
+ pango/pango-matrix.c     | 2 +-
+ pango/pango-ot-ruleset.c | 2 +-
+ 4 files changed, 6 insertions(+), 3 deletions(-)
+
+commit a087f683c22f7c7e79a6300e2e626a9da191fcf8
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Tue May 5 17:25:36 2015 -0700
+
+    Fix up api index sections
+
+ docs/pango-docs.sgml | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
+
+commit d0ae2a4b74903331e8b79968faf2af95e012ef65
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Tue May 5 17:17:04 2015 -0700
+
+    Fix a few warnings
+
+ pango/pango-gravity.c | 1 -
+ pango/pango-layout.c  | 2 +-
+ pango/pango-utils.c   | 2 +-
+ pango/pangofc-shape.c | 2 --
+ 4 files changed, 2 insertions(+), 5 deletions(-)
+
+commit 9117a1c6c7717287f2f8d76c5926bd2e5551c52e
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Tue May 5 15:01:53 2015 -0700
+
+    Fix leading vs trailing grapheme edge docs
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=748822
+    https://bugzilla.gnome.org/show_bug.cgi?id=744836
+
+ pango/pango-layout.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+commit 762afd93b3be04ae475de3cfd433a2a1b70dac1a
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Mon May 4 23:46:15 2015 -0700
+
+    [test] Include header
+
+ tests/test-common.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+commit 77a8ddf97931e35d43db37fb80e3be55de0e30c8
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Mon May 4 23:44:27 2015 -0700
+
+    Fix build with picky ld
+
+ pango-view/Makefile.am | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+commit dfcc7424a4eed6cb3e0be6bdf7171725a81465b2
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Mon May 4 22:52:21 2015 -0400
+
+    Fix a copy-paste error
+
+ pango/pangofc-fontmap.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 62aa445db95013cfc46202036e4410475d843faa
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Fri May 1 18:06:32 2015 -0400
+
+    Minor
+
+ pango/pango-script.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit b3474e68f0d823cee69239fb10c93320894e0a5b
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Fri May 1 15:16:42 2015 -0400
+
+    Bug 748767 - Add pango_fc_font_map_config_changed()
+
+ docs/pango-sections.txt |  1 +
+ pango/pangofc-fontmap.c | 22 +++++++++++++++++++++-
+ pango/pangofc-fontmap.h |  5 ++++-
+ pango/pangoft2.def      |  1 +
+ 4 files changed, 27 insertions(+), 2 deletions(-)
+
+commit d650fc32b145f55da37fe27edbda1624ab7ac437
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Fri May 1 15:07:48 2015 -0400
+
+    Bug 748768 - pango_fc_font_map_set_config() should clear caches
+
+ pango/pangofc-fontmap.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+commit 66d0aaa967043822b5d1119ab92ce6137a1ceabb
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Fri May 1 15:01:05 2015 -0400
+
+    Rename pango_fc_font_map_[sg]et_fc_config to
+    pango_fc_font_map_[sg]et_config
+
+    Do it before it's too late!
+
+ docs/pango-sections.txt |  4 ++--
+ pango/pangofc-fontmap.c | 32 ++++++++++++++++----------------
+ pango/pangofc-fontmap.h |  4 ++--
+ pango/pangoft2.c        |  2 +-
+ pango/pangoft2.def      |  4 ++--
+ 5 files changed, 23 insertions(+), 23 deletions(-)
+
+commit 4ad91ff6754f99d8c4f3ca1e09e2cc3005edb857
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Thu Apr 30 18:00:14 2015 -0400
+
+    Bug 547671 - Add pango_fc_font_map_[gs]et_fc_config()
+
+ docs/pango-sections.txt |  2 ++
+ pango/pangofc-fontmap.c | 73
+ +++++++++++++++++++++++++++++++++++++++++++++----
+ pango/pangofc-fontmap.h |  6 ++++
+ pango/pangoft2.c        |  2 +-
+ pango/pangoft2.def      |  2 ++
+ 5 files changed, 79 insertions(+), 6 deletions(-)
+
+commit d4e0fb667815ad80bff60491a2125321ee88d1b7
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Thu Apr 30 17:23:38 2015 -0400
+
+    Bug 602257 - Make pango_matrix_get_font_scale_factors() public
+
+ docs/pango-docs.sgml    | 10 ++++++-
+ docs/pango-sections.txt |  1 +
+ pango/pango-matrix.c    | 69
+ ++++++++++++++++++++++++++++++++-----------------
+ pango/pango-matrix.h    |  2 ++
+ pango/pango.def         |  1 +
+ pango/pangofc-private.h | 42 ------------------------------
+ 6 files changed, 58 insertions(+), 67 deletions(-)
+
+commit c089b1f7b0e3006b88c1a76784dcb4d8a2da7547
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Thu Apr 30 17:05:12 2015 -0400
+
+    Bug 548490 - regenerate script-lang-table against to-be-released
+    fontconfig
+
+ pango/pango-script-lang-table.h | 17 +++++++++--------
+ 1 file changed, 9 insertions(+), 8 deletions(-)
+
+commit 2982e68f45cf78e7722e3dd708e45e229e999724
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Thu Apr 30 17:04:08 2015 -0400
+
+    Fixup tools/
+
+ tools/Makefile.am | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit 6406594cae082f5295d5fe7b9529d06fc61f9899
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Thu Apr 30 12:42:02 2015 -0400
+
+    Minor
+
+ configure.ac      | 3 ---
+ pango/Makefile.am | 2 ++
+ 2 files changed, 2 insertions(+), 3 deletions(-)
+
+commit be8941dc47404534a561ea32fc968df6c44d341c
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Thu Apr 30 12:31:56 2015 -0400
+
+    Bug 328141 - Use Requires.private in pkg-config files when appropriate
+
+    Clean up our shi^W"stuff".  Please confirm I didn't break everything.
+
+ pango-uninstalled.pc.in      | 3 ++-
+ pangocairo-uninstalled.pc.in | 3 ++-
+ pangoft2-uninstalled.pc.in   | 3 ++-
+ pangowin32-uninstalled.pc.in | 3 ++-
+ pangowin32.pc.in             | 3 ++-
+ 5 files changed, 10 insertions(+), 5 deletions(-)
+
+commit 9f00b5319325839ccf377043feaba33635a67d7a
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Thu Apr 30 11:58:54 2015 -0400
+
+    Bug 695163 - pangocairo hexboxes don't take actual font size into
+    account
+
+ pango/pangocairo-font.c | 17 ++++++++++++-----
+ 1 file changed, 12 insertions(+), 5 deletions(-)
+
+commit 96f1f8c27c696cccc963988ed4a3b3c13395133d
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Thu Apr 30 10:59:28 2015 -0400
+
+    Bug 694697 - [PATCH] cosmetic fix for configure.ac
+
+    Fixes https://bugzilla.gnome.org/show_bug.cgi?id=694697
+
+ configure.ac | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
+
+commit 074296f966aacfe5864ea9df8ee527ef809a9f2e
+Author: Simon McVittie <simon.mcvittie@collabora.co.uk>
+Date:   Mon Apr 20 14:54:28 2015 +0100
+
+    Makefile-newvs: some .vcxproj.filters files are in builddir, some
+    in srcdir
+
+    Without this change, out-of-tree distcheck doesn't get very far.
+
+    Similarly, allow *.vcxproj, *.props to be in either the builddir or
+    the srcdir.
+
+    Finally, since I'm touching these lines anyway, eliminate some
+    useless uses of cat: "cat x | sed 's/foo/bar/' > y" is
+    equivalent to "sed 's/foo/bar/' < x > y".
+
+    Bug: https://bugzilla.gnome.org/show_bug.cgi?id=748176
+    Reviewed-by: Chun-wei Fan <fanchunwei@src.gnome.org>
+
+ build/Makefile-newvs.am | 20 +++++++++++++++-----
+ 1 file changed, 15 insertions(+), 5 deletions(-)
+
+commit f148ea6ecd22f56c0801bf187cdbca2cf1d2d8fe
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Thu Apr 23 14:23:32 2015 -0700
+
+    Hide pango-view --pangorc
+
+ pango-view/viewer-render.c | 4 ++--
+ pango-view/viewer-render.h | 1 -
+ 2 files changed, 2 insertions(+), 3 deletions(-)
+
+commit 1eb56a29d555771b4c3fdf9c10e7fa9766be8709
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Wed Apr 22 15:45:38 2015 -0700
+
+    Remove some old build cruft
+
+ configure.ac      | 57
+ +++++++++----------------------------------------------
+ pango.pc.in       |  3 ++-
+ pango/Makefile.am |  8 --------
+ pangocairo.pc.in  |  3 ++-
+ 4 files changed, 13 insertions(+), 58 deletions(-)
+
+commit 27204694f78dd8aebce9b3d2a52db81a21ff081e
+Author: Chun-wei Fan <fanchunwei@src.gnome.org>
+Date:   Fri Apr 17 14:03:11 2015 +0800
+
+    build/Makefile-newvs.am: Clean Up A Bit
+
+    We can use $< for generating the MSVC 2012/2013 Solution files,
+    so use it.
+
+ build/Makefile-newvs.am | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 76011eca53871a8f0fdad81fa848fc1768f8e578
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Tue Apr 14 13:33:17 2015 -0700
+
+    Revert "Use UTF-8 pragma for MSVC"
+
+    This reverts commit c8b1d5bea67155ae51cb9a145d43df79a52faeb4.
+
+    See discussion:
+    https://bugzilla.gnome.org/show_bug.cgi?id=747772
+
+ pango/break.c                       | 4 ----
+ pango/pango-language-sample-table.h | 5 -----
+ 2 files changed, 9 deletions(-)
+
+commit 9a3c401c704e6be92a980f7f893b814c37b7ba7a
+Author: Khaled Hosny <khaledhosny@eglug.org>
+Date:   Mon Apr 13 23:30:11 2015 +0200
+
+    Add missing G_DEPRECATED annotation
+
+ pango/pango-utils.h | 2 ++
+ 1 file changed, 2 insertions(+)
+
+commit 487f0254ab31a71a79ff818e8d0afc85aeff7b9f
+Author: Khaled Hosny <khaledhosny@eglug.org>
+Date:   Mon Apr 13 23:08:43 2015 +0200
+
+    Minor
+
+ pango/pango-utils.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit d2dda8d6ace0cbacd2c39ba49eff9967f12771d1
+Author: Khaled Hosny <khaledhosny@eglug.org>
+Date:   Mon Apr 13 21:54:45 2015 +0200
+
+    Deprecate noop utility functions
+
+    After the removal of modules and configuration files, both
+    pango_get_lib_subdirectory and pango_get_sysconf_subdirectory are
+    meaningless now. This patch deprecates them and removes the Windows
+    specific behaviour as it prevents statically compiling Pango under
+    Windows.
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=682840
+
+ pango/pango-utils.c | 57
+ ++++++++---------------------------------------------
+ 1 file changed, 8 insertions(+), 49 deletions(-)
+
+commit c8b1d5bea67155ae51cb9a145d43df79a52faeb4
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Mon Apr 13 12:25:35 2015 -0700
+
+    Use UTF-8 pragma for MSVC
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=747772
+
+ pango/break.c                       | 4 ++++
+ pango/pango-language-sample-table.h | 5 +++++
+ 2 files changed, 9 insertions(+)
+
+commit b110042886198dc51b82d1f9d4c957121ee336eb
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Fri Apr 10 10:24:55 2015 -0700
+
+    Fix warnings if font is not found
+
+ pango/fonts.c        | 3 ++-
+ pango/pango-engine.c | 4 ++--
+ 2 files changed, 4 insertions(+), 3 deletions(-)
+
+commit 28df77e08b1f9c9ad27ba719465c2ff230516df0
+Author: Chun-wei Fan <fanchunwei@src.gnome.org>
+Date:   Fri Apr 10 10:08:17 2015 +0800
+
+    build/Makefile.msvcproj: Don't Use realpath(1)
+
+    Apaprently there are many incompatible realpath(1) implementations out
+    there, so things like --relative-to can't be assured to work
+    everywhere,
+    such as on Ubuntu.
+
+    Instead, simply use the subst feature of automake to fulfil the same
+    purpose, which is like what the rest of this file does, and follows
+    the
+    pattern of the introspection makefile, which this is modelled on.
+
+    Also update the simple tutorial and clean up a bit, changing
+    $(empty) to
+    <nothing> as Behdad pointed out.
+
+    This is also checked with 'make -j8 distcheck'.
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=735039
+
+ build/Makefile.msvcproj | 14 +++++---------
+ 1 file changed, 5 insertions(+), 9 deletions(-)
+
+commit 0e0a3a83bfd4d57dced9e75383125d636e49adaa
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Thu Apr 9 15:06:06 2015 -0700
+
+    pango-view: accept comma as well as space as --margin separator
+
+ pango-view/viewer-render.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit df05ec0d05062a911efc929b1ea32ef8d526d0e2
+Author: Chun-wei Fan <fanchunwei@src.gnome.org>
+Date:   Thu Apr 9 18:36:49 2015 +0800
+
+    Revert "build/Makefile.msvcproj: Don't Use realpath(1)"
+
+    This reverts commit aa7a9e08d33ac01aa43460a064e086b099f71642.
+
+    Sorry, I accidently committed this in master, when I am supposed
+    to commit
+    in my own local branch.
+
+ build/Makefile.msvcproj | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
+
+commit aa7a9e08d33ac01aa43460a064e086b099f71642
+Author: Chun-wei Fan <fanchunwei@src.gnome.org>
+Date:   Thu Apr 9 18:35:42 2015 +0800
+
+    build/Makefile.msvcproj: Don't Use realpath(1)
+
+    Apaprently there are many incompatible realpath(1) implementations out
+    there, so things like --relative-to can't be assured to work
+    everywhere,
+    such as on Ubuntu.
+
+    Instead, simply use the subst feature of automake to fulfil the same
+    purpose, which is like what the rest of this file does, and follows
+    the
+    pattern of the introspection makefile, which this is modelled on.
+
+    This is also checked with 'make -j8 distcheck'
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=735039
+
+ build/Makefile.msvcproj | 11 ++++-------
+ 1 file changed, 4 insertions(+), 7 deletions(-)
+
+commit 991d74a9947c050e12ca4f8509a05ddee6d0f3df
+Author: Chun-wei Fan <fanchunwei@src.gnome.org>
+Date:   Thu Apr 9 18:30:15 2015 +0800
+
+    MSVC Builds: Cosmetics
+
+    Since we are no longer using the interim Makefile-msvcproj.am way to
+    generate the complete MSVC build files, change all PangoApiVersion to
+    ApiVersion, to be consistent with the other MSVC build files in
+    the GTK+/
+    Clutter stack.
+
+ build/win32/vs10/pango-install-bin.props    | 10 +++++-----
+ build/win32/vs10/pango-install.propsin      | 12 ++++++------
+ build/win32/vs10/pango-version-paths.props  |  8 ++++----
+ build/win32/vs10/pango.vcxprojin            |  8 ++++----
+ build/win32/vs10/pangocairo.vcxprojin       | 22 +++++++++++-----------
+ build/win32/vs10/pangoft2.vcxprojin         |  8 ++++----
+ build/win32/vs10/pangowin32.vcxprojin       |  8 ++++----
+ build/win32/vs9/pango-install-bin.vsprops   | 10 +++++-----
+ build/win32/vs9/pango-install.vspropsin     | 12 ++++++------
+ build/win32/vs9/pango-version-paths.vsprops |  4 ++--
+ build/win32/vs9/pango.vcprojin              |  8 ++++----
+ build/win32/vs9/pangocairo.vcprojin         | 22 +++++++++++-----------
+ build/win32/vs9/pangoft2.vcprojin           |  8 ++++----
+ build/win32/vs9/pangowin32.vcprojin         |  8 ++++----
+ 14 files changed, 74 insertions(+), 74 deletions(-)
+
+commit d3a460865cf796b35cc9cf0e7e42781432a4138c
+Author: Chun-wei Fan <fanchunwei@src.gnome.org>
+Date:   Thu Apr 9 18:16:42 2015 +0800
+
+    MSVC Builds: Fix Header "Installation"
+
+    Create the directory where the headers should be copied.  I did
+    not notice
+    this as there was always
+    $(GlibEtcInstallRoot)\vs$(VSVER)\$(PLAT)\include\pango-1.0\pango.
+    Oops.
+
+ build/win32/vs10/pango-install.propsin  | 1 +
+ build/win32/vs9/pango-install.vspropsin | 1 +
+ 2 files changed, 2 insertions(+)
+
+commit d3adb1e58a40a01ecf8706adcbbfca01f7c9fe35
+Author: Chun-wei Fan <fanchunwei@src.gnome.org>
+Date:   Wed Apr 8 14:07:33 2015 +0800
+
+    Remove Traces of the Old Makefile-msvcproj.am
+
+    We don't need them around anymore
+
+ pango/mini-fribidi/Makefile.am | 7 -------
+ 1 file changed, 7 deletions(-)
+
+commit b2835f6c5de242a679090ccb577447ddd7607dca
+Author: Chun-wei Fan <fanchunwei@src.gnome.org>
+Date:   Wed Apr 8 13:56:46 2015 +0800
+
+    Drop the Unused Makefile-msvcproj.am
+
+    ...as this is interim that is to be superceded by Makefile.msvcproj,
+    which
+    is meant to be usable across different projects.
+
+ build/Makefile-msvcproj.am | 237
+ ---------------------------------------------
+ 1 file changed, 237 deletions(-)
+
+commit 11d29d7342026f9234e42250e771484392ae5a5c
+Author: Chun-wei Fan <fanchunwei@src.gnome.org>
+Date:   Wed Apr 8 13:43:07 2015 +0800
+
+    pango.vcxproj: Fix MSVC 2010+ Build
+
+    The command macro for copying config.h.win32 to config.h was wrong
+    due to
+    a leftover when copying the rule.  Fix that, oops.
+
+ build/win32/vs10/pango.vcxprojin | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+commit 6f4737efde78bb465b916dcd9d15a7a58e6092a0
+Author: Chun-wei Fan <fanchunwei@src.gnome.org>
+Date:   Tue Apr 7 18:13:10 2015 +0800
+
+    MSVC Bulids: Restore Visual Studio 2012/2013 Projects
+
+    This restores the EXTRA_DIST for the project file related items,
+    as the
+    underlying mechanism in the previous commit (i.e. Makefile-newvs.am)
+    has
+    been cleaned up and fixed to allow 'make -jN distcheck' to complete
+    successfully.
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=735039
+
+ build/win32/vs11/Makefile.am | 18 ++++++++++++++++++
+ build/win32/vs12/Makefile.am | 18 ++++++++++++++++++
+ 2 files changed, 36 insertions(+)
+
+commit dc1d6bb43a4d9e589956738ea4f097867da29b19
+Author: Chun-wei Fan <fanchunwei@src.gnome.org>
+Date:   Tue Apr 7 18:10:32 2015 +0800
+
+    build/Makefile-newvs.am: Use Pattern Rules
+
+    This allows this common autotools file to be cleaned up quite a
+    bit, and
+    has the benefit of having 'make -jN distcheck' complete successfully.
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=735039
+
+ build/Makefile-newvs.am | 32 +++++++++++---------------------
+ 1 file changed, 11 insertions(+), 21 deletions(-)
+
+commit 8e772f8c8bbfcb2bcbcf3bfe40945a49ff4d5e25
+Author: Chun-wei Fan <fanchunwei@src.gnome.org>
+Date:   Tue Apr 7 18:07:53 2015 +0800
+
+    MSVC Builds: Restore MSVC 2008/2010 Project Generation
+
+    ... in a way that 'make distcheck' (with or without -jN) completes
+    successfully.  This uses the common autotools module that was added in
+    a previous commit so that we just need to define the items needed
+    and call
+    the things in there during 'make dist' (or 'make distcheck'),
+    which would
+    have things in a more tidy manner for this.
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=735039
+
+ build/win32/vs10/Makefile.am                  |  60 ++++----
+ build/win32/vs10/pango-install.propsin        |  32 +---
+ build/win32/vs10/pango.vcxproj.filtersin      |   3 +-
+ build/win32/vs10/pango.vcxprojin              |   3 +-
+ build/win32/vs10/pangocairo.vcxproj.filtersin |   4 +-
+ build/win32/vs10/pangocairo.vcxprojin         |   2 +-
+ build/win32/vs10/pangoft2.vcxproj.filtersin   |   5 +-
+ build/win32/vs10/pangoft2.vcxprojin           |   8 +-
+ build/win32/vs10/pangowin32.vcxproj           | 202
+ --------------------------
+ build/win32/vs10/pangowin32.vcxproj.filters   |  39 -----
+ build/win32/vs10/pangowin32.vcxproj.filtersin |  23 +++
+ build/win32/vs10/pangowin32.vcxprojin         | 193
+ ++++++++++++++++++++++++
+ build/win32/vs9/Makefile.am                   |  43 +++---
+ build/win32/vs9/pango-install.vspropsin       |  19 +--
+ build/win32/vs9/pango.vcprojin                |   3 +-
+ build/win32/vs9/pangocairo.vcprojin           |   2 +-
+ build/win32/vs9/pangoft2.vcprojin             |   8 +-
+ build/win32/vs9/pangowin32.vcproj             | 181
+ -----------------------
+ build/win32/vs9/pangowin32.vcprojin           | 172
+ ++++++++++++++++++++++
+ pango/Makefile.am                             |  45 ++++++
+ 20 files changed, 505 insertions(+), 542 deletions(-)
+
+commit b5519c3a59e6c9b091f1389403c982871f93972b
+Author: Chun-wei Fan <fanchunwei@src.gnome.org>
+Date:   Mon Aug 25 14:57:30 2014 +0800
+
+    build: Add Common Autotools Module for MSVC Projects
+
+    This adds a common autotools module that can be used by various
+    projects to
+    generate the Visual Studio projects as needed, and if necessary,
+    generate
+    the headers listings to "install" for that project, based on items
+    passed
+    in to this.  This is modelled on the Makefile.introspection autotools
+    file
+    that is used by many GNOME projects to generate the introspection
+    files.
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=735039
+
+ build/Makefile.msvcproj | 107
+ ++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 107 insertions(+)
+
+commit e57c5221426fb80afd1544edb79241331f7654ab
+Author: Chun-wei Fan <fanchunwei@src.gnome.org>
+Date:   Tue Apr 7 17:49:18 2015 +0800
+
+    MSVC Builds: Use Custom Build Rules
+
+    Use a custom build rule for the copying of config.h.win32 to
+    config.h, and
+    reflect on the changes on the module source files for the Arabic
+    and Indic
+    line breaks.
+
+ build/win32/vs10/pango-prebuild.props    | 60
+ +++++++-------------------------
+ build/win32/vs10/pango.vcxproj.filtersin | 11 +++---
+ build/win32/vs10/pango.vcxprojin         | 34 +++++++++---------
+ build/win32/vs9/pango-prebuild.vsprops   | 33 +++---------------
+ build/win32/vs9/pango.vcprojin           | 56
+ ++++++++++++++++++++---------
+ 5 files changed, 81 insertions(+), 113 deletions(-)
+
+commit 39b48288fc825dce31e8e740cc9bbe0e1e6867c7
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Mon Apr 6 13:21:56 2015 -0700
+
+    Minor
+
+ pango/break.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit b838c04243ab840330b3e47413bda16bf6fd3e01
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Mon Apr 6 13:21:26 2015 -0700
+
+    Fix regression after 137832fa931e875b900dedd1c8909b46d1f7e8ad
+
+ pango/break.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit e2b89006dd2aae60805712a24534586ccdcc8d06
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Mon Apr 6 12:17:16 2015 -0700
+
+    Fix tailoring of run boundary break properties
+
+    I have no idea how this was never caught before.
+
+ pango/break.c | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
+
+commit 2001c93eb59165ed1ed4801b05983c3d77333f45
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Mon Apr 6 11:55:06 2015 -0700
+
+    [test] Fix line number reporting
+
+ tests/testboundaries.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 0da76d1b427629f4e671b502d7034595ae9ac568
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Sun Apr 5 15:14:02 2015 -0700
+
+    Speed up test-pangocairo-threads
+
+ tests/test-pangocairo-threads.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit 0ec2a4821a37b31e01a0e70fae0fe99035cc2385
+Author: Khaled Hosny <khaledhosny@eglug.org>
+Date:   Sun Apr 5 23:43:49 2015 +0200
+
+    Fix building with libthai
+
+    Regression from 137832fa931e875b900dedd1c8909b46d1f7e8ad.
+
+ pango/Makefile.am | 2 ++
+ 1 file changed, 2 insertions(+)
+
+commit 3d7f7acea1983863c37cb01eda959252d42be555
+Author: Khaled Hosny <khaledhosny@eglug.org>
+Date:   Sun Apr 5 22:32:48 2015 +0200
+
+    Make the deprecation a bit more clear
+
+    Followup to 81904127fe1107b6c0db4ce50c3d44cdf63b7f67.
+
+ pango/pango-utils.c | 13 ++++---------
+ 1 file changed, 4 insertions(+), 9 deletions(-)
+
+commit 3a510689764e54516b309be1c542ea0f2263d177
+Merge: 2ae5739 f734d7c
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Sun Apr 5 12:58:46 2015 -0700
+
+    Merge branch 'kill-modules'
+
+    Bug 733882 - Kill Pango modules, engines, and config files
+
+    This removes use of gmodule modules, config files, and deprecates
+    engine and module APIs, although for compatibility reasons, those
+    are still used internally to wire things up.  ~2500 lines gone.
+
+commit f734d7c937e518f93da544ef0fceec453bfce5d2
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Sun Apr 5 12:53:20 2015 -0700
+
+    Minor
+
+ pango/pango-engine.h  | 1 -
+ pango/pangocoretext.c | 4 ++--
+ 2 files changed, 2 insertions(+), 3 deletions(-)
+
+commit 6763f38c4c0de135b0839eb74d9ac7d5e7fafec6
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Sun Apr 5 12:42:54 2015 -0700
+
+    Remove gmodule dependency and deprecate some more symbols
+
+ configure.ac                  |  2 +-
+ examples/pangowin32tobmp.c    |  1 -
+ pango-uninstalled.pc.in       |  1 -
+ pango.pc.in                   |  1 -
+ pango/Makefile.am             |  3 ---
+ pango/modules.c               | 10 ----------
+ pango/modules.h               | 35 -----------------------------------
+ pango/pango-engine.c          |  7 ++++++-
+ pango/pango-engine.h          | 30 ++++++++++++++++++++++++++----
+ pango/pango-modules.h         |  2 ++
+ pango/pangocoretext-fontmap.c |  1 -
+ pango/pangofc-fontmap.c       |  1 -
+ pango/pangowin32-fontmap.c    |  1 -
+ 13 files changed, 35 insertions(+), 60 deletions(-)
+
+commit 4e5e6cf3946846c0cbdb449314473acafce7947a
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Sat Apr 4 19:35:08 2015 -0700
+
+    [win32] Don't read pango.aliases
+
+    Part of Bug 733882 - Kill Pango modules, engines, and config files
+
+ pango/pangowin32-fontmap.c | 54
+ ----------------------------------------------
+ 1 file changed, 54 deletions(-)
+
+commit 2fc870895bb1ad6d3b28dd013927a4ddde2a102d
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Sat Apr 4 19:15:12 2015 -0700
+
+    [win32] Another try to fix make distcheck
+
+    Sigh.
+
+ pango/Makefile.am | 8 +-------
+ 1 file changed, 1 insertion(+), 7 deletions(-)
+
+commit be24f3fb3125f1622858edb7c9ca14f8687a8858
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Sat Apr 4 19:07:47 2015 -0700
+
+    [win32] Unbreak make distcheck
+
+    Win32 maintainer, please...
+
+ build/win32/vs10/Makefile.am | 7 ++++---
+ build/win32/vs9/Makefile.am  | 7 ++++---
+ 2 files changed, 8 insertions(+), 6 deletions(-)
+
+commit 386473844c0764cb171e874fee09abaf2dfec7f6
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Sat Apr 4 19:02:42 2015 -0700
+
+    [win32] Unbreak dist
+
+ pango/Makefile.am | 3 +++
+ 1 file changed, 3 insertions(+)
+
+commit b579c59f20e0fb8dd38d5e9779087d28f38f9fe6
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Sat Apr 4 19:01:21 2015 -0700
+
+    [win32] Unbreak build
+
+    What is this...
+
+ build/win32/vs11/Makefile.am | 18 ------------------
+ build/win32/vs12/Makefile.am | 18 ------------------
+ 2 files changed, 36 deletions(-)
+
+commit bd2b3257b4af0c122cb794f9a7d95c866875dd01
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Sat Apr 4 18:53:50 2015 -0700
+
+    Unbreak docs build
+
+ docs/Makefile.am | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 0a7f37279b29fa4ce9f2b38f8102424cb6723ba9
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Sat Apr 4 18:49:27 2015 -0700
+
+    Minor
+
+ NEWS | 6 ------
+ 1 file changed, 6 deletions(-)
+
+commit 137832fa931e875b900dedd1c8909b46d1f7e8ad
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Sat Apr 4 18:46:20 2015 -0700
+
+    [modules] Move language modules in source tree and remove modules/
+
+    This should complete the kill-modules effort.  What is left is
+    leftover
+    removal and unbreaking stuff.
+
+    Bug 733882 - Kill Pango modules, engines, and config files
+
+ Makefile.am                     |   2 +-
+ configure.ac                    | 200 +-------------------------
+ docs/Makefile.am                |   1 -
+ modules/Makefile.am             |   8 --
+ modules/arabic/Makefile.am      |  14 --
+ modules/arabic/arabic-lang.c    | 152 --------------------
+ modules/indic/Makefile.am       |  14 --
+ modules/indic/indic-lang.c      | 309
+ ----------------------------------------
+ modules/thai/Makefile.am        |  17 ---
+ modules/thai/thai-lang.c        | 148 -------------------
+ pango/Makefile.am               |  46 +-----
+ pango/break-arabic.c            |  91 ++++++++++++
+ pango/break-indic.c             | 208 +++++++++++++++++++++++++++
+ pango/break-thai.c              |  90 ++++++++++++
+ pango/break.c                   |  86 +++++++++--
+ pango/module-defs-fc.c.win32    |   9 --
+ pango/module-defs-lang.c.win32  |  11 --
+ pango/module-defs-win32.c.win32 |   9 --
+ pango/module-defs.h.win32       |  29 ----
+ pango/pango-context.c           |  19 +--
+ pango/pango-engine-private.h    |   4 +-
+ 21 files changed, 476 insertions(+), 991 deletions(-)
+
+commit ef69cbb18b00d7e454cf881a8f58bdabad04ecef
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Sat Apr 4 17:07:07 2015 -0700
+
+    Fix MT-unsafe initializations
+
+ pango/pangocoretext.c    | 4 ++--
+ pango/pangofc-font.c     | 4 ++--
+ pango/pangoft2-fontmap.c | 2 +-
+ pango/pangowin32.c       | 9 +++++----
+ 4 files changed, 10 insertions(+), 9 deletions(-)
+
+commit 1a767088167b2b71fdc0f8663cd3e1ba7e919862
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Sat Apr 4 16:56:07 2015 -0700
+
+    [break] Call language engine on each script change
+
+    In preparation for merging all language engines into one.
+
+ pango/break.c | 31 ++++---------------------------
+ 1 file changed, 4 insertions(+), 27 deletions(-)
+
+commit e0a880a032600da88faf34d4e5b43b3c3773b2eb
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Sat Apr 4 16:38:53 2015 -0700
+
+    [modules] Fixup pango_map_get_engines() after recent changes
+
+ pango/modules.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+commit 231d860cd45814f7fd445194bb41af7e0e113c4c
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Sat Apr 4 16:14:33 2015 -0700
+
+    Increase number of features per run
+
+ pango/pangofc-shape.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 2561b8cec54ca1108422a6f41c5ce840d2f5f966
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Tue Nov 25 13:23:49 2014 -0800
+
+    Deprecate pango_font_map_get_shape_engine_type()
+
+ pango/pango-fontmap.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+commit 61fbcd17a292196745edd6d8bf8d865b58fc54ba
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Mon Sep 29 18:26:14 2014 +0000
+
+    Hide internal symbol
+
+ pango/pango-context.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 44447b1baa7bea0a492de70a25580e901a7ff7b0
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Mon Jul 28 20:27:13 2014 -0400
+
+    [coretext] Reverse glyphs if right-to-left
+
+    The shape.c layer is doing this for clumsy backends but warns.
+    Fix properly.
+
+ pango/pangocoretext-shape.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+commit 7d30b3f91958a3ff45ee2b8e5de2b6186cadfb72
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Mon Jul 28 18:37:36 2014 -0400
+
+    Deprecate module system, skip it for shaper modules
+
+    Now shaper is discovered via (previously unused!) font->find_shaper().
+    I'm keeping that just to allow clients override shaping.  Though,
+    even that I'm not sure we want to keep.
+
+    Wraps shaper in PangoEngineShape structs to keep PangoAnalysis API
+    intact.
+
+    Deprecated pango-modules.h and some pango-engine.h.  Language modules
+    are not moved yet.
+
+    Wired up PangoFc, PangoWin32, and PangoCoretext shapers.
+
+ configure.ac                  |   4 +-
+ pango/modules.c               | 439
+ +++---------------------------------------
+ pango/pango-context.c         | 176 +++++------------
+ pango/pango-engine.h          |  32 ++-
+ pango/pango-modules.h         |   4 +
+ pango/pangocoretext-fontmap.c |   4 -
+ pango/pangocoretext-private.h |  11 +-
+ pango/pangocoretext-shape.c   |  89 ++-------
+ pango/pangocoretext.c         |  35 +++-
+ pango/pangocoretext.h         |   3 +-
+ pango/pangofc-font.c          |  49 +++--
+ pango/pangofc-font.h          |   4 +-
+ pango/pangofc-fontmap.c       |  11 --
+ pango/pangofc-fontmap.h       |   2 +-
+ pango/pangofc-private.h       |   9 +-
+ pango/pangofc-shape.c         |  85 +-------
+ pango/pangowin32-fontmap.c    |   4 -
+ pango/pangowin32-private.h    |  12 +-
+ pango/pangowin32-shape.c      | 147 ++------------
+ pango/pangowin32.c            |  55 ++++--
+ 20 files changed, 259 insertions(+), 916 deletions(-)
+
+commit 14c11dd96e1547aaede1bb05a0243f5b0b53186e
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Sun Jul 27 18:11:16 2014 -0400
+
+    Move shapers from modules/basic/ into pango/
+
+    Note wired up yet.  Doesn't build.
+
+ configure.ac                   |  13 +-
+ modules/Makefile.am            |   1 -
+ modules/basic/Makefile.am      |  36 --
+ modules/basic/basic-coretext.c | 547 -------------------------
+ modules/basic/basic-fc.c       | 483 -----------------------
+ modules/basic/basic-win32.c    | 877
+ -----------------------------------------
+ pango/Makefile.am              |  11 +-
+ pango/pangocoretext-shape.c    | 546 +++++++++++++++++++++++++
+ pango/pangofc-shape.c          | 483 +++++++++++++++++++++++
+ pango/pangowin32-shape.c       | 877
+ +++++++++++++++++++++++++++++++++++++++++
+ 10 files changed, 1915 insertions(+), 1959 deletions(-)
+
+commit cfe9ce995d7e12a3e3f64c923123337d5dba25b0
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Sun Jul 27 17:39:46 2014 -0400
+
+    Kill module.def and Module.mk
+
+ modules/Makefile.am        | 4 ----
+ modules/Module.mk          | 7 -------
+ modules/arabic/Makefile.am | 8 +++++++-
+ modules/basic/Makefile.am  | 8 +++++++-
+ modules/indic/Makefile.am  | 8 +++++++-
+ modules/module.def         | 5 -----
+ modules/thai/Makefile.am   | 8 +++++++-
+ 7 files changed, 28 insertions(+), 20 deletions(-)
+
+commit 88c066452a252149d1e51387ae989f532603820c
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Sun Jul 27 17:36:10 2014 -0400
+
+    Remove unused / obsolete pango-zip.sh.in and sanitize-la.sh
+
+ Makefile.am     |  2 --
+ configure.ac    |  1 -
+ pango-zip.sh.in | 47 -----------------------------------------------
+ sanitize-la.sh  |  3 ---
+ 4 files changed, 53 deletions(-)
+
+commit 8d97bd8d9f12fc42f1c2136e7c193dff1b2fc2e0
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Sun Jul 27 17:35:01 2014 -0400
+
+    Kill PANGO_MODULE_VERSION
+
+ config.h.win32.in          | 6 ------
+ configure.ac               | 6 ------
+ pango-view/viewer-render.c | 1 -
+ pango-zip.sh.in            | 2 --
+ pango.pc.in                | 2 --
+ 5 files changed, 17 deletions(-)
+
+commit 39391e428afd6c2a7cc9892d9c3f46f88b856996
+Author: Khaled Hosny <khaledhosny@eglug.org>
+Date:   Sat Jul 26 10:05:00 2014 +0200
+
+    Kill unused pangorc file
+
+ modules/Makefile.am        |  3 +--
+ modules/pangorc            |  3 ---
+ pango-view/Makefile.am     |  9 +--------
+ pango-view/viewer-render.c | 10 +---------
+ tests/Makefile.am          |  9 +--------
+ tests/dump-boundaries.c    |  2 --
+ 6 files changed, 4 insertions(+), 32 deletions(-)
+
+commit 81904127fe1107b6c0db4ce50c3d44cdf63b7f67
+Author: Khaled Hosny <khaledhosny@eglug.org>
+Date:   Sat Jul 26 09:57:03 2014 +0200
+
+    Deprecate pango_config_key_get*
+
+    The config file was used solely for dynamic module paths, but
+    they have
+    been killed.
+
+ pango/pango-utils.c | 142
+ +++-------------------------------------------------
+ pango/pango-utils.h |   2 +
+ 2 files changed, 8 insertions(+), 136 deletions(-)
+
+commit bc88f6809a6befdbb9a59b628ecc84901ab9d486
+Author: Khaled Hosny <khaledhosny@eglug.org>
+Date:   Sat Jul 26 09:48:52 2014 +0200
+
+    [modules] Simplify build a bit
+
+ configure.ac               | 8 +-------
+ modules/Makefile.am        | 7 -------
+ modules/Module.mk          | 7 -------
+ modules/arabic/Makefile.am | 5 +----
+ modules/basic/Makefile.am  | 8 ++------
+ modules/indic/Makefile.am  | 4 +---
+ modules/thai/Makefile.am   | 4 ++--
+ pango/Makefile.am          | 8 ++++----
+ 8 files changed, 11 insertions(+), 40 deletions(-)
+
+commit fa6dfc688c293fa02c36ee89ac5611fd5e0131a5
+Author: Khaled Hosny <khaledhosny@eglug.org>
+Date:   Sat Jul 26 09:33:58 2014 +0200
+
+    [modules] Kill pango-querymodules
+
+    It serves no purpose now.
+
+ configure.ac                |  31 +----
+ docs/Makefile.am            |  23 +---
+ docs/pango-docs.sgml        |   5 -
+ docs/pango-querymodules.xml | 131 ------------------
+ pango-zip.sh.in             |   1 -
+ pango/Makefile.am           |  18 ---
+ pango/querymodules.c        | 323
+ --------------------------------------------
+ 7 files changed, 4 insertions(+), 528 deletions(-)
+
+commit 9da68205689f5a1c7c15043f3b6c0dac341cb147
+Author: Khaled Hosny <khaledhosny@eglug.org>
+Date:   Sat Jul 26 09:15:11 2014 +0200
+
+    [modules] Kill build tree pango.modules file
+
+ modules/Makefile.am | 45 ---------------------------------------------
+ modules/pangorc     |  5 -----
+ pango-zip.sh.in     |  1 -
+ 3 files changed, 51 deletions(-)
+
+commit 0b4e22662cee7af89c1877b3271579c1487dfad7
+Author: Khaled Hosny <khaledhosny@eglug.org>
+Date:   Sat Jul 26 09:03:46 2014 +0200
+
+    [modules] Stop loading dynamic modules
+
+    We are not building dynamic modules anymore.
+
+ pango/modules.c | 352
+ +-------------------------------------------------------
+ 1 file changed, 3 insertions(+), 349 deletions(-)
+
+commit 64492e1897a3510661e49754d0c7d7f7b58d640c
+Author: Khaled Hosny <khaledhosny@eglug.org>
+Date:   Sat Jul 26 09:00:28 2014 +0200
+
+    [modules] Don't build any dynamic modules
+
+ configure.ac               | 74
+ ++++++++--------------------------------------
+ modules/Makefile.am        |  7 +----
+ modules/Module.mk          | 23 +-------------
+ modules/arabic/Makefile.am | 12 +-------
+ modules/basic/Makefile.am  | 21 -------------
+ modules/indic/Makefile.am  | 12 +-------
+ modules/thai/Makefile.am   | 12 +-------
+ pango/Makefile.am          |  2 --
+ 8 files changed, 18 insertions(+), 145 deletions(-)
+
+commit 7e7159e48164ef0487ba039555ee0418972340e7
+Author: Khaled Hosny <khaledhosny@eglug.org>
+Date:   Sat Jul 26 08:38:55 2014 +0200
+
+    [modules] Build all modules statically by default
+
+ configure.ac | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+commit 2ae57392de417554b7d6e37adea1b99396ef578a
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Fri Apr 3 17:10:25 2015 -0700
+
+    Allow disabling OpenType features from fontconfig
+
+    For example:
+
+    <!--match target="font">
+      <edit name="fontfeatures" mode="append">
+        <string>liga off</string>
+        <string>dlig off</string>
+      </edit>
+    </match-->
+
+    The format is like CSS font-feature-settings.
+
+ modules/basic/basic-fc.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+commit b137e7b099a1e67db0612c280b5ae8bd3ccb9455
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Fri Mar 13 00:11:07 2015 -0400
+
+    Add tests for PangoAttributes
+
+    These tests exercise PangoAttribute, PangoAttrList and
+    PangoAttrIterator apis.
+
+ tests/Makefile.am      |   7 +
+ tests/testattributes.c | 630
+ +++++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 637 insertions(+)
+
+commit a2b0c3367d75b066a18914e7ab820c3e2229fc5d
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Thu Mar 12 21:51:35 2015 -0400
+
+    Split out some test functions
+
+    These will be reused later.
+
+ tests/Makefile.am   |   7 ++
+ tests/test-common.c | 204
+ ++++++++++++++++++++++++++++++++++++++++++++++++++++
+ tests/test-common.h |  22 ++++++
+ tests/test-layout.c | 176 ++-------------------------------------------
+ 4 files changed, 240 insertions(+), 169 deletions(-)
+
+commit 5a00bdb4873056749a833173112d78d578f82c72
+Author: Chun-wei Fan <fanchunwei@src.gnome.org>
+Date:   Fri Mar 6 16:35:00 2015 +0800
+
+    MSVC Builds: Rename "Install" Project
+
+    Rename the install projects to pango-install, so that they can
+    be easier
+    integrated into grand solution files that are used to build items,
+    such as
+    the entire GTK+ or Clutter stack.
+
+ build/win32/vs10/Makefile.am           |   2 +-
+ build/win32/vs10/install.vcxproj       | 206
+ ---------------------------------
+ build/win32/vs10/pango-install.vcxproj | 206
+ +++++++++++++++++++++++++++++++++
+ build/win32/vs10/pango.sln             |   2 +-
+ build/win32/vs11/Makefile.am           |   2 +-
+ build/win32/vs12/Makefile.am           |   2 +-
+ build/win32/vs9/Makefile.am            |   2 +-
+ build/win32/vs9/install.vcproj         | 137 ----------------------
+ build/win32/vs9/pango-install.vcproj   | 137 ++++++++++++++++++++++
+ build/win32/vs9/pango.sln              |   2 +-
+ 10 files changed, 349 insertions(+), 349 deletions(-)
+
+commit 48fc4fa07e5fe513f4eb7ee061fb9e1a04d733e8
+Author: Chun-wei Fan <fanchunwei@src.gnome.org>
+Date:   Wed Mar 4 19:34:45 2015 +0800
+
+    MSVC Builds: "Install" the .pdb files
+
+    To make it easier for people to develop and debug Pango on Windows,
+    especially as the builds already generate the .pdb's.
+
+ build/win32/vs10/pango-install-bin.props  | 38
+ +++++++++----------------------
+ build/win32/vs9/pango-install-bin.vsprops | 21 +++++++++--------
+ 2 files changed, 22 insertions(+), 37 deletions(-)
+
+commit f1e3f39f49b59ff8c156097de28f631009807532
+Author: Chun-wei Fan <fanchunwei@src.gnome.org>
+Date:   Wed Mar 4 19:32:54 2015 +0800
+
+    MSVC 2010+ Builds: Update .pdb Generation
+
+    Make the .pdb filenames like the ones generated by the MSVC 2008
+    builds,
+    that follows the names of the DLLs.  Also, use the /d2Zi+ flag so
+    that more
+    useful information is logged into the .pdb files, in particular
+    the release
+    builds.
+
+ build/win32/vs10/pango-build-defines.props | 2 ++
+ 1 file changed, 2 insertions(+)
+
+commit 8914c1a2d67ad318c873d8501e060c18d505b47f
+Author: Chun-wei Fan <fanchunwei@src.gnome.org>
+Date:   Wed Mar 4 19:04:17 2015 +0800
+
+    MSVC Builds: Speed Up Release Builds
+
+    This adds the /MP option to the compiler, which can cut down on the
+    build time of release builds by quite a bit, by using multi-processor
+    or multi-core capabilities.  This will, however, emit a brief warning
+    with debug builds, but the code will otherwise build normally.
+
+ build/win32/vs10/pango-build-defines.props  | 1 +
+ build/win32/vs9/pango-build-defines.vsprops | 1 +
+ 2 files changed, 2 insertions(+)
+
+commit 1ca76d068af22cbc98a6c24e4f4faf15038d6f21
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Tue Mar 3 17:19:10 2015 -0800
+
+    Bug 743692 - Irish pangram (sample text) is inappropriate
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=743692
+
+ pango/pango-language-sample-table.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit 1aeef5865ab83304b815484045fc1ded038608d3
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Tue Feb 10 11:52:54 2015 -0500
+
+    Avoid uninitialized memory
+
+    pango_default_break() was not clearing the is_char_break field,
+    causing unwanted breaks in the middle of clusters, occasionally.
+
+    Patch by Gene Hightower,
+    https://bugzilla.gnome.org/show_bug.cgi?id=744118
+
+ pango/break.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+commit a5338500f5af46f41200fa71ac07f91e89d7e02d
+Author: Max <verem@m1stereo.tv>
+Date:   Wed Oct 22 07:19:00 2014 +0000
+
+    Increase MAX_FREED_FONTS value
+
+    Increasing MAX_FREED_FONTS value should make fontset's cache
+    working normally because of long alias list and available
+    fonts under Windows 7.
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=738868
+
+ pango/pangowin32.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 92a4e7bb6d767b7e5ba4826738e0f9e068b4b9f9
+Author: Max <verem@m1stereo.tv>
+Date:   Wed Oct 22 07:07:00 2014 +0000
+
+    Fix weak pointer leak
+
+    This patch fixes a leak with lost weak references in fontset.
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=738868
+
+ pango/pangowin32.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+commit 91024c84f73ddefb4bde174e0a1689b2d136a9b6
+Author: Cody Russell <cody@jhu.edu>
+Date:   Fri Oct 31 22:43:01 2014 -0500
+
+    Check kCTFontCondensedTrait when creating from CTFontDescriptionRef.
+
+    Fixes https://bugzilla.gnome.org/show_bug.cgi?id=734372
+
+ pango/pangocoretext-fontmap.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+commit fa6ded9b0d065634481d8ae4126fdea0b88e3558
+Author: Evan Nemerson <evan@nemerson.com>
+Date:   Fri May 30 19:21:11 2014 -0700
+
+    Add many missing nullability annotations.
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=731022
+
+ pango/break.c                |  2 +-
+ pango/fonts.c                | 49
+ +++++++++++++++++++++++---------------------
+ pango/glyphstring.c          | 20 +++++++++---------
+ pango/modules.c              |  4 ++--
+ pango/pango-attributes.c     | 22 ++++++++++----------
+ pango/pango-color.c          | 13 ++++++------
+ pango/pango-context.c        | 15 +++++++-------
+ pango/pango-coverage.c       |  4 ++--
+ pango/pango-engine.h         | 20 +++++++++---------
+ pango/pango-fontmap.c        |  8 ++++----
+ pango/pango-glyph-item.c     | 12 +++++------
+ pango/pango-gravity.c        |  2 +-
+ pango/pango-item.c           | 10 ++++-----
+ pango/pango-language.c       | 22 ++++++++++----------
+ pango/pango-layout.c         | 47
+ ++++++++++++++++++++++--------------------
+ pango/pango-matrix.c         | 16 +++++++--------
+ pango/pango-ot-buffer.c      |  6 ++++--
+ pango/pango-ot-info.c        | 13 +++++++-----
+ pango/pango-ot-ruleset.c     |  6 ++++--
+ pango/pango-ot-tag.c         |  2 +-
+ pango/pango-ot.h             | 13 +++++++-----
+ pango/pango-renderer.c       | 21 +++++++++----------
+ pango/pango-renderer.h       |  5 +++--
+ pango/pango-utils.c          | 16 +++++++--------
+ pango/pangocairo-context.c   | 19 +++++++++--------
+ pango/pangocairo-font.c      |  2 +-
+ pango/pangocairo-fontmap.c   | 10 ++++-----
+ pango/pangofc-font.c         |  6 ++++--
+ pango/pangofc-font.h         | 13 ++++++------
+ pango/pangofc-fontmap.c      |  4 ++--
+ pango/pangofc-fontmap.h      | 30 +++++++++++++--------------
+ pango/pangoft2-render.c      |  3 ++-
+ pango/pangoft2.c             |  5 +++--
+ pango/pangowin32-fontcache.c |  8 ++++----
+ pango/pangowin32.c           |  3 ++-
+ pango/pangoxft-font.c        |  5 +++--
+ pango/pangoxft-render.c      |  3 ++-
+ 37 files changed, 241 insertions(+), 218 deletions(-)
+
+commit adb5a4e86b09b0935ec1dd71bf05ac41807c84a2
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Wed Oct 1 10:33:04 2014 -0400
+
+    Bump version to 1.37
+
+    New development might happen.
+
+ configure.ac | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit c2a40e3b35a37f76f353655d9220dd94156fb89c
+Author: Cody Russell <cody@jhu.edu>
+Date:   Sun Sep 28 15:47:46 2014 -0500
+
+    [coretext] NULL check in ct_font_descriptor_get_weight()
+
+    Ensure that CFDictionaryGetValue() didn't return NULL before we
+    call CFNumberGetValue().
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=736697
+
+ pango/pangocoretext-fontmap.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit e0a21abf52a0b7588b1aa3357818948816ed9103
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Mon Sep 22 14:29:40 2014 -0400
+
+    1.36.8
+
+ NEWS         | 4 ++++
+ configure.ac | 2 +-
+ 2 files changed, 5 insertions(+), 1 deletion(-)
+
+commit bda622c386a0b04478a9116c6b9534c023ca2446
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Fri Sep 19 11:43:15 2014 -0400
+
+    Update expected test results
+
+    Update the expected output of the layout tests to the previous
+    change.
+
+ tests/layouts/valid-1.expected |  6 +++---
+ tests/layouts/valid-2.expected | 10 +++++-----
+ 2 files changed, 8 insertions(+), 8 deletions(-)
+
+commit 2a8eed93477304317ccedfdea8ea46fb9779ee69
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Fri Sep 19 11:33:14 2014 -0400
+
+    Don't compare fonts in the layout test
+
+    For some reason (that I haven't been able to track down), this
+    fails in the installed tests on build.gnome.org.
+
+ tests/test-layout.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 0d1945ed2c602e295e433ce7e9e1ecbc6600c76a
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Mon Sep 8 11:55:06 2014 -0400
+
+    Add some tests for PangoFontDescription
+
+    This just a small beginning, much more is needed here.
+
+ tests/Makefile.am |  2 ++
+ tests/test-font.c | 92
+ +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 94 insertions(+)
+
+commit 7b36ee404c22495e33c66cc4d755671a16089bdf
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Sat Sep 6 14:31:43 2014 -0400
+
+    Try to fix the test on build.gnome.org
+
+    For some reason, the test-layout test does not show the
+    font size when run on build.gnome.org. Try harder to make
+    it use the Cantarell 11 font that I want it to use.
+
+ tests/test-layout.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
+
+commit f7ffec46581ee8d45c7d9480168a167c86c766d3
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Wed Sep 3 15:47:46 2014 -0400
+
+    1.36.7
+
+ NEWS         | 7 +++++++
+ configure.ac | 2 +-
+ 2 files changed, 8 insertions(+), 1 deletion(-)
+
+commit cfe6663ed90db3edde9564f6513c0fbc9e776c68
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Wed Sep 3 15:43:00 2014 -0400
+
+    layout tests: Adapt expected output
+
+    We see the 'ellipsized' analysis flag in the output now,
+    as we should.
+
+ tests/layouts/valid-1.expected | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit d984352b5edb9e0f5c7d07956f0562288865ff37
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Wed Sep 3 15:37:02 2014 -0400
+
+    test-layout: Better error reporting
+
+    Run diff over the output to give a meaningful error if the
+    comparison fails.
+
+ tests/test-layout.c | 70
+ +++++++++++++++++++++++++++++++++++++++++++++++------
+ 1 file changed, 62 insertions(+), 8 deletions(-)
+
+commit d23a0b0820ff5ea37e9dd71b3589039760e230c9
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Tue Sep 2 18:18:21 2014 -0400
+
+    PangoGlyphItem: Better treatment of ellipsized runs
+
+    When we reapply non-shape attributes, we must take care to
+    not add any attributes that start in the middle of an
+    ellipsized run, or we end up with a blue, underlined ellipsis
+    if there is a link anywhere inside the ellipsized text.
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=735732
+
+ pango/pango-glyph-item.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+commit 95ccc8910223d7d092f4cc30c93b4a5f9dcd301a
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Sat Aug 30 14:09:19 2014 -0400
+
+    Add an analysis flag to mark the ellipsis run
+
+    Without this, it is hard to determine if you are 'inside the
+    ellipsis'. We need to know this in GTK+, e.g. to skip link
+    processing.
+
+    I decided not to turn the flags into an enum at the time to
+    avoid possible language binding problems.
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=735719
+
+ pango/ellipsize.c  |  2 ++
+ pango/pango-item.h | 13 +++++++++++--
+ 2 files changed, 13 insertions(+), 2 deletions(-)
+
+commit 0068b78276c4ac7df95d97fa270a5e8ca4b58348
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Sat Aug 30 20:20:00 2014 -0400
+
+    Add tests for PangoLayout
+
+    This tests works similar to the markup parser tests -
+    we populate a layout with known data, and then compare
+    a dump of its properties with expected output.
+
+ tests/Makefile.am              |  23 +-
+ tests/layouts/valid-1.expected |  35 +++
+ tests/layouts/valid-1.markup   |   2 +
+ tests/layouts/valid-2.expected |  34 +++
+ tests/layouts/valid-2.markup   |   2 +
+ tests/test-layout.c            | 487
+ +++++++++++++++++++++++++++++++++++++++++
+ 6 files changed, 580 insertions(+), 3 deletions(-)
+
+commit 92e7b73e27f54db86d58dcb5b4ddaafb32101980
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Sat Aug 30 14:11:04 2014 -0400
+
+    Revert "Fix leftover markup in docs"
+
+    This reverts commit 19a252d9a3d63e7816f9a77bab65bd161675440a.
+
+ pango/pango-attributes.c  |  2 +-
+ pango/pango-color.c       |  3 ++-
+ pango/pango-engine.h      | 59
+ ++++++++++++++++++++++++-----------------------
+ pango/pango-glyph-item.h  | 22 +++++++++---------
+ pango/pango-language.c    | 35 ++++++++++++++--------------
+ pango/pango-layout.c      | 17 +++++++-------
+ pango/pango-renderer.c    |  2 +-
+ pango/pangocairo-render.c |  2 +-
+ 8 files changed, 73 insertions(+), 69 deletions(-)
+
+commit 19a252d9a3d63e7816f9a77bab65bd161675440a
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Sat Aug 30 13:11:09 2014 -0400
+
+    Fix leftover markup in docs
+
+ pango/pango-attributes.c  |  2 +-
+ pango/pango-color.c       |  3 +--
+ pango/pango-engine.h      | 59
+ +++++++++++++++++++++++------------------------
+ pango/pango-glyph-item.h  | 22 +++++++++---------
+ pango/pango-language.c    | 35 ++++++++++++++--------------
+ pango/pango-layout.c      | 17 +++++++-------
+ pango/pango-renderer.c    |  2 +-
+ pango/pangocairo-render.c |  2 +-
+ 8 files changed, 69 insertions(+), 73 deletions(-)
+
+commit 5d319c5989d599e9e867df76795eb81472b4db7a
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Thu Aug 28 01:19:29 2014 -0400
+
+    Add tests for pango markup
+
+    This test is modeled after the GMarkup parser tests in GLib.
+    Test file with a name ending in .markup can be dumped in
+    tests/markups/, and tests/markup-parse can be used to generate
+    the expected output files which should be in the same location
+    and with the extension .markup replaced by .expected.
+
+    The test is also used as an installed test.
+
+ tests/Makefile.am              |  18 ++-
+ tests/markup-parse.c           | 249
+ +++++++++++++++++++++++++++++++++++++++++
+ tests/markups/fail-1.expected  |   1 +
+ tests/markups/fail-1.markup    |   1 +
+ tests/markups/valid-1.expected |  12 ++
+ tests/markups/valid-1.markup   |   1 +
+ tests/markups/valid-2.expected |  12 ++
+ tests/markups/valid-2.markup   |   1 +
+ tests/markups/valid-3.expected |  18 +++
+ tests/markups/valid-3.markup   |  11 ++
+ tests/markups/valid-4.expected |  38 +++++++
+ tests/markups/valid-4.markup   |   1 +
+ 12 files changed, 360 insertions(+), 3 deletions(-)
+
+commit 0c827ee95c4ff6564eefabb519d00bfcccd046fe
+Author: Chun-wei Fan <fanchunwei@src.gnome.org>
+Date:   Tue Aug 19 15:27:34 2014 +0800
+
+    MSVC Builds: Fix "Installation"
+
+    Make sure we only try to create the directory for pango.aliases
+    if that
+    file didn't exist.  This cleans things up a little, and avoids weird
+    MSBuild batch errors.
+
+ build/win32/vs10/pango-install.propsin  | 2 --
+ build/win32/vs9/pango-install.vspropsin | 2 +-
+ 2 files changed, 1 insertion(+), 3 deletions(-)
+
+commit a78778e54f7cc013080fda9d9349ad113ecb3e0e
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Sat Aug 16 09:05:00 2014 -0400
+
+    Updates for 1.36.6
+
+ NEWS | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+commit 8441321866247a0a6c2f4b11a3c3863005bfba44
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Sun Aug 10 19:23:29 2014 -0400
+
+    [coretext] Minor fix
+
+ modules/basic/basic-coretext.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 729e7678cd6a691e6a423c716bda55177c540de7
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Sun Aug 10 19:22:58 2014 -0400
+
+    [coretext] Bug 734174 Crashes on OS  Yosemite
+
+ modules/basic/basic-coretext.c | 15 ++++++++++++++-
+ 1 file changed, 14 insertions(+), 1 deletion(-)
+
+commit 051aa4844b9e60cbeae0e6088aa33d192de06621
+Author: Andre Klapper <a9016009@gmx.de>
+Date:   Fri Aug 1 23:33:09 2014 +0200
+
+    doap: add <programming-language>
+
+ pango.doap | 1 +
+ 1 file changed, 1 insertion(+)
+
+commit c53b48e5a3a46784c5008f692cfbf24d75571f10
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Thu Jul 31 10:48:37 2014 -0400
+
+    Add more Hangul jamo to previous commit
+
+    https://github.com/GNOME/pango/commit/61aeba6257ec7691a7a5222fb69aec3cc042435b#commitcomment-7215250
+
+ pango/pango-context.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+commit 61aeba6257ec7691a7a5222fb69aec3cc042435b
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Wed Jul 30 18:58:14 2014 -0400
+
+    Don't break run in the middle of Hangul jamo sequence
+
+    See comments.
+
+    Bug 705727 - Incorrect rendering w/ Hangul syllable composition GSUB
+    https://bugzilla.gnome.org/show_bug.cgi?id=705727
+
+ pango/pango-context.c | 23 +++++++++++++++++++++--
+ 1 file changed, 21 insertions(+), 2 deletions(-)
+
+commit 2b414de9d93989950667d5642b548d427a89dc1c
+Author: Olav Vitters <olav@vitters.nl>
+Date:   Wed Jul 30 20:41:01 2014 +0200
+
+    doap category core
+
+ pango.doap | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit f60fbff29c729244bae42712b2b3a7fd2a11f5a1
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Tue Jul 29 11:36:30 2014 -0400
+
+    Bug 733898 - Fix build of pangocairo-fontmap.c
+
+ pango/pangocairo-fontmap.c | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
+
+commit 4866be2c7b252182ec81ba2880fd2740afa20633
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Tue Jul 29 10:58:56 2014 -0400
+
+    [win32] Invert y_offset
+
+    All these years, in the win32 backend, the y_offset was inverted.
+    Ie. no vertical glyph positioning worked, ever...  Sigh.
+
+ modules/basic/basic-win32.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit 8d4d42e7b34ef625677a7adae020b0e6c7ebc136
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Tue Jul 29 10:58:25 2014 -0400
+
+    [coretext] Reverse glyphs if right-to-left
+
+    The shape.c layer is doing this for clumsy backends but warns.
+    Fix properly.
+
+ modules/basic/basic-coretext.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+commit caa226bc36d4d449b89a6eab6c0d24a5bba2658c
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Mon Jul 28 18:20:42 2014 -0400
+
+    [pangocairo] Fix backend selection through $PANGOCAIRO_BACKEND
+
+ pango/pangocairo-fontmap.c | 21 ++++++++++++++++-----
+ 1 file changed, 16 insertions(+), 5 deletions(-)
+
+commit cda5d4ffb5ad9e48da235a7a97ae3fe8b782e6aa
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Sat Jul 26 17:33:14 2014 -0400
+
+    [coretext] Support PANGO_WEIGHT_SEMILIGHT
+
+    We should interpolate.  Added TODO.  Don't have a coretext build so
+    don't want to break it.
+
+    Bug 733764 - Support more / free font weights
+
+ pango/pangocoretext-fontmap.c | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
+
+commit 40f5c151e911464cb9da569d8ceee88f52fcbfbf
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Sat Jul 26 16:27:59 2014 -0400
+
+    [fc] Use FcWeightTo/FromOpenType() if available
+
+    This makes the weight mapping a continuous, as ooposed to a step
+    function.
+
+    Last piece of Bug 733764 - Support more / free font weights
+
+ configure.ac            | 6 ++++++
+ pango/pangofc-fontmap.c | 8 ++++++++
+ 2 files changed, 14 insertions(+)
+
+commit b30a04708823c14fc9fef81294bfb2b87ac5df7a
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Sat Jul 26 16:22:20 2014 -0400
+
+    More PANGO_WEIGHT_SEMILIGHT
+
+    Previous commit was incomplete.
+
+ pango/pangofc-fontmap.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+commit 6a1420c22bb1365bac94cc979053b558ba328796
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Fri Jul 25 18:24:32 2014 -0400
+
+    Add PANGO_WEIGHT_SEMILIGHT
+
+    Part of Bug 733764 - Support more / free font weights
+
+ pango/fonts.c           | 2 ++
+ pango/pango-font.h      | 2 ++
+ pango/pangofc-fontmap.c | 4 +++-
+ pango/pangofc-private.h | 6 ++++++
+ 4 files changed, 13 insertions(+), 1 deletion(-)
+
+commit 9f221d657e98d2dff377420a02cd91c6411b9c5a
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Fri Jul 25 18:17:51 2014 -0400
+
+    [win32] Bug 733764 - Support more / free font weights
+
+ pango/pangowin32-fontmap.c | 38 ++++----------------------------------
+ 1 file changed, 4 insertions(+), 34 deletions(-)
+
+commit 424008bd763abfa881ea8c6fac669062cbcfa83d
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Thu Jul 24 15:03:13 2014 -0400
+
+    Accept PANGOCAIRO_BACKEND=fc as alias to fontconfig
+
+ pango/pangocairo-fontmap.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+commit 8aa4afb3c2700279efb057bb7ad63c613ec20387
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Wed Jul 23 12:27:48 2014 -0400
+
+    Fix introspection includes
+
+    Inspired by:
+    https://github.com/Alexpux/MINGW-packages/tree/master/mingw-w64-pango
+
+ pango/Makefile.am | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+commit 1a043201e0b1ef4496ada1e980e66996570b1efe
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Wed Jul 23 12:21:53 2014 -0400
+
+    [pangocairo] Allow backend selection
+
+    Based on:
+    https://github.com/Alexpux/MINGW-packages/blob/master/mingw-w64-pango/0008-allow-backend-selection.mingw.patch
+
+ pango/pangocairo-fontmap.c | 25 +++++++++++++++++++------
+ 1 file changed, 19 insertions(+), 6 deletions(-)
+
+commit 1075fc4bd12df3b81bdfb94f6a2c960595e98a3f
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Wed Jul 23 11:42:13 2014 -0400
+
+    Give CC to gir-scanner
+
+    From:
+    https://github.com/Alexpux/MINGW-packages/blob/master/mingw-w64-pango/0006-give-cc-to-gir-scanner.mingw.patch
+
+ pango/Makefile.am | 1 +
+ 1 file changed, 1 insertion(+)
+
+commit 25ddf43c0185e3c7935414618bd21aee0c35dfe2
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Mon Jul 14 12:53:12 2014 -0400
+
+    Bug 733137 - Don't force no static builds on Win32
+
+ configure.ac | 11 -----------
+ 1 file changed, 11 deletions(-)
+
+commit 9f67b924eb662f498f4e643ed740ce84640968f7
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Fri Jul 11 12:05:45 2014 -0400
+
+    Prevent HarfBuzz from using REPLACEMENT CHARACTER
+
+    Needed after this:
+    https://github.com/behdad/harfbuzz/commit/efe74214bbb68eaa3d7621e73869b5d58210107e
+
+ modules/basic/basic-fc.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+commit fe66e7b36331d031f1025dbe05db065334381fee
+Author: Chun-wei Fan <fanchunwei@src.gnome.org>
+Date:   Tue Jul 1 16:04:51 2014 +0800
+
+    MSVC 2012/2013 Support: Update Property Sheet Creation
+
+    Be a bit more carful when copying and updating the property sheets,
+    so that
+    we don't accidently change fields with '10' in them that are
+    actually not
+    indicating the Visual Studio version.
+
+ build/Makefile-newvs.am | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit e895f9e56353448842c333a37a3f92f9b58e79f0
+Author: Chun-wei Fan <fanchunwei@src.gnome.org>
+Date:   Tue Jul 1 13:46:46 2014 +0800
+
+    Build: Provide Simple Support for MSVC 2012/2013
+
+    As the Visual Studio 2012/2013 are only slightly different from
+    the Visual
+    Studio 2010 projects, we can provide support for them by using
+    scripts to
+    copy the Visual Studio 2010 projects, and update the specific parts as
+    necessary.  Thus, there would be little maintenance overhead for
+    these as
+    only the 2010 projects need to be kept up-to-date as a result.
+
+    This might change when we do get the stack working with WinRT/Metro,
+    but
+    that's going to be another totally different issue.
+
+ build/Makefile-newvs.am      | 37 +++++++++++++++++++++++++++++++++++++
+ build/win32/Makefile.am      |  6 +++++-
+ build/win32/vs11/Makefile.am | 28 ++++++++++++++++++++++++++++
+ build/win32/vs12/Makefile.am | 28 ++++++++++++++++++++++++++++
+ configure.ac                 |  2 ++
+ 5 files changed, 100 insertions(+), 1 deletion(-)
+
+commit 33b83516e17a6a34265d036f9e02b272cd1b436a
+Author: Sebastian Dröge <sebastian@centricular.com>
+Date:   Thu Jun 26 13:15:38 2014 +0200
+
+    pango: Don't fail to initialize if LC_CTYPE is not set
+
+    g_once_init_leave() does not work on NULL, and just returns... and
+    all future calls to g_once_init_enter() will block forever.
+
+    Happens on Android, so let's just fall back to the C locale if there's
+    nothing else we can do.
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=732276
+
+ pango/pango-language.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
+
+commit 4cf39ece01babd61ccbee37295fbdb77d8ce46cd
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Tue Jun 24 13:38:32 2014 -0400
+
+    Bump version
+
+ configure.ac | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 41b2e15167bf3a6ef2d682ccaf8530a4ba44f061
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Tue Jun 24 13:29:00 2014 -0400
+
+    1.36.5
+
+ NEWS | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+commit 858704140e35058ee074f2929d7d06a3c2bb1951
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Tue Jun 24 10:26:37 2014 -0600
+
+    Revert "build: Require Harfbuzz 0.9.29"
+
+    This reverts commit e728c4c3659cc0ead406344b4cf98c0676cb769e.
+
+    See previous commit for explanation.
+
+ configure.ac | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 394b2789c7a4f7c6071f4e5b83e3cf9876d50608
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Tue Jun 24 10:26:08 2014 -0600
+
+    Revert "ot-info: Update after API break in HarfBuzz"
+
+    This reverts commit 4901fb74b3c1137d13a6b7e4e8784577c1816e47.
+
+    The removed API was added back to HarfBuzz.  So, no need for this.
+
+ pango/pango-ot-info.c | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
+
+commit a788c729989f4f116ecd6742895d06da1a75c80c
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Mon Jun 23 14:05:51 2014 -0400
+
+    Bump version
+
+ configure.ac | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 64113b70adff816d1d7885500abfb99461e40838
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Mon Jun 23 13:35:22 2014 -0400
+
+    1.36.4
+
+ NEWS | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+commit 4901fb74b3c1137d13a6b7e4e8784577c1816e47
+Author: Emmanuele Bassi <ebassi@gnome.org>
+Date:   Fri Jun 20 11:39:15 2014 +0100
+
+    ot-info: Update after API break in HarfBuzz
+
+ pango/pango-ot-info.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
+
+commit e728c4c3659cc0ead406344b4cf98c0676cb769e
+Author: Emmanuele Bassi <ebassi@gnome.org>
+Date:   Fri Jun 20 11:38:19 2014 +0100
+
+    build: Require Harfbuzz 0.9.29
+
+    There has been an API change in HB:
+
+        -hb_ot_layout_language_get_required_feature_index
+        +hb_ot_layout_language_get_required_feature
+
+    Commit: da132937989acb4d8ca9bd41c79f98750e7dda30
+
+    So we need to bump the dependency.
+
+ configure.ac | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 715ed720eced19967a88871c9712d8e4e4de03b9
+Author: Emmanuele Bassi <ebassi@gnome.org>
+Date:   Fri Jun 20 11:26:33 2014 +0100
+
+    Fix introspection annotation
+
+    Missing colon broke the g-ir-scanner.
+
+ pango/shape.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit aee1d73950792744af73d7cec5cb867906c225af
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Tue Jun 10 19:46:55 2014 -0400
+
+    Update PangoWeight documentation
+
+    A while ago, we added a weight of 1000 to the enumeration, but
+    neglected to update the allowed values in the documentation.
+    Fix that.
+
+ pango/pango-font.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 809246a62d5ca91f7321f8239db50b77eaaef021
+Author: Chun-wei Fan <fanchunwei@src.gnome.org>
+Date:   Mon Jun 9 10:49:53 2014 +0800
+
+    MSVC 2010+ Projects: Update "Installation" Process
+
+    Currently, due to the way that Visual Studio 2010+ projects are
+    handled,
+    the "install" project does not re-build upon changes to the sources,
+    as it
+    does not believe that its dependencies have changed, although
+    the changed
+    sources are automatically recompiled.  This means that if a part
+    or more
+    of the solution does not build, or if the sources need some other
+    fixes
+    or enhancements, the up-to-date build is not copied automatically,
+    which
+    can be misleading.
+
+    Improve on the situation by forcing the "install" project to
+    trigger its
+    rebuild, so that the updated binaries can be copied.  This does
+    trigger an
+    MSBuild warning, but having that warning is way better than not
+    having an
+    up-to-date build, especially during testing and development.
+
+ build/win32/vs10/install.vcxproj         | 52
+ +++++++++++++++++---------------
+ build/win32/vs10/pango-install-bin.props |  2 +-
+ build/win32/vs10/pango-install.propsin   | 14 ++++++++-
+ 3 files changed, 42 insertions(+), 26 deletions(-)
+
+commit 35fbbe32ae49cb80130be4d0cd7d375dfef6d2ad
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Sat May 31 00:19:57 2014 -0400
+
+    testsuite: put installed tests in the right place
+
+    Follow the prevailing practice and put the installed tests
+    into $libdir/installed-tests/$PACKAGE instead of
+    $pkglibdir/installed-tests.
+
+ tests/Makefile.am | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit c039b91c429383826ca4becbcb4c87e9d7c983b4
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Thu May 8 17:13:52 2014 -0400
+
+    Typo
+
+    Oops
+
+ pango/pango-renderer.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 17fc3aad5a0084ac8c31b09807bf8e03a01569b5
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Thu May 8 17:00:30 2014 -0400
+
+    Bug 729840 - Missing annotation for get_color
+
+ pango/pango-renderer.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit 6a7834465b3e188744673f8e335737464e4d15de
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Wed Apr 9 20:50:50 2014 -0700
+
+    [win32] Fixup previous commit
+
+ pango/pangowin32-fontmap.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit b75a1c26e3436c58b6ce2b56e31768ad115b6bed
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Wed Apr 9 16:55:12 2014 -0700
+
+    [win32] Improve threadsafety
+
+    Based on patch from Chun-wei Fan.  Original patch comments:
+
+    Improve the thread-safety situation on Windows by only allowing the
+    pango_aliases_ht GHashTable be populated once.
+
+    Pango on Windows is not yet thread-safe, but with the thread safety
+    patch on Cairo-Win32-Font[1], it does seem that the test program
+    test-pangocairo-threads does not crash randomly anymore, which seems
+    to be an improvement.
+
+    [1]: https://bugs.freedesktop.org/show_bug.cgi?id=73012
+
+    Fixes https://bugzilla.gnome.org/show_bug.cgi?id=695913
+
+ pango/pangowin32-fontmap.c | 46
+ +++++++++++++++++++++++++---------------------
+ 1 file changed, 25 insertions(+), 21 deletions(-)
+
+commit 124a3728b5b73a6204bdea66cc502916e0847e69
+Author: Chun-wei Fan <fanchunwei@src.gnome.org>
+Date:   Wed Apr 2 11:52:01 2014 +0800
+
+    MSVC Builds: Fix "Installation" for MSVC 2010 and Later
+
+    We need to create $(prefix)\etc\pango before trying to create
+    a default
+    pango.aliases file, otherwise it wouldn't work.
+
+ build/win32/vs10/pango-install.propsin | 2 ++
+ 1 file changed, 2 insertions(+)
+
+commit 2432e6a180a18933d45de91f03f4abcc9eae8e8c
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Mon Mar 17 21:17:12 2014 -0400
+
+    Bump version
+
+ NEWS         | 7 +++++++
+ configure.ac | 2 +-
+ 2 files changed, 8 insertions(+), 1 deletion(-)
+
+commit f8b1566e81af9e36ac018af4f0ae85ee7db4b8fd
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Mon Mar 17 20:47:36 2014 -0400
+
+    Update the pango_color_parse docs
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=711061
+
+ pango/pango-color.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+commit 27693187e309f7e7fbb2f75a709e71dd4119428e
+Author: Chun-wei Fan <fanchunwei@src.gnome.org>
+Date:   Tue Feb 25 13:16:51 2014 +0800
+
+    MSVC Builds: Update Introspection Build Process
+
+    GObject-Introspection was recently changed to support acquiring the
+    name of
+    the DLL from a library (.lib, etc) that was passed into g-ir-scanner
+    on
+    Windows, like the *nix builds, instead of directly passing in the
+    name of
+    the DLL.
+
+    This updates the introspection build process, so that introspection
+    files
+    for Pango can continue to be properly built.
+
+ build/pango-introspection-msvc.mak | 15 +++------------
+ 1 file changed, 3 insertions(+), 12 deletions(-)
+
+commit 05e4927ab0b7b4ead30c47c26e881711a1724d63
+Author: Chun-wei Fan <fanchunwei@src.gnome.org>
+Date:   Fri Feb 21 13:38:04 2014 +0800
+
+    build/Makefile-msvcproj.am: Remove Generated Intermediate Files
+
+    Delete libpangocairo.vs10.sourcefiles and
+    libpangocairo.vs10.sourcefiles.filters once we are done with them,
+    so to
+    fix make distcheck
+
+ build/Makefile-msvcproj.am | 2 ++
+ 1 file changed, 2 insertions(+)
+
+commit 44d90b5771bf08e0e900596eb3a4db78c10d7f23
+Author: Akira TAGOH <akira@tagoh.org>
+Date:   Wed Feb 12 18:39:27 2014 +0900
+
+    Avoid a crash when FT_Face is null
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=724006
+
+ pango/pango-ot-info.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+commit d8e2dc00c8d28e1bf8b443208497ce1ab25e0af4
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Tue Feb 11 12:37:33 2014 -0500
+
+    Fix cairotwisted curve_length()
+
+ examples/cairotwisted.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 07de8494412e6d735c5fa04aa8bdf1632582d098
+Author: Iain Lane <iain.lane@canonical.com>
+Date:   Fri Feb 7 13:59:14 2014 +0000
+
+    Fix tests for builddir != srcdir by setting G_TEST_{SRC,BUILD}DIR
+
+ tests/Makefile.am | 2 ++
+ 1 file changed, 2 insertions(+)
+
+commit f324a942455cd68fc4a97327a61ed6492f1f1f40
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Tue Feb 4 14:09:42 2014 -0500
+
+    1.36.2
+
+ NEWS | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+commit d574d9820bbea053f5a8b4c0be5fbc1c5dfef69c
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Thu Jan 16 11:37:21 2014 +0800
+
+    [coretext] Default DPI to 96 instead of 72
+
+ pango/pangocairo-coretextfontmap.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 58699f3d00aeac5728a4ddd5d57d4bd1f06adfe4
+Author: Chun-wei Fan <fanchunwei@src.gnome.org>
+Date:   Mon Jan 13 15:42:29 2014 +0800
+
+    MSVC Introspection Build: Fix build
+
+    Link and run the dumper program firstly against the build of ATK from
+    the same tarball, then linking to the other dependent libraries which
+    this build of ATK was built against before finally trying to link and
+    run against other existing builds.
+
+    This is especially important for unstable releases, as APIs are often
+    added and dependent upon during development cycles.
+
+ build/pango-introspection-msvc.mak | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+commit e3334e924b4a80919cff9b90b529fe5ddc257a19
+Author: Chun-wei Fan <fanchunwei@src.gnome.org>
+Date:   Mon Jan 13 14:03:50 2014 +0800
+
+    build/introspection-msvc.mak: Fix Default typelib Path
+
+ build/introspection-msvc.mak | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit c825bb054b38d0cc78f878d115189ff32a4773a2
+Author: Chun-wei Fan <fanchunwei@src.gnome.org>
+Date:   Fri Jan 10 16:58:38 2014 +0800
+
+    MSVC Builds: Rework Introspection Build
+
+    The current approach of building the introspection files for Pango
+    works,
+    but is often cumbersome as one needs to set many environmental
+    variables
+    before launching a solution file, which runs a Windows batch script to
+    generate the .gir/.typelib files. It was also possible to hand-run the
+    batch script from the Visual Studio command prompt, but even more
+    environmental variables need to be set.
+
+    This changes the approach to build the introspection files using
+    an NMake
+    Makefile (but elimating from the Visual Studio Project Files the
+    part to
+    build the introspection files) to:
+
+    -Make it clearer to the person building the introspection files what
+     environmental variables are needed, specifically for PKG_CONFIG_PATH
+     and
+     MINGWDIR and CFG (formerly CONF). Setting stuff like VSVER, PLAT and
+     BASEDIR is no longer required, which was a bit clunky.
+    -Allows some more easier flexibility on the build of the intropsection
+     files.
+
+ build/Makefile.am                    |   6 ++
+ build/gen-file-list-pango.py         | 161
+ +++++++++++++++++++++++++++++++++
+ build/introspection-msvc.mak         |  79 ++++++++++++++++
+ build/pango-introspection-msvc.mak   | 106 ++++++++++++++++++++++
+ build/testsrules_msvc.mak            |  72 +++++++++++++++
+ build/win32/Makefile.am              |   4 +-
+ build/win32/gen-file-list-pango.py   | 154
+ -------------------------------
+ build/win32/gengir_pango.bat         | 169
+ -----------------------------------
+ build/win32/vs10/Makefile.am         |   2 -
+ build/win32/vs10/gengir.vcxproj      | 112 -----------------------
+ build/win32/vs10/pango-gengir.props  |  31 -------
+ build/win32/vs10/pango.sln           |  10 ---
+ build/win32/vs9/Makefile.am          |   2 -
+ build/win32/vs9/gengir.vcproj        |  77 ----------------
+ build/win32/vs9/pango-gengir.vsprops |  21 -----
+ build/win32/vs9/pango.sln            |  14 ---
+ 16 files changed, 425 insertions(+), 595 deletions(-)
+
+commit a6c318ee505aeabe6f84e1543d68834b9e0e7acf
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Sun Dec 15 18:42:17 2013 -0500
+
+    Bug 720379 - SIGFPE in pango_layout_iter_get_char_extents()
+
+    Untested.
+
+ pango/pango-layout.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
+
+commit f9c83d3e0ec5d086fca6495a7e9aac7fbae1f9ca
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Tue Dec 3 18:03:11 2013 -0500
+
+    Fix build --withincluded-modules
+
+    According to Doug Felt:
+
+    pango's configure dies with --with-included-modules=yes, because when
+    have_libthai is true, thai_modules ends up being ",thai-lang", and
+    all_modules (and included_modules) ends up containing ',,'.
+
+    for module in $included_modules;
+
+    ends up with module='' and the case $module falls back to default,
+    which
+    calls as_fn_error.
+
+ configure.ac | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 922e4973475db9420c8de9e3f634271738ce920f
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Tue Dec 3 16:22:02 2013 -0500
+
+    [git.mk] Update
+
+ Makefile.am | 17 +++--------------
+ git.mk      | 21 +++++++++++++--------
+ 2 files changed, 16 insertions(+), 22 deletions(-)
+
+commit 10dc44e0bb9f974782ed6d01a7a65634d0921aee
+Author: Chun-wei Fan <fanchunwei@src.gnome.org>
+Date:   Fri Dec 13 17:01:38 2013 +0800
+
+    modules/basic/basic-win32.c: Silence a Warning
+
+    The length is an unsigned int, and it is already enforced that it must
+    be greater or equal to 0 in this source file, so fix the type
+    declaration.
+
+ modules/basic/basic-win32.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit c9d6799320b4cf941f513fed5e44c537ba1d7b6f
+Author: Chun-wei Fan <fanchunwei@src.gnome.org>
+Date:   Thu Dec 5 17:48:46 2013 +0800
+
+    MSVC 2008 Projects: More cleanups
+
+    We don't have the *_FC configs in the Pango and PangoWin32 projects
+    anymore, so get rid of all remaining traces of them in these
+    projects, like
+    the MSVC 2010 ones.
+
+ build/win32/vs9/pango.vcprojin    | 8 --------
+ build/win32/vs9/pangowin32.vcproj | 4 ----
+ 2 files changed, 12 deletions(-)
+
+commit c940e9cee5bbfbb43dddbb7f610374d89ad81a1d
+Author: Chun-wei Fan <fanchunwei@src.gnome.org>
+Date:   Tue Dec 3 17:20:06 2013 +0800
+
+    Remove the original "big" MSVC2010 property sheet
+
+ build/win32/vs10/pango.propsin | 243
+ -----------------------------------------
+ 1 file changed, 243 deletions(-)
+
+commit 9f2c369bd8a1a966b2c75bdf07c3fbb1e01f5c69
+Author: Chun-wei Fan <fanchunwei@src.gnome.org>
+Date:   Tue Dec 3 17:18:30 2013 +0800
+
+    Split up the MSVC 2010 property sheets
+
+    Split up the property sheets so that their maintenance can be
+    simplified
+
+ build/win32/vs10/Makefile.am               | 15 ++++---
+ build/win32/vs10/gengir.vcxproj            |  8 ++--
+ build/win32/vs10/install.vcxproj           | 32 +++++++--------
+ build/win32/vs10/pango-build-defines.props | 42 +++++++++++++++++++
+ build/win32/vs10/pango-gengir.props        | 31 ++++++++++++++
+ build/win32/vs10/pango-ignore-fc.props     | 26 ++++++------
+ build/win32/vs10/pango-install-bin.props   | 65
+ ++++++++++++++++++++++++++++++
+ build/win32/vs10/pango-install.propsin     | 60
+ +++++++++++++++++++++++++++
+ build/win32/vs10/pango-prebuild.props      | 53 ++++++++++++++++++++++++
+ build/win32/vs10/pango-version-paths.props | 53 ++++++++++++++++++++++++
+ build/win32/vs10/pango.vcxprojin           | 12 ++++--
+ build/win32/vs10/pangocairo.vcxprojin      | 16 ++++----
+ build/win32/vs10/pangoft2.vcxprojin        |  8 ++--
+ build/win32/vs10/pangowin32.vcxproj        |  8 ++--
+ 14 files changed, 371 insertions(+), 58 deletions(-)
+
+commit 23ce626acc74c767add6fa6c43060727dbcc606f
+Author: Chun-wei Fan <fanchunwei@src.gnome.org>
+Date:   Tue Dec 3 16:16:29 2013 +0800
+
+    Split up the MSVC 2008 Property Sheets
+
+    ...so that the maintenance of these files would be easier
+
+ build/win32/vs9/Makefile.am                 |  15 ++-
+ build/win32/vs9/gengir.vcproj               |   8 +-
+ build/win32/vs9/install.vcproj              |  32 ++---
+ build/win32/vs9/pango-build-defines.vsprops |  37 ++++++
+ build/win32/vs9/pango-gengir.vsprops        |  21 ++++
+ build/win32/vs9/pango-install-bin.vsprops   |  40 ++++++
+ build/win32/vs9/pango-install.vspropsin     |  36 ++++++
+ build/win32/vs9/pango-prebuild.vsprops      |  35 ++++++
+ build/win32/vs9/pango-version-paths.vsprops |  49 ++++++++
+ build/win32/vs9/pango.vcprojin              |  10 +-
+ build/win32/vs9/pango.vspropsin             | 185
+ ----------------------------
+ build/win32/vs9/pangocairo.vcprojin         |  20 ++-
+ build/win32/vs9/pangoft2.vcprojin           |  10 +-
+ build/win32/vs9/pangowin32.vcproj           |   8 +-
+ 14 files changed, 268 insertions(+), 238 deletions(-)
+
+commit ca7d1cf957864fad0470c70511565c6b5def705d
+Author: Chun-wei Fan <fanchunwei@src.gnome.org>
+Date:   Tue Dec 3 15:15:26 2013 +0800
+
+    build/win32/vs*/README.txt: Update build information
+
+    As there is no longer a pango_fc.sln solution file, tell the people
+    to use
+    the *_fc configs if building PangoFT2 and PangoCairo with FreeType/
+    FontConfig support with the Visual Studio Projects is desired.
+
+ build/win32/vs10/README.txt | 4 ++--
+ build/win32/vs9/README.txt  | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
+
+commit ed2e1ac3c6cbedef02e0753ad73bc91560280c30
+Author: Chun-wei Fan <fanchunwei@src.gnome.org>
+Date:   Tue Dec 3 15:10:21 2013 +0800
+
+    Visual Studio 2010 Projects: Improve Optimization
+
+    Turn on Whole Program Optimization/Link Time Code Generation for
+    release
+    builds to improve optimization a bit
+
+ build/win32/vs10/pango.vcxprojin      | 2 ++
+ build/win32/vs10/pangocairo.vcxprojin | 4 ++++
+ build/win32/vs10/pangoft2.vcxprojin   | 2 ++
+ build/win32/vs10/pangowin32.vcxproj   | 2 ++
+ 4 files changed, 10 insertions(+)
+
+commit 78395d1df00dc7002b1763daffb5c8894888e5aa
+Author: Chun-wei Fan <fanchunwei@src.gnome.org>
+Date:   Tue Dec 3 14:59:45 2013 +0800
+
+    Cleanup the Visual Studio 2008 Project Files
+
+    Combine the non-PangoFT2 and PangoFT2 builds into one single
+    solution file
+    and remove configs in the Pango and PangoWin32 projects that aren't
+    really
+    necessary.  Also use Link Time Code Generation for release builds to
+    improve optimization a bit.
+
+ build/win32/vs9/Makefile.am             |   2 +-
+ build/win32/vs9/install.vcproj          |  16 ++--
+ build/win32/vs9/pango-ignore-fc.vsprops |  12 +++
+ build/win32/vs9/pango.sln               |  59 ++++++++++++++
+ build/win32/vs9/pango.vcprojin          | 135
+ +++-----------------------------
+ build/win32/vs9/pango.vspropsin         | 102 +++++++++++++++---------
+ build/win32/vs9/pango_fc.sln            |  82 -------------------
+ build/win32/vs9/pangocairo.vcprojin     |  20 +++--
+ build/win32/vs9/pangoft2.vcprojin       |   6 +-
+ build/win32/vs9/pangowin32.vcproj       | 135
+ ++------------------------------
+ 10 files changed, 177 insertions(+), 392 deletions(-)
+
+commit 610b82073ff1774d7897502412fe885ab9770853
+Author: Chun-wei Fan <fanchunwei@src.gnome.org>
+Date:   Tue Dec 3 14:36:20 2013 +0800
+
+    build/win32/vs10/pango.propsin: Fix .lib installation
+
+    Missed out the $(Platform) part when building the FontConfig
+    flavor, so
+    make it up.
+
+ build/win32/vs10/pango.propsin | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+commit 96b93126858ad09fc0be802d554d53b0f7e7695d
+Author: Chun-wei Fan <fanchunwei@src.gnome.org>
+Date:   Tue Dec 3 13:17:26 2013 +0800
+
+    build/win32/vs10/pango.propsin: Improve DLL "installation"
+
+    Make the DLL installation more flexible, as one might still prefer
+    to use
+    the autotools style DLL naming for the Visual Studio builds.
+
+ build/win32/vs10/pango.propsin | 30 +++++++++++++++---------------
+ 1 file changed, 15 insertions(+), 15 deletions(-)
+
+commit 69501d6348e41014d729fe064755d4f79dce26f7
+Author: Chun-wei Fan <fanchunwei@src.gnome.org>
+Date:   Tue Dec 3 12:47:03 2013 +0800
+
+    build/win32/vs10/pangowin32.vcxproj: Clean up
+
+    We don't really need the NoFCDef here, as this DLL has nothing to
+    do with
+    FreeType, like the main Pango DLL.  FreeType matters when we build
+    PangoCairo (and the cxx-test.c and pango-view) though.
+
+ build/win32/vs10/pangowin32.vcxproj | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+commit 6e068cdf7082de07681096eac688011378defafb
+Author: Chun-wei Fan <fanchunwei@src.gnome.org>
+Date:   Tue Dec 3 12:41:08 2013 +0800
+
+    build/win32/vs10/pango.vcxprojin: Clean up
+
+    We don't really need to NoFCDef here, so remove that.
+
+ build/win32/vs10/pango.vcxprojin | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+commit 54f0ce4de22e0af9c4ef3c040bfc366ab2c75750
+Author: Chun-wei Fan <fanchunwei@src.gnome.org>
+Date:   Tue Dec 3 12:39:17 2013 +0800
+
+    Update config.h.win32.in
+
+    Make its entries more consistent to the autotools-generated
+    config.h.in,
+    and update MODULE_VERSION to 1.8.0, as that was missed.
+
+ config.h.win32.in | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
+
+commit 05f7dcda500e83e5cec87cc05e2ba2f8a6d28a8d
+Author: Philip Withnall <philip.withnall@collabora.co.uk>
+Date:   Fri Nov 29 12:38:07 2013 +0000
+
+    pango-utils: Fix a potential strtol(NULL) call
+
+    parse_int() is called by pango_parse_enum(), which permits the enum
+    string to be NULL. This string is passed directly through to
+    parse_int()
+    and then to strtol(), which is tagged as nonnull.
+
+    Found by scan-build.
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=719549
+
+ pango/pango-utils.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
+
+commit 280a23e7f75dac7de0f5ec5cf627bbea21b2242f
+Author: Chun-wei Fan <fanchunwei@src.gnome.org>
+Date:   Mon Dec 2 17:45:15 2013 +0800
+
+    build/Makefile-msvcproj.am: Cleanup
+
+    Remove lines that were left out in the last commit
+
+ build/Makefile-msvcproj.am | 2 --
+ 1 file changed, 2 deletions(-)
+
+commit bbeb1a45ab3c14194b565e5786645822bd0ef8f8
+Author: Chun-wei Fan <fanchunwei@src.gnome.org>
+Date:   Mon Dec 2 17:34:51 2013 +0800
+
+    Clean up the Visual Studio 2010 projects
+
+    Use a single solution file for the non-PangoFT2 and PangoFT2 builds,
+    and
+    use a single PangoCairo project for these builds too.  Also get rid of
+    configurations that we don't really need in the Pango and PangoWin32
+    projects.
+
+ build/Makefile-msvcproj.am                       |  18 ---
+ build/win32/vs10/Makefile.am                     |   6 +-
+ build/win32/vs10/install.vcxproj                 |  16 +-
+ build/win32/vs10/pango-ignore-fc.props           |  14 ++
+ build/win32/vs10/pango.propsin                   |  68 ++++++--
+ build/win32/vs10/pango.sln                       |  54 +++++++
+ build/win32/vs10/pango.vcxprojin                 | 150 +-----------------
+ build/win32/vs10/pango_fc.sln                    |  65 --------
+ build/win32/vs10/pangocairo.vcxproj.filtersin    |   2 +
+ build/win32/vs10/pangocairo.vcxprojin            | 170
+ +++++++++++++++++++-
+ build/win32/vs10/pangocairo_fc.vcxproj.filtersin |  29 ----
+ build/win32/vs10/pangocairo_fc.vcxprojin         | 191
+ -----------------------
+ build/win32/vs10/pangowin32.vcxproj              | 135 +---------------
+ 13 files changed, 309 insertions(+), 609 deletions(-)
+
+commit 0f7f77785692cb7c72078335414e764c7081f643
+Author: Chun-wei Fan <fanchunwei@src.gnome.org>
+Date:   Mon Nov 25 16:07:22 2013 +0800
+
+    build/win32/vs10/gengir.vcxproj: Add PlatformToolset tag
+
+    This makes it easier to upgrade to Visual Studio 2012/2013 formats,
+    like
+    the other *.vcxproj files in Pango.
+
+ build/win32/vs10/gengir.vcxproj | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+commit 5b56434feee4dcf19cef95a98854d5b5e0007381
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Mon Nov 11 11:41:42 2013 -0500
+
+    Bump version
+
+ configure.ac | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 7c4f5ec21c7221e8e7a5d0198b0ca6f1a479ae68
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Mon Nov 11 11:01:39 2013 -0500
+
+    1.36.1
+
+ NEWS         | 5 +++++
+ configure.ac | 2 +-
+ 2 files changed, 6 insertions(+), 1 deletion(-)
+
+commit 8be9097e75611ccdc818ca6af9028c52df772b70
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Mon Sep 30 12:50:41 2013 -0400
+
+    Update git.mk
+
+ git.mk | 122
+ ++++++++++++++++++++++++++++++++++++++++++++++++++++++-----------
+ 1 file changed, 102 insertions(+), 20 deletions(-)
+
+commit fbb05a88a35871378a2967b38e67f974439f115f
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Fri Sep 27 15:09:56 2013 -0400
+
+    Doc fixups
+
+ docs/pango-docs.sgml  | 12 ++++++++++++
+ pango/pango-fontmap.c |  2 +-
+ 2 files changed, 13 insertions(+), 1 deletion(-)
+
+commit 6d08bcab0d2821365a2ffd955cbbb07270565664
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Fri Sep 27 14:36:51 2013 -0400
+
+    Bug 685167 - migrate docs to no-tmpl flavour
+
+    Patch from Rafał Mużyło.
+
+ configure.ac                      |    2 +-
+ docs/pango-docs.sgml              |    4 -
+ docs/pango-sections.txt           |    1 +
+ docs/tmpl/bidi.sgml               |  108 ----
+ docs/tmpl/coretext-fonts.sgml     |   40 --
+ docs/tmpl/coverage-maps.sgml      |  140 -----
+ docs/tmpl/engines.sgml            |  120 -----
+ docs/tmpl/fonts.sgml              | 1036
+ -------------------------------------
+ docs/tmpl/freetype-fonts.sgml     |  228 --------
+ docs/tmpl/glyphs.sgml             |  694 -------------------------
+ docs/tmpl/layout.sgml             |  938
+ ---------------------------------
+ docs/tmpl/main.sgml               |  478 -----------------
+ docs/tmpl/modules.sgml            |   90 ----
+ docs/tmpl/opentype.sgml           |  554 --------------------
+ docs/tmpl/pango-engine-lang.sgml  |   56 --
+ docs/tmpl/pango-engine-shape.sgml |   57 --
+ docs/tmpl/pango-renderer.sgml     |  246 ---------
+ docs/tmpl/pango-version.sgml      |  115 ----
+ docs/tmpl/pangocairo.sgml         |  441 ----------------
+ docs/tmpl/pangofc-decoder.sgml    |   58 ---
+ docs/tmpl/pangofc-font.sgml       |  130 -----
+ docs/tmpl/pangofc-fontmap.sgml    |  241 ---------
+ docs/tmpl/scripts.sgml            |  280 ----------
+ docs/tmpl/tab-stops.sgml          |  150 ------
+ docs/tmpl/text-attributes.sgml    |  833 -----------------------------
+ docs/tmpl/utils.sgml              |  222 --------
+ docs/tmpl/vertical.sgml           |  155 ------
+ docs/tmpl/win32-fonts.sgml        |  267 ----------
+ docs/tmpl/xft-fonts.sgml          |  311 -----------
+ pango/fonts.c                     |   13 +
+ pango/modules.c                   |   21 +
+ pango/pango-attributes.c          |   13 +-
+ pango/pango-attributes.h          |  217 +++++++-
+ pango/pango-bidi-type.c           |   22 +-
+ pango/pango-break.h               |   53 ++
+ pango/pango-context.c             |   18 +-
+ pango/pango-coverage.c            |   12 +-
+ pango/pango-coverage.h            |   21 +
+ pango/pango-engine.c              |   39 ++
+ pango/pango-engine.h              |   46 ++
+ pango/pango-font.h                |  234 +++++++++
+ pango/pango-fontmap.h             |   68 +++
+ pango/pango-fontset.h             |   42 ++
+ pango/pango-glyph-item.h          |   64 +++
+ pango/pango-glyph.h               |   55 ++
+ pango/pango-gravity.c             |   60 ++-
+ pango/pango-item.h                |   28 +
+ pango/pango-language.c            |    9 +
+ pango/pango-language.h            |    5 +
+ pango/pango-layout.c              |   50 +-
+ pango/pango-layout.h              |   43 ++
+ pango/pango-modules.h             |   11 +
+ pango/pango-ot-buffer.c           |    2 +-
+ pango/pango-ot-info.c             |   10 +
+ pango/pango-ot-private.h          |   18 +
+ pango/pango-ot-ruleset.c          |   12 +
+ pango/pango-ot.h                  |  149 ++++++
+ pango/pango-script.c              |   11 +-
+ pango/pango-script.h              |  102 ++++
+ pango/pango-tabs.c                |   14 +
+ pango/pango-tabs.h                |   11 +
+ pango/pango-types.h               |  104 +++-
+ pango/pango-utils.c               |   18 +
+ pango/pango-utils.h               |   44 ++
+ pango/pangocairo-context.c        |    2 +-
+ pango/pangocairo-render.c         |  133 +++++
+ pango/pangocairo.h                |   14 +
+ pango/pangocoretext.c             |    8 +
+ pango/pangocoretext.h             |    6 +
+ pango/pangofc-decoder.c           |    8 +
+ pango/pangofc-font.c              |   18 +
+ pango/pangofc-fontmap.c           |   21 +
+ pango/pangofc-fontmap.h           |    4 +-
+ pango/pangoft2-fontmap.c          |   21 +-
+ pango/pangoft2-render.c           |   11 +
+ pango/pangoft2.c                  |   15 +-
+ pango/pangoft2.h                  |   13 +
+ pango/pangowin32-fontcache.c      |    5 +
+ pango/pangowin32-fontmap.c        |    4 +-
+ pango/pangowin32.c                |    8 +
+ pango/pangowin32.h                |    6 +
+ pango/pangoxft-font.c             |   30 ++
+ pango/pangoxft-fontmap.c          |    4 +-
+ pango/pangoxft.h                  |   26 +
+ pango/shape.c                     |   10 +
+ 85 files changed, 1975 insertions(+), 8026 deletions(-)
+
+commit bb5c4c8497157afddcb5ced7e16c5dad4e893a03
+Author: Owen W. Taylor <otaylor@fishsoup.net>
+Date:   Wed Sep 25 14:50:15 2013 -0400
+
+    pango_attr_iterator_get_font(): handle scaling absolute font sizes
+
+    When handling PANGO_ATTR_SCALE on a font description with an absolute
+    size, properly preserve the absolute flag when setting the scaled
+    size.
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=708778
+
+ pango/pango-attributes.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
 commit 9d2ff982c2c0a9b7ca96bb05416b4c0a92c8db18
 Author: Matthias Clasen <mclasen@redhat.com>
 Date:   Mon Sep 23 06:41:36 2013 -0400

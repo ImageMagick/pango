@@ -24,7 +24,6 @@
 #include "pangocairo.h"
 #include "pangocairo-private.h"
 #include "pango-impl-utils.h"
-#include "gconstructor.h"
 
 #if defined (HAVE_CORE_TEXT) && defined (HAVE_CAIRO_QUARTZ)
 #  include "pangocairo-coretext.h"
@@ -59,6 +58,13 @@ pango_cairo_font_map_default_init (PangoCairoFontMapIface *iface)
  * You generally should only use the #PangoFontMap and
  * #PangoCairoFontMap interfaces on the returned object.
  *
+ * You can override the type of backend returned by using an
+ * environment variable %PANGOCAIRO_BACKEND.  Supported types,
+ * based on your build, are fc (fontconfig), win32, and coretext.
+ * If requested type is not available, NULL is returned. Ie.
+ * this is only useful for testing, when at least two backends
+ * are compiled in.
+ *
  * Return value: (transfer full): the newly allocated #PangoFontMap,
  *               which should be freed with g_object_unref().
  *
@@ -67,20 +73,41 @@ pango_cairo_font_map_default_init (PangoCairoFontMapIface *iface)
 PangoFontMap *
 pango_cairo_font_map_new (void)
 {
+  const char *backend = getenv ("PANGOCAIRO_BACKEND");
+  if (backend && !*backend)
+    backend = NULL;
 #if !GLIB_CHECK_VERSION (2, 35, 3)
   /* Make sure that the type system is initialized */
   g_type_init ();
 #endif
 #if defined(HAVE_CORE_TEXT) && defined (HAVE_CAIRO_QUARTZ)
-  return g_object_new (PANGO_TYPE_CAIRO_CORE_TEXT_FONT_MAP, NULL);
-#elif defined(HAVE_CAIRO_WIN32)
-  return g_object_new (PANGO_TYPE_CAIRO_WIN32_FONT_MAP, NULL);
-#elif defined(HAVE_CAIRO_FREETYPE)
-  return g_object_new (PANGO_TYPE_CAIRO_FC_FONT_MAP, NULL);
-#else
-  g_assert_not_reached ();
-  return NULL;
+  if (!backend || 0 == strcmp (backend, "coretext"))
+    return g_object_new (PANGO_TYPE_CAIRO_CORE_TEXT_FONT_MAP, NULL);
 #endif
+#if defined(HAVE_CAIRO_WIN32)
+  if (!backend || 0 == strcmp (backend, "win32"))
+    return g_object_new (PANGO_TYPE_CAIRO_WIN32_FONT_MAP, NULL);
+#endif
+#if defined(HAVE_CAIRO_FREETYPE)
+  if (!backend || 0 == strcmp (backend, "fc")
+	       || 0 == strcmp (backend, "fontconfig"))
+    return g_object_new (PANGO_TYPE_CAIRO_FC_FONT_MAP, NULL);
+#endif
+  {
+    const char backends[] = ""
+#if defined(HAVE_CORE_TEXT) && defined (HAVE_CAIRO_QUARTZ)
+      " coretext"
+#endif
+#if defined(HAVE_CAIRO_WIN32)
+      " win32"
+#endif
+#if defined(HAVE_CAIRO_FREETYPE)
+      " fontconfig"
+#endif
+      ;
+    g_error ("Unknown $PANGOCAIRO_BACKEND value.\n  Available backends are:%s", backends);
+  }
+  return NULL;
 }
 
 /**
@@ -94,10 +121,10 @@ pango_cairo_font_map_new (void)
  * or in fact in most of those cases, just use
  * @pango_cairo_font_map_get_default().
  *
- * Return value: (transfer full) : the newly allocated #PangoFontMap
- *               of suitable type which should be freed with
- *               g_object_unref(), or %NULL if the requested cairo
- *               font backend is not supported / compiled in.
+ * Return value: (transfer full) (nullable): the newly allocated
+ *               #PangoFontMap of suitable type which should be freed
+ *               with g_object_unref(), or %NULL if the requested
+ *               cairo font backend is not supported / compiled in.
  *
  * Since: 1.18
  **/
@@ -169,7 +196,7 @@ pango_cairo_font_map_get_default (void)
 
 /**
  * pango_cairo_font_map_set_default:
- * @fontmap: The new default font map, or %NULL
+ * @fontmap: (nullable): The new default font map, or %NULL
  *
  * Sets a default #PangoCairoFontMap to use with Cairo.
  *
@@ -276,17 +303,4 @@ pango_cairo_font_map_get_font_type (PangoCairoFontMap *fontmap)
   g_return_val_if_fail (PANGO_IS_CAIRO_FONT_MAP (fontmap), CAIRO_FONT_TYPE_TOY);
 
   return (* PANGO_CAIRO_FONT_MAP_GET_IFACE (fontmap)->get_font_type) (fontmap);
-}
-
-G_DEFINE_DESTRUCTOR(pango_init_dtor)
-
-static void
-pango_init_dtor(void)
-{
-  PangoFontMap *fontmap = g_private_get(&default_font_map);
-  if (fontmap == NULL)
-    return;
-
-  g_object_unref(fontmap);
-  g_private_set(&default_font_map, NULL);
 }

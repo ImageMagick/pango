@@ -19,6 +19,54 @@
  * Boston, MA 02111-1307, USA.
  */
 
+/**
+ * SECTION:layout
+ * @short_description:High-level layout driver objects
+ * @title:Layout Objects
+ *
+ * While complete access to the layout capabilities of Pango is provided
+ * using the detailed interfaces for itemization and shaping, using
+ * that functionality directly involves writing a fairly large amount
+ * of code. The objects and functions in this section provide a
+ * high-level driver for formatting entire paragraphs of text
+ * at once.
+ */
+
+/**
+ * PangoLayout:
+ *
+ * The #PangoLayout structure represents an entire paragraph
+ * of text. It is initialized with a #PangoContext, UTF-8 string
+ * and set of attributes for that string. Once that is done, the
+ * set of formatted lines can be extracted from the object,
+ * the layout can be rendered, and conversion between logical
+ * character positions within the layout's text, and the physical
+ * position of the resulting glyphs can be made.
+ *
+ * There are also a number of parameters to adjust the formatting
+ * of a #PangoLayout, which are illustrated in <xref linkend="parameters"/>.
+ * It is possible, as well, to ignore the 2-D setup, and simply
+ * treat the results of a #PangoLayout as a list of lines.
+ *
+ * <figure id="parameters">
+ * <title>Adjustable parameters for a PangoLayout</title>
+ * <graphic fileref="layout.gif" format="GIF"></graphic>
+ * </figure>
+ *
+ * The #PangoLayout structure is opaque, and has no user-visible
+ * fields.
+ */
+
+/**
+ * PangoLayoutIter:
+ *
+ * A #PangoLayoutIter structure can be used to
+ * iterate over the visual extents of a #PangoLayout.
+ *
+ * The #PangoLayoutIter structure is opaque, and
+ * has no user-visible fields.
+ */
+
 #include "config.h"
 #include "pango-glyph.h"		/* For pango_shape() */
 #include "pango-break.h"
@@ -199,6 +247,7 @@ pango_layout_init (PangoLayout *layout)
   layout->width = -1;
   layout->height = -1;
   layout->indent = 0;
+  layout->spacing = 0;
 
   layout->alignment = PANGO_ALIGN_LEFT;
   layout->justify = FALSE;
@@ -679,10 +728,10 @@ pango_layout_set_font_description (PangoLayout                 *layout,
  *
  * Gets the font description for the layout, if any.
  *
- * Return value: a pointer to the layout's font description,
- *  or %NULL if the font description from the layout's
- *  context is inherited. This value is owned by the layout
- *  and must not be modified or freed.
+ * Return value: (nullable): a pointer to the layout's font
+ *  description, or %NULL if the font description from the layout's
+ *  context is inherited. This value is owned by the layout and must
+ *  not be modified or freed.
  *
  * Since: 1.8
  **/
@@ -875,7 +924,8 @@ pango_layout_set_tabs (PangoLayout   *layout,
  * and %NULL is returned. Default tabs are every 8 spaces.
  * The return value should be freed with pango_tab_array_free().
  *
- * Return value: a copy of the tabs for this layout, or %NULL.
+ * Return value: (nullable): a copy of the tabs for this layout, or
+ * %NULL.
  **/
 PangoTabArray*
 pango_layout_get_tabs (PangoLayout *layout)
@@ -1263,7 +1313,7 @@ pango_layout_get_unknown_glyphs_count (PangoLayout *layout)
 static void
 check_context_changed (PangoLayout *layout)
 {
-  int old_serial = layout->context_serial;
+  guint old_serial = layout->context_serial;
 
   layout->context_serial = pango_context_get_serial (layout->context);
 
@@ -1484,10 +1534,11 @@ pango_layout_get_lines_readonly (PangoLayout *layout)
  * Use the faster pango_layout_get_line_readonly() if you do not plan
  * to modify the contents of the line (glyphs, glyph widths, etc.).
  *
- * Return value: (transfer none): the requested #PangoLayoutLine, or %NULL if the
- *               index is out of range. This layout line can
- *               be ref'ed and retained, but will become invalid
- *               if changes are made to the #PangoLayout.
+ * Return value: (transfer none) (nullable): the requested
+ *               #PangoLayoutLine, or %NULL if the index is out of
+ *               range. This layout line can be ref'ed and retained,
+ *               but will become invalid if changes are made to the
+ *               #PangoLayout.
  **/
 PangoLayoutLine *
 pango_layout_get_line (PangoLayout *layout,
@@ -1526,11 +1577,11 @@ pango_layout_get_line (PangoLayout *layout,
  * but the user is not expected
  * to modify the contents of the line (glyphs, glyph widths, etc.).
  *
- * Return value: (transfer none): the requested #PangoLayoutLine, or %NULL if the
- *               index is out of range. This layout line can
- *               be ref'ed and retained, but will become invalid
- *               if changes are made to the #PangoLayout.
- *               No changes should be made to the line.
+ * Return value: (transfer none) (nullable): the requested
+ *               #PangoLayoutLine, or %NULL if the index is out of
+ *               range. This layout line can be ref'ed and retained,
+ *               but will become invalid if changes are made to the
+ *               #PangoLayout.  No changes should be made to the line.
  *
  * Since: 1.16
  **/
@@ -1713,7 +1764,7 @@ pango_layout_index_to_line_and_extents (PangoLayout     *layout,
  * @layout:    a #PangoLayout
  * @index_:    the byte index of a grapheme within the layout.
  * @trailing:  an integer indicating the edge of the grapheme to retrieve the
- *             position of. If 0, the trailing edge of the grapheme, if > 0,
+ *             position of. If > 0, the trailing edge of the grapheme, if 0,
  *             the leading of the grapheme.
  * @line: (out) (allow-none): location to store resulting line index. (which will
  *               between 0 and pango_layout_get_line_count(layout) - 1), or %NULL
@@ -1769,9 +1820,9 @@ pango_layout_index_to_line_x (PangoLayout *layout,
  *                weak cursor. The strong cursor is the cursor corresponding
  *                to text insertion in the base direction for the layout.
  * @old_index:    the byte index of the grapheme for the old index
- * @old_trailing: if 0, the cursor was at the trailing edge of the
+ * @old_trailing: if 0, the cursor was at the leading edge of the
  *                grapheme indicated by @old_index, if > 0, the cursor
- *                was at the leading edge.
+ *                was at the trailing edge.
  * @direction:    direction to move cursor. A negative
  *                value indicates motion to the left.
  * @new_index: (out): location to store the new cursor byte index. A value of -1
@@ -1960,14 +2011,14 @@ pango_layout_move_cursor_visually (PangoLayout *layout,
  * @trailing: (out): location to store a integer indicating where
  *             in the grapheme the user clicked. It will either
  *             be zero, or the number of characters in the
- *             grapheme. 0 represents the trailing edge of the grapheme.
+ *             grapheme. 0 represents the leading edge of the grapheme.
  *
  * Converts from X and Y position within a layout to the byte
  * index to the character at that logical position. If the
  * Y position is not inside the layout, the closest position is chosen
  * (the position will be clamped inside the layout). If the
  * X position is not within the layout, then the start or the
- * end of the line is chosen as  described for pango_layout_x_to_index().
+ * end of the line is chosen as described for pango_layout_line_x_to_index().
  * If either the X or Y positions were not inside the layout, then the
  * function returns %FALSE; on an exact hit, it returns %TRUE.
  *
@@ -3602,6 +3653,7 @@ add_line (PangoLayoutLine *line,
       PangoRectangle logical_rect;
       pango_layout_line_get_extents (line, NULL, &logical_rect);
       state->remaining_height -= logical_rect.height;
+      state->remaining_height -= layout->spacing;
       state->line_height = logical_rect.height;
     }
 }
@@ -3800,6 +3852,11 @@ no_shape_filter_func (PangoAttribute *attribute,
     PANGO_ATTR_UNDERLINE,
     PANGO_ATTR_STRIKETHROUGH,
     PANGO_ATTR_RISE
+    /* Ideally we want font-features here, because we don't
+     * want it to break shaping runs.  But if we put it here,
+     * it won't show up in the shaper anymore :(.  To be
+     * fixed later. */
+    /* PANGO_ATTR_FONT_FEATURES */
   };
 
   int i;
@@ -4014,7 +4071,7 @@ pango_layout_check_lines (PangoLayout *layout)
 
 /**
  * pango_layout_line_ref:
- * @line: a #PangoLayoutLine, may be %NULL
+ * @line: (nullable): a #PangoLayoutLine, may be %NULL
  *
  * Increase the reference count of a #PangoLayoutLine by one.
  *
@@ -5110,6 +5167,9 @@ static void
 justify_clusters (PangoLayoutLine *line,
 		  ParaBreakState  *state)
 {
+  const gchar *text = line->layout->text;
+  const PangoLogAttr *log_attrs = line->layout->log_attrs;
+
   int total_remaining_width, total_gaps = 0;
   int added_so_far, gaps_so_far;
   gboolean is_hinted;
@@ -5128,6 +5188,11 @@ justify_clusters (PangoLayoutLine *line,
 
   for (mode = MEASURE; mode <= ADJUST; mode++)
     {
+      gboolean leftedge = TRUE;
+      PangoGlyphString *rightmost_glyphs = NULL;
+      int rightmost_space;
+      int residual = 0;
+
       added_so_far = 0;
       gaps_so_far = 0;
 
@@ -5135,61 +5200,116 @@ justify_clusters (PangoLayoutLine *line,
 	{
 	  PangoLayoutRun *run = run_iter->data;
 	  PangoGlyphString *glyphs = run->glyphs;
-	  gboolean is_first_gap = TRUE;
+	  PangoGlyphItemIter cluster_iter;
+	  gboolean have_cluster;
+	  int dir;
+	  int offset;
 
-	  int i;
+	  dir = run->item->analysis.level % 2 == 0 ? +1 : -1;
 
-	  for (i = 0; i < glyphs->num_glyphs; i++)
+	  /* We need character offset of the start of the run.  We don't have this.
+	   * Compute by counting from the beginning of the line.  The naming is
+	   * confusing.  Note that:
+	   *
+	   * run->item->offset        is byte offset of start of run in layout->text.
+	   * state->line_start_index  is byte offset of start of line in layout->text.
+	   * state->line_start_offset is character offset of start of line in layout->text.
+	   */
+	  g_assert (run->item->offset >= state->line_start_index);
+	  offset = state->line_start_offset
+		 + pango_utf8_strlen (text + state->line_start_index,
+				      run->item->offset - state->line_start_index);
+
+	  for (have_cluster = dir > 0 ?
+		 pango_glyph_item_iter_init_start (&cluster_iter, run, text) :
+		 pango_glyph_item_iter_init_end   (&cluster_iter, run, text);
+	       have_cluster;
+	       have_cluster = dir > 0 ?
+	         pango_glyph_item_iter_next_cluster (&cluster_iter) :
+	         pango_glyph_item_iter_prev_cluster (&cluster_iter))
 	    {
-	      if (!glyphs->glyphs[i].attr.is_cluster_start)
-	        continue;
+	      int i;
+	      int width = 0;
 
-	      /* also don't expand zero-width spaces at the end of runs */
-	      if (glyphs->glyphs[i].geometry.width == 0)
-	        {
-		  if (i == glyphs->num_glyphs -1)
-		    continue;
+	      /* don't expand in the middle of graphemes */
+	      if (!log_attrs[offset + cluster_iter.start_char].is_cursor_position)
+		continue;
 
-		  if (i == 0 && glyphs->num_glyphs > 1 && glyphs->glyphs[i+1].attr.is_cluster_start)
-		    continue;
-		}
+	      for (i = cluster_iter.start_glyph; i != cluster_iter.end_glyph; i += dir)
+		width += glyphs->glyphs[i].geometry.width;
 
-	      if (is_first_gap)
-	        {
-		  is_first_gap = FALSE;
-		  continue;
-		}
+	      /* also don't expand zero-width clusters. */
+	      if (width == 0)
+		continue;
 
 	      gaps_so_far++;
 
 	      if (mode == ADJUST)
 		{
+		  int leftmost, rightmost;
 		  int adjustment, space_left, space_right;
 
-		  adjustment = (gaps_so_far * total_remaining_width) / total_gaps - added_so_far;
+		  adjustment = total_remaining_width / total_gaps + residual;
 		  if (is_hinted)
+		  {
+		    int old_adjustment = adjustment;
 		    adjustment = PANGO_UNITS_ROUND (adjustment);
+		    residual = old_adjustment - adjustment;
+		  }
 		  /* distribute to before/after */
 		  distribute_letter_spacing (adjustment, &space_left, &space_right);
 
-		  glyphs->glyphs[i-1].geometry.width    += space_left ;
-		  glyphs->glyphs[i  ].geometry.width    += space_right;
-		  glyphs->glyphs[i  ].geometry.x_offset += space_right;
+		  if (cluster_iter.start_glyph < cluster_iter.end_glyph)
+		  {
+		    /* LTR */
+		    leftmost  = cluster_iter.start_glyph;
+		    rightmost = cluster_iter.end_glyph - 1;
+		  }
+		  else
+		  {
+		    /* RTL */
+		    leftmost  = cluster_iter.end_glyph + 1;
+		    rightmost = cluster_iter.start_glyph;
+		  }
+		  /* Don't add to left-side of left-most glyph of left-most non-zero run. */
+		  if (leftedge)
+		    leftedge = FALSE;
+		  else
+		  {
+		    glyphs->glyphs[leftmost].geometry.width    += space_left ;
+		    glyphs->glyphs[leftmost].geometry.x_offset += space_left ;
+		    added_so_far += space_left;
+		  }
+		  /* Don't add to right-side of right-most glyph of right-most non-zero run. */
+		  {
+		    /* Save so we can undo later. */
+		    rightmost_glyphs = glyphs;
+		    rightmost_space = space_right;
 
-		  added_so_far += adjustment;
+		    glyphs->glyphs[rightmost].geometry.width  += space_right;
+		    added_so_far += space_right;
+		  }
 		}
 	    }
 	}
 
       if (mode == MEASURE)
 	{
-	  total_gaps = gaps_so_far;
+	  total_gaps = gaps_so_far - 1;
 
 	  if (total_gaps == 0)
 	    {
 	      /* a single cluster, can't really justify it */
 	      return;
 	    }
+	}
+      else /* mode == ADJUST */
+        {
+	  if (rightmost_glyphs)
+	   {
+	     rightmost_glyphs->glyphs[rightmost_glyphs->num_glyphs - 1].geometry.width -= rightmost_space;
+	     added_so_far -= rightmost_space;
+	   }
 	}
     }
 
@@ -5203,7 +5323,6 @@ justify_words (PangoLayoutLine *line,
   const gchar *text = line->layout->text;
   const PangoLogAttr *log_attrs = line->layout->log_attrs;
 
-  int offset;
   int total_remaining_width, total_space_width = 0;
   int added_so_far, spaces_so_far;
   gboolean is_hinted;
@@ -5225,13 +5344,26 @@ justify_words (PangoLayoutLine *line,
       added_so_far = 0;
       spaces_so_far = 0;
 
-      offset = state->line_start_offset;
       for (run_iter = line->runs; run_iter; run_iter = run_iter->next)
 	{
 	  PangoLayoutRun *run = run_iter->data;
 	  PangoGlyphString *glyphs = run->glyphs;
 	  PangoGlyphItemIter cluster_iter;
 	  gboolean have_cluster;
+	  int offset;
+
+	  /* We need character offset of the start of the run.  We don't have this.
+	   * Compute by counting from the beginning of the line.  The naming is
+	   * confusing.  Note that:
+	   *
+	   * run->item->offset        is byte offset of start of run in layout->text.
+	   * state->line_start_index  is byte offset of start of line in layout->text.
+	   * state->line_start_offset is character offset of start of line in layout->text.
+	   */
+	  g_assert (run->item->offset >= state->line_start_index);
+	  offset = state->line_start_offset
+		 + pango_utf8_strlen (text + state->line_start_index,
+				      run->item->offset - state->line_start_index);
 
 	  for (have_cluster = pango_glyph_item_iter_init_start (&cluster_iter, run, text);
 	       have_cluster;
@@ -5266,8 +5398,6 @@ justify_words (PangoLayoutLine *line,
 		    }
 		}
 	    }
-
-	  offset += glyphs->num_glyphs;
 	}
 
       if (mode == MEASURE)
@@ -5544,13 +5674,13 @@ update_run (PangoLayoutIter *iter,
 
 /**
  * pango_layout_iter_copy:
- * @iter: a #PangoLayoutIter, may be %NULL
+ * @iter: (nullable): a #PangoLayoutIter, may be %NULL
  *
  * Copies a #PangoLayoutIter.
  *
- * Return value: the newly allocated #PangoLayoutIter, which should
- *               be freed with pango_layout_iter_free(), or %NULL if
- *               @iter was %NULL.
+ * Return value: (nullable): the newly allocated #PangoLayoutIter,
+ *               which should be freed with pango_layout_iter_free(),
+ *               or %NULL if @iter was %NULL.
  *
  * Since: 1.20
  **/
@@ -5663,7 +5793,7 @@ pango_layout_get_iter (PangoLayout *layout)
 
 /**
  * pango_layout_iter_free:
- * @iter: a #PangoLayoutIter, may be %NULL
+ * @iter: (nullable): a #PangoLayoutIter, may be %NULL
  *
  * Frees an iterator that's no longer in use.
  **/
@@ -5712,7 +5842,7 @@ pango_layout_iter_get_index (PangoLayoutIter *iter)
  * Use the faster pango_layout_iter_get_run_readonly() if you do not plan
  * to modify the contents of the run (glyphs, glyph widths, etc.).
  *
- * Return value: (transfer none): the current run.
+ * Return value: (transfer none) (nullable): the current run.
  **/
 PangoLayoutRun*
 pango_layout_iter_get_run (PangoLayoutIter *iter)
@@ -5738,7 +5868,8 @@ pango_layout_iter_get_run (PangoLayoutIter *iter)
  * but the user is not expected
  * to modify the contents of the run (glyphs, glyph widths, etc.).
  *
- * Return value: (transfer none): the current run, that should not be modified.
+ * Return value: (transfer none) (nullable): the current run, that
+ * should not be modified.
  *
  * Since: 1.16
  **/
@@ -6130,8 +6261,15 @@ pango_layout_iter_get_char_extents (PangoLayoutIter *iter,
       return;
     }
 
-  x0 = (iter->character_position * cluster_rect.width) / iter->cluster_num_chars;
-  x1 = ((iter->character_position + 1) * cluster_rect.width) / iter->cluster_num_chars;
+  if (iter->cluster_num_chars)
+  {
+    x0 = (iter->character_position * cluster_rect.width) / iter->cluster_num_chars;
+    x1 = ((iter->character_position + 1) * cluster_rect.width) / iter->cluster_num_chars;
+  }
+  else
+  {
+    x0 = x1 = 0;
+  }
 
   logical_rect->width = x1 - x0;
   logical_rect->height = cluster_rect.height;

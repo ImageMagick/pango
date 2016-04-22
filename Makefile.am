@@ -1,6 +1,6 @@
 ## Process this file with automake to create Makefile.in.
 
-SUBDIRS= pango modules pango-view examples docs tools tests build
+SUBDIRS= pango pango-view examples docs tools tests build
 
 EXTRA_DIST = 			\
 	autogen.sh		\
@@ -30,29 +30,16 @@ EXTRA_DIST = 			\
 	HACKING			\
 	README.win32		\
 	config.h.win32		\
-	pango-zip.sh.in		\
-	sanitize-la.sh		\
 	pango.doap
 
 MAINTAINERCLEANFILES = \
+	$(GITIGNORE_MAINTAINERCLEANFILES_TOPLEVEL) \
+	$(GITIGNORE_MAINTAINERCLEANFILES_MAKEFILE_IN) \
 	$(srcdir)/INSTALL \
-	$(srcdir)/aclocal.m4 \
-	$(srcdir)/autoscan.log \
-	$(srcdir)/compile \
-	$(srcdir)/config.guess \
-	$(srcdir)/config.h.in \
-	$(srcdir)/config.sub \
-	$(srcdir)/configure.scan \
-	$(srcdir)/depcomp \
-	$(srcdir)/install-sh \
-	$(srcdir)/ltmain.sh \
-	$(srcdir)/missing \
-	$(srcdir)/mkinstalldirs \
 	$(srcdir)/omf.make \
 	$(srcdir)/xmldocs.make \
 	$(srcdir)/gtk-doc.make \
-	$(srcdir)/ChangeLog \
-	`find "$(srcdir)" -type f -name Makefile.in -print`
+	$(srcdir)/ChangeLog
 
 ### ChangeLog generation
 

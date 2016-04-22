@@ -20,6 +20,14 @@
  * Boston, MA 02111-1307, USA.
  */
 
+/**
+ * SECTION:freetype-fonts
+ * @short_description:Functions for shape engines to manipulate FreeType fonts
+ * @title:FreeType Fonts and Rendering
+ *
+ * The macros and functions in this section are used to access fonts and render
+ * text to bitmaps using the FreeType 2 library.
+ */
 #include "config.h"
 
 #include <string.h>
@@ -102,7 +110,7 @@ load_fallback_face (PangoFT2Font *ft2font,
 
   _pango_ft2_font_map_default_substitute ((PangoFcFontMap *)fcfont->fontmap, sans);
 
-  matched = FcFontMatch (NULL, sans, &result);
+  matched = FcFontMatch (pango_fc_font_map_get_config (fcfont->fontmap), sans, &result);
 
   if (FcPatternGetString (matched, FC_FILE, 0, &filename2) != FcResultMatch)
     goto bail1;
@@ -161,8 +169,9 @@ set_transform (PangoFT2Font *ft2font)
  * face from pango_fc_font_lock_face() you must call
  * pango_fc_font_unlock_face().
  *
- * Return value: a pointer to a <type>FT_Face</type> structure, with the size set correctly,
- *               or %NULL if @font is %NULL.
+ * Return value: (nullable): a pointer to a <type>FT_Face</type>
+ *               structure, with the size set correctly, or %NULL if
+ *               @font is %NULL.
  **/
 FT_Face
 pango_ft2_font_get_face (PangoFont *font)
@@ -467,12 +476,13 @@ pango_ft2_font_finalize (GObject *object)
 
 /**
  * pango_ft2_font_get_coverage:
- * @font: a #PangoFT2Font.
+ * @font: a <type>PangoFT2Font</type>.
  * @language: a language tag.
- * @returns: a #PangoCoverage.
  *
- * Gets the #PangoCoverage for a #PangoFT2Font. Use
+ * Gets the #PangoCoverage for a <type>PangoFT2Font</type>. Use
  * pango_font_get_coverage() instead.
+ *
+ * Return value: a #PangoCoverage.
  **/
 PangoCoverage *
 pango_ft2_font_get_coverage (PangoFont     *font,

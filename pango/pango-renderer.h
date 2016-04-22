@@ -59,8 +59,9 @@ typedef enum
 
 /**
  * PangoRenderer:
- * @matrix: the current transformation matrix for the Renderer; may
- *    be %NULL, which should be treated the same as the identity matrix.
+ * @matrix: (nullable): the current transformation matrix for
+ *    the Renderer; may be %NULL, which should be treated the
+ *    same as the identity matrix.
  *
  * #PangoRenderer is a base class for objects that are used to
  * render Pango objects such as #PangoGlyphString and
@@ -245,6 +246,12 @@ void        pango_renderer_set_color (PangoRenderer    *renderer,
 				      PangoRenderPart   part,
 				      const PangoColor *color);
 PangoColor *pango_renderer_get_color (PangoRenderer    *renderer,
+				      PangoRenderPart   part);
+
+void        pango_renderer_set_alpha (PangoRenderer    *renderer,
+				      PangoRenderPart   part,
+				      guint16           alpha);
+guint16     pango_renderer_get_alpha (PangoRenderer    *renderer,
 				      PangoRenderPart   part);
 
 void                        pango_renderer_set_matrix (PangoRenderer     *renderer,

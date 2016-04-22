@@ -19,6 +19,27 @@
  * Boston, MA 02111-1307, USA.
  */
 
+/**
+ * SECTION:pangofc-fontmap
+ * @short_description:Base fontmap class for Fontconfig-based backends
+ * @title:PangoFcFontMap
+ * @see_also:
+ * <variablelist><varlistentry>
+ * <term>#PangoFcFont</term>
+ * <listitem>The base class for fonts; creating a new
+ * Fontconfig-based backend involves deriving from both
+ * #PangoFcFontMap and #PangoFcFont.</listitem>
+ * </varlistentry></variablelist>
+ *
+ * PangoFcFontMap is a base class for font map implementations using the
+ * Fontconfig and FreeType libraries. It is used in the
+ * <link linkend="pango-Xft-Fonts-and-Rendering">Xft</link> and
+ * <link linkend="pango-FreeType-Fonts-and-Rendering">FreeType</link>
+ * backends shipped with Pango, but can also be used when creating
+ * new backends. Any backend deriving from this base class will
+ * take advantage of the wide range of shapers implemented using
+ * FreeType that come with Pango.
+ */
 #define FONTSET_CACHE_SIZE 256
 
 #include "config.h"
@@ -28,7 +49,6 @@
 #include "pangofc-fontmap.h"
 #include "pangofc-private.h"
 #include "pango-impl-utils.h"
-#include "modules.h"
 #include "pango-enum-types.h"
 
 
@@ -130,6 +150,8 @@ struct _PangoFcFontMapPrivate
   GSList *findfuncs;
 
   guint closed : 1;
+
+  FcConfig *config;
 };
 
 struct _PangoFcFontFaceData
@@ -760,7 +782,7 @@ pango_fc_patterns_get_font_pattern (PangoFcPatterns *pats, int i, gboolean *prep
       FcResult result;
       if (!pats->match && !pats->fontset)
         {
-	  pats->match = FcFontMatch (NULL, pats->pattern, &result);
+	  pats->match = FcFontMatch (pats->fontmap->priv->config, pats->pattern, &result);
 #ifdef FC_PATTERN
 	  /* The FC_PATTERN element, which points back to our the original
 	   * pattern defeats our hash tables.
@@ -780,7 +802,7 @@ pango_fc_patterns_get_font_pattern (PangoFcPatterns *pats, int i, gboolean *prep
       if (!pats->fontset)
         {
 	  FcResult result;
-	  pats->fontset = FcFontSort (NULL, pats->pattern, FcTrue, NULL, &result);
+	  pats->fontset = FcFontSort (pats->fontmap->priv->config, pats->pattern, FcTrue, NULL, &result);
 	  if (pats->match)
 	    {
 	      FcPatternDestroy (pats->match);
@@ -1033,22 +1055,11 @@ G_DEFINE_ABSTRACT_TYPE (PangoFcFontMap, pango_fc_font_map, PANGO_TYPE_FONT_MAP)
 static void
 pango_fc_font_map_init (PangoFcFontMap *fcfontmap)
 {
-  static gsize registered_modules = 0; /* MT-safe */
   PangoFcFontMapPrivate *priv;
 
   priv = fcfontmap->priv = G_TYPE_INSTANCE_GET_PRIVATE (fcfontmap,
 							PANGO_TYPE_FC_FONT_MAP,
 							PangoFcFontMapPrivate);
-
-  if (g_once_init_enter (&registered_modules))
-    {
-      int i;
-
-      for (i = 0; _pango_included_fc_modules[i].list; i++)
-	pango_module_register (&_pango_included_fc_modules[i]);
-
-      g_once_init_leave(&registered_modules, 1);
-    }
 
   priv->n_families = -1;
 
@@ -1169,8 +1180,8 @@ pango_fc_font_map_add_decoder_find_func (PangoFcFontMap        *fcfontmap,
  * Finds the decoder to use for @pattern.  Decoders can be added to
  * a font map using pango_fc_font_map_add_decoder_find_func().
  *
- * Returns: a newly created #PangoFcDecoder object or %NULL if
- *          no decoder is set for @pattern.
+ * Returns: (nullable): a newly created #PangoFcDecoder object or
+ *          %NULL if no decoder is set for @pattern.
  *
  * Since: 1.26
  **/
@@ -1303,7 +1314,7 @@ pango_fc_font_map_list_families (PangoFontMap      *fontmap,
        * the same family have different spacing values */
       GHashTable *temp_family_hash;
 
-      fontset = FcFontList (NULL, pat, os);
+      fontset = FcFontList (priv->config, pat, os);
 
       FcPatternDestroy (pat);
       FcObjectSetDestroy (os);
@@ -1354,12 +1365,17 @@ pango_fc_font_map_list_families (PangoFontMap      *fontmap,
 static int
 pango_fc_convert_weight_to_fc (PangoWeight pango_weight)
 {
+#ifdef HAVE_FCWEIGHTFROMOPENTYPE
+  return FcWeightFromOpenType (pango_weight);
+#else
   if (pango_weight <= (PANGO_WEIGHT_THIN + PANGO_WEIGHT_ULTRALIGHT) / 2)
     return FC_WEIGHT_THIN;
   else if (pango_weight <= (PANGO_WEIGHT_ULTRALIGHT + PANGO_WEIGHT_LIGHT) / 2)
     return FC_WEIGHT_ULTRALIGHT;
-  else if (pango_weight <= (PANGO_WEIGHT_LIGHT + PANGO_WEIGHT_BOOK) / 2)
+  else if (pango_weight <= (PANGO_WEIGHT_LIGHT + PANGO_WEIGHT_SEMILIGHT) / 2)
     return FC_WEIGHT_LIGHT;
+  else if (pango_weight <= (PANGO_WEIGHT_SEMILIGHT + PANGO_WEIGHT_BOOK) / 2)
+    return FC_WEIGHT_DEMILIGHT;
   else if (pango_weight <= (PANGO_WEIGHT_BOOK + PANGO_WEIGHT_NORMAL) / 2)
     return FC_WEIGHT_BOOK;
   else if (pango_weight <= (PANGO_WEIGHT_NORMAL + PANGO_WEIGHT_MEDIUM) / 2)
@@ -1376,6 +1392,7 @@ pango_fc_convert_weight_to_fc (PangoWeight pango_weight)
     return FC_WEIGHT_BLACK;
   else
     return FC_WEIGHT_EXTRABLACK;
+#endif
 }
 
 static int
@@ -1794,6 +1811,86 @@ pango_fc_font_map_cache_clear (PangoFcFontMap *fcfontmap)
   pango_font_map_changed (PANGO_FONT_MAP (fcfontmap));
 }
 
+/**
+ * pango_fc_font_map_config_changed:
+ * @fcfontmap: a #PangoFcFontMap
+ *
+ * Informs font map that the fontconfig configuration (ie, FcConfig object)
+ * used by this font map has changed.  This currently calls
+ * pango_fc_font_map_cache_clear() which ensures that list of fonts, etc
+ * will be regenerated using the updated configuration.
+ *
+ * Since: 1.38
+ **/
+void
+pango_fc_font_map_config_changed (PangoFcFontMap *fcfontmap)
+{
+  pango_fc_font_map_cache_clear (fcfontmap);
+}
+
+/**
+ * pango_fc_font_map_set_config:
+ * @fcfontmap: a #PangoFcFontMap
+ * @fcconfig: (nullable) a #FcConfig, or %NULL
+ *
+ * Set the FcConfig for this font map to use.  The default value
+ * is %NULL, which causes Fontconfig to use its global "current config".
+ * You can create a new FcConfig object and use this API to attach it
+ * to a font map.
+ *
+ * This is particularly useful for example, if you want to use application
+ * fonts with Pango.  For that, you would create a fresh FcConfig, add your
+ * app fonts to it, and attach it to a new Pango font map.
+ *
+ * If @fcconfig is different from the previous config attached to the font map,
+ * pango_fc_font_map_config_changed() is called.
+ *
+ * This function acquires a reference to the FcConfig object; the caller
+ * does NOT need to retain a reference.
+ *
+ * Since: 1.38
+ **/
+void
+pango_fc_font_map_set_config (PangoFcFontMap *fcfontmap,
+			      FcConfig       *fcconfig)
+{
+  FcConfig *oldconfig;
+
+  g_return_if_fail (PANGO_IS_FC_FONT_MAP (fcfontmap));
+
+  oldconfig = fcfontmap->priv->config;
+
+  if (fcconfig)
+    FcConfigReference (fcconfig);
+
+  fcfontmap->priv->config = fcconfig;
+
+  if (oldconfig != fcconfig)
+    pango_fc_font_map_config_changed (fcfontmap);
+
+  if (oldconfig)
+    FcConfigDestroy (oldconfig);
+}
+
+/**
+ * pango_fc_font_map_get_config:
+ * @fcfontmap: a #PangoFcFontMap
+ *
+ * Fetches FcConfig attached to a font map.  See pango_fc_font_map_set_config().
+ *
+ * Returns: (nullable): the #FcConfig object attached to @fcfontmap, which
+ *          might be %NULL.
+ *
+ * Since: 1.38
+ **/
+FcConfig *
+pango_fc_font_map_get_config (PangoFcFontMap *fcfontmap)
+{
+  g_return_val_if_fail (PANGO_IS_FC_FONT_MAP (fcfontmap), NULL);
+
+  return fcfontmap->priv->config;
+}
+
 static PangoFcFontFaceData *
 pango_fc_font_map_get_font_face_data (PangoFcFontMap *fcfontmap,
 				      FcPattern      *font_pattern)
@@ -2038,12 +2135,17 @@ pango_fc_font_map_shutdown (PangoFcFontMap *fcfontmap)
 static PangoWeight
 pango_fc_convert_weight_to_pango (int fc_weight)
 {
+#ifdef HAVE_FCWEIGHTFROMOPENTYPE
+  return FcWeightToOpenType (fc_weight);
+#else
   if (fc_weight <= (FC_WEIGHT_THIN + FC_WEIGHT_EXTRALIGHT) / 2)
     return PANGO_WEIGHT_THIN;
   else if (fc_weight <= (FC_WEIGHT_EXTRALIGHT + FC_WEIGHT_LIGHT) / 2)
     return PANGO_WEIGHT_ULTRALIGHT;
-  else if (fc_weight <= (FC_WEIGHT_LIGHT + FC_WEIGHT_BOOK) / 2)
+  else if (fc_weight <= (FC_WEIGHT_LIGHT + FC_WEIGHT_DEMILIGHT) / 2)
     return PANGO_WEIGHT_LIGHT;
+  else if (fc_weight <= (FC_WEIGHT_DEMILIGHT + FC_WEIGHT_BOOK) / 2)
+    return PANGO_WEIGHT_SEMILIGHT;
   else if (fc_weight <= (FC_WEIGHT_BOOK + FC_WEIGHT_REGULAR) / 2)
     return PANGO_WEIGHT_BOOK;
   else if (fc_weight <= (FC_WEIGHT_REGULAR + FC_WEIGHT_MEDIUM) / 2)
@@ -2060,6 +2162,7 @@ pango_fc_convert_weight_to_pango (int fc_weight)
     return PANGO_WEIGHT_HEAVY;
   else
     return PANGO_WEIGHT_ULTRAHEAVY;
+#endif
 }
 
 static PangoStyle
@@ -2217,6 +2320,7 @@ pango_fc_face_describe (PangoFontFace *face)
   FcResult res;
   FcPattern *match_pattern;
   FcPattern *result_pattern;
+  FcConfig *config = NULL;
 
   if (G_UNLIKELY (!fcfamily))
     return pango_font_description_new ();
@@ -2243,7 +2347,10 @@ pango_fc_face_describe (PangoFontFace *face)
   FcConfigSubstitute (NULL, match_pattern, FcMatchPattern);
   FcDefaultSubstitute (match_pattern);
 
-  result_pattern = FcFontMatch (NULL, match_pattern, &res);
+  if (fcface->family && fcface->family->fontmap)
+    config = fcface->family->fontmap->priv->config;
+
+  result_pattern = FcFontMatch (config, match_pattern, &res);
   if (result_pattern)
     {
       desc = pango_fc_font_description_from_pattern (result_pattern, FALSE);
@@ -2463,7 +2570,7 @@ pango_fc_family_list_faces (PangoFontFamily  *family,
 	  PangoFcFace **faces;
 	  gint num = 0;
 
-	  fontset = FcFontList (NULL, pat, os);
+	  fontset = FcFontList (priv->config, pat, os);
 
 	  FcPatternDestroy (pat);
 	  FcObjectSetDestroy (os);

@@ -37,6 +37,11 @@
 typedef struct _PangoFT2Family       PangoFT2Family;
 typedef struct _PangoFT2FontMapClass PangoFT2FontMapClass;
 
+/**
+ * PangoFT2FontMap:
+ *
+ * The #PangoFT2FontMap is the #PangoFontMap implementation for FreeType fonts.
+ */
 struct _PangoFT2FontMap
 {
   PangoFcFontMap parent_instance;
@@ -92,10 +97,16 @@ pango_ft2_font_map_class_init (PangoFT2FontMapClass *class)
 static void
 pango_ft2_font_map_init (PangoFT2FontMap *fontmap)
 {
+  FT_Error error;
+
   fontmap->serial = 1;
   fontmap->library = NULL;
   fontmap->dpi_x   = 72.0;
   fontmap->dpi_y   = 72.0;
+
+  error = FT_Init_FreeType (&fontmap->library);
+  if (error != FT_Err_Ok)
+    g_critical ("pango_ft2_font_map_init: Could not initialize freetype");
 }
 
 static void
@@ -131,21 +142,12 @@ pango_ft2_font_map_finalize (GObject *object)
 PangoFontMap *
 pango_ft2_font_map_new (void)
 {
-  PangoFT2FontMap *ft2fontmap;
-  FT_Error error;
-
 #if !GLIB_CHECK_VERSION (2, 35, 3)
   /* Make sure that the type system is initialized */
   g_type_init ();
 #endif
 
-  ft2fontmap = g_object_new (PANGO_TYPE_FT2_FONT_MAP, NULL);
-
-  error = FT_Init_FreeType (&ft2fontmap->library);
-  if (error != FT_Err_Ok)
-    g_critical ("pango_ft2_font_map_new: Could not initialize freetype");
-
-  return (PangoFontMap *)ft2fontmap;
+  return (PangoFontMap *) g_object_new (PANGO_TYPE_FT2_FONT_MAP, NULL);
 }
 
 static guint
@@ -203,7 +205,7 @@ pango_ft2_font_map_set_default_substitute (PangoFT2FontMap        *fontmap,
 
 /**
  * pango_ft2_font_map_substitute_changed:
- * @fontmap: a #PangoFT2Fontmap
+ * @fontmap: a #PangoFT2FontMap
  *
  * Call this function any time the results of the
  * default substitution function set with
@@ -224,7 +226,7 @@ pango_ft2_font_map_substitute_changed (PangoFT2FontMap *fontmap)
 
 /**
  * pango_ft2_font_map_set_resolution:
- * @fontmap: a #PangoFT2Fontmap
+ * @fontmap: a #PangoFT2FontMap
  * @dpi_x: dots per inch in the X direction
  * @dpi_y: dots per inch in the Y direction
  *
@@ -246,8 +248,8 @@ pango_ft2_font_map_set_resolution (PangoFT2FontMap *fontmap,
 }
 
 /**
- * pango_ft2_font_map_create_context:
- * @fontmap: a #PangoFT2Fontmap
+ * pango_ft2_font_map_create_context: (skip)
+ * @fontmap: a #PangoFT2FontMap
  *
  * Create a #PangoContext for the given fontmap.
  *
@@ -266,12 +268,12 @@ pango_ft2_font_map_create_context (PangoFT2FontMap *fontmap)
 }
 
 /**
- * pango_ft2_get_context:
+ * pango_ft2_get_context: (skip)
  * @dpi_x:  the horizontal DPI of the target device
  * @dpi_y:  the vertical DPI of the target device
  *
  * Retrieves a #PangoContext for the default PangoFT2 fontmap
- * (see pango_ft2_fontmap_get_for_display()) and sets the resolution
+ * (see pango_ft2_font_map_for_display()) and sets the resolution
  * for the default fontmap to @dpi_x by @dpi_y.
  *
  * Return value: the new #PangoContext
@@ -292,7 +294,7 @@ pango_ft2_get_context (double dpi_x, double dpi_y)
 G_GNUC_END_IGNORE_DEPRECATIONS
 
 /**
- * pango_ft2_font_map_for_display:
+ * pango_ft2_font_map_for_display: (skip)
  *
  * Returns a #PangoFT2FontMap. This font map is cached and should
  * not be freed. If the font map is no longer needed, it can
@@ -306,7 +308,7 @@ PangoFontMap *
 pango_ft2_font_map_for_display (void)
 {
   if (g_once_init_enter (&pango_ft2_global_fontmap))
-    g_once_init_leave(&pango_ft2_global_fontmap, PANGO_FT2_FONT_MAP (pango_ft2_font_map_new ()));
+    g_once_init_leave (&pango_ft2_global_fontmap, PANGO_FT2_FONT_MAP (pango_ft2_font_map_new ()));
 
   return PANGO_FONT_MAP (pango_ft2_global_fontmap);
 }
@@ -341,7 +343,7 @@ _pango_ft2_font_map_get_library (PangoFontMap *fontmap)
 
 /**
  * _pango_ft2_font_map_get_renderer:
- * @fontmap: a #PangoFT2Fontmap
+ * @fontmap: a #PangoFT2FontMap
  *
  * Gets the singleton PangoFT2Renderer for this fontmap.
  *

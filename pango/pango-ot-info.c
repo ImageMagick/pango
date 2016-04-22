@@ -19,6 +19,16 @@
  * Boston, MA 02111-1307, USA.
  */
 
+/**
+ * SECTION:opentype
+ * @short_description:Obtaining information from OpenType tables
+ * @title:OpenType Font Handling
+ * @stability:Unstable
+ *
+ * Functions and macros in this section are used to implement the OpenType Layout
+ * features and algorithms.  These are mostly useful when writing Fontconfig-based
+ * shaping engines
+ */
 #include "config.h"
 
 #include "pango-ot-private.h"
@@ -78,6 +88,9 @@ pango_ot_info_get (FT_Face face)
 {
   PangoOTInfo *info;
 
+  if (G_UNLIKELY (!face))
+    return NULL;
+
   if (G_LIKELY (face->generic.data && face->generic.finalizer == pango_ot_info_finalizer))
     return face->generic.data;
   else
@@ -110,7 +123,8 @@ get_hb_table_type (PangoOTTableType table_type)
  * @info: a #PangoOTInfo.
  * @table_type: the table type to obtain information about.
  * @script_tag: the tag of the script to find.
- * @script_index: location to store the index of the script, or %NULL.
+ * @script_index: (out) (optional): location to store the index of the
+ *   script, or %NULL.
  *
  * Finds the index of a script.  If not found, tries to find the 'DFLT'
  * and then 'dflt' scripts and return the index of that in @script_index.
@@ -143,9 +157,10 @@ pango_ot_info_find_script (PangoOTInfo      *info,
  * @table_type: the table type to obtain information about.
  * @script_index: the index of the script whose languages are searched.
  * @language_tag: the tag of the language to find.
- * @language_index: location to store the index of the language, or %NULL.
- * @required_feature_index: location to store the required feature index of
- *    the language, or %NULL.
+ * @language_index: (out) (optional): location to store the index of
+ *   the language, or %NULL.
+ * @required_feature_index: (out) (optional): location to store the
+ *    required feature index of the language, or %NULL.
  *
  * Finds the index of a language and its required feature index.
  * If the language is not found, sets @language_index to
@@ -192,7 +207,8 @@ pango_ot_info_find_language (PangoOTInfo      *info,
  * @script_index: the index of the script.
  * @language_index: the index of the language whose features are searched,
  *     or %PANGO_OT_DEFAULT_LANGUAGE to use the default language of the script.
- * @feature_index: location to store the index of the feature, or %NULL.
+ * @feature_index: (out) (optional): location to store the index of
+ *   the feature, or %NULL.
  *
  * Finds the index of a feature.  If the feature is not found, sets
  * @feature_index to PANGO_OT_NO_FEATURE, which is safe to pass to

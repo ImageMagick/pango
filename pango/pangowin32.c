@@ -22,6 +22,14 @@
  * Boston, MA 02111-1307, USA.
  */
 
+/**
+ * SECTION:win32-fonts
+ * @short_description:Functions for shape engines to manipulate Win32 fonts
+ * @title:Win32 Fonts and Rendering
+ *
+ * The macros and functions in this section are used to access fonts natively on
+ * Win32 systems and to render text in conjunction with Win32 APIs.
+ */
 #include "config.h"
 
 #include <string.h>
@@ -32,7 +40,7 @@
 #include "pangowin32.h"
 #include "pangowin32-private.h"
 
-#define MAX_FREED_FONTS 16
+#define MAX_FREED_FONTS 256
 
 #define CH_IS_UNIHAN_BMP(ch) ((ch) >= 0x3400 && (ch) <= 0x9FFF)
 #define CH_IS_UNIHAN(ch) (CH_IS_UNIHAN_BMP (ch) || \
@@ -148,9 +156,9 @@ _pango_win32_font_init (PangoWin32Font *win32font)
 HDC
 pango_win32_get_dc (void)
 {
-  if (_pango_win32_hdc == NULL)
+  if (g_once_init_enter (&_pango_win32_hdc))
     {
-      _pango_win32_hdc = CreateDC ("DISPLAY", NULL, NULL, NULL);
+      HDC hdc = CreateDC ("DISPLAY", NULL, NULL, NULL);
       memset (&_pango_win32_os_version_info, 0,
 	      sizeof (_pango_win32_os_version_info));
       _pango_win32_os_version_info.dwOSVersionInfoSize =
@@ -165,6 +173,7 @@ pango_win32_get_dc (void)
       if (getenv ("PANGO_WIN32_DEBUG") != NULL)
 	_pango_win32_debug = TRUE;
 #endif
+      g_once_init_leave (&_pango_win32_hdc, hdc);
     }
 
   return _pango_win32_hdc;
@@ -374,7 +383,8 @@ pango_win32_render (HDC               hdc,
 /**
  * pango_win32_render_transformed:
  * @hdc:     a windows device context
- * @matrix:  a #PangoMatrix, or %NULL to use an identity transformation
+ * @matrix:  (nullable): a #PangoMatrix, or %NULL to use an identity
+ *           transformation
  * @font:    the font in which to draw the string
  * @glyphs:  the glyph string to draw
  * @x:       the x position of the start of the string (in Pango
@@ -836,7 +846,10 @@ pango_win32_font_finalize (GObject *object)
 
   fontmap = g_weak_ref_get ((GWeakRef *) &win32font->fontmap);
   if (fontmap)
+  {
+    g_object_remove_weak_pointer (G_OBJECT (win32font->fontmap), (gpointer *) (gpointer) &win32font->fontmap);
     g_object_unref (fontmap);
+  }
 
   G_OBJECT_CLASS (_pango_win32_font_parent_class)->finalize (object);
 }
@@ -863,20 +876,6 @@ pango_win32_font_describe_absolute (PangoFont *font)
   pango_font_description_set_absolute_size (desc, win32font->size);
 
   return desc;
-}
-
-static PangoMap *
-pango_win32_get_shaper_map (PangoLanguage *lang)
-{
-  static guint engine_type_id = 0; /* MT-safe */
-  static guint render_type_id = 0; /* MT-safe */
-
-  if (engine_type_id == 0)
-    engine_type_id = g_quark_from_static_string (PANGO_ENGINE_TYPE_SHAPE);
-  if (render_type_id == 0)
-    render_type_id = g_quark_from_static_string (PANGO_RENDER_TYPE_WIN32);
-
-  return pango_find_map (lang, engine_type_id, render_type_id);
 }
 
 static gint
@@ -937,17 +936,44 @@ pango_win32_font_get_coverage (PangoFont     *font,
   return coverage;
 }
 
+/* Wrap shaper in PangoEngineShape to pass it through old API,
+ * from times when there were modules and engines. */
+typedef PangoEngineShape      PangoWin32ShapeEngine;
+typedef PangoEngineShapeClass PangoWin32ShapeEngineClass;
+static GType pango_win32_shape_engine_get_type (void) G_GNUC_CONST;
+G_DEFINE_TYPE (PangoWin32ShapeEngine, pango_win32_shape_engine, PANGO_TYPE_ENGINE_SHAPE);
+static void
+_pango_win32_shape_engine_shape (PangoEngineShape    *engine G_GNUC_UNUSED,
+				 PangoFont           *font,
+				 const char          *item_text,
+				 unsigned int         item_length,
+				 const PangoAnalysis *analysis,
+				 PangoGlyphString    *glyphs,
+				 const char          *paragraph_text,
+				 unsigned int         paragraph_length)
+{
+  _pango_win32_shape (font, item_text, item_length, analysis, glyphs,
+		      paragraph_text, paragraph_length);
+}
+static void
+pango_win32_shape_engine_class_init (PangoEngineShapeClass *class)
+{
+  class->script_shape = _pango_win32_shape_engine_shape;
+}
+static void
+pango_win32_shape_engine_init (PangoEngineShape *object)
+{
+}
+
 static PangoEngineShape *
 pango_win32_font_find_shaper (PangoFont     *font,
 			      PangoLanguage *lang,
 			      guint32        ch)
 {
-  PangoMap *shape_map = NULL;
-  PangoScript script;
-
-  shape_map = pango_win32_get_shaper_map (lang);
-  script = pango_script_for_unichar (ch);
-  return (PangoEngineShape *)pango_map_get_engine (shape_map, script);
+  static PangoEngineShape *shaper;
+  if (g_once_init_enter (&shaper))
+    g_once_init_leave (&shaper, g_object_new (pango_win32_shape_engine_get_type(), NULL));
+  return shaper;
 }
 
 /* Utility functions */

@@ -25,6 +25,18 @@
 
 static void pango_ot_ruleset_finalize   (GObject        *object);
 
+/**
+ * PangoOTRuleset:
+ *
+ * The #PangoOTRuleset structure holds a
+ * set of features selected from the tables in an OpenType font.
+ * (A feature is an operation such as adjusting glyph positioning
+ * that should be applied to a text feature such as a certain
+ * type of accent.) A #PangoOTRuleset
+ * is created with pango_ot_ruleset_new(), features are added
+ * to it with pango_ot_ruleset_add_feature(), then it is
+ * applied to a #PangoGlyphString with pango_ot_ruleset_shape().
+ */
 G_DEFINE_TYPE (PangoOTRuleset, pango_ot_ruleset, G_TYPE_OBJECT);
 
 static void
@@ -255,8 +267,10 @@ pango_ot_ruleset_maybe_add_features (PangoOTRuleset          *ruleset,
 /**
  * pango_ot_ruleset_get_feature_count:
  * @ruleset: a #PangoOTRuleset.
- * @n_gsub_features: location to store number of GSUB features, or %NULL.
- * @n_gpos_features: location to store number of GPOS features, or %NULL.
+ * @n_gsub_features: (out) (optional): location to store number of
+ *   GSUB features, or %NULL.
+ * @n_gpos_features: (out) (optional): location to store number of
+ *   GPOS features, or %NULL.
  *
  * Gets the number of GSUB and GPOS features in the ruleset.
  *

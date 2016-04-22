@@ -19,6 +19,16 @@
  * Boston, MA 02111-1307, USA.
  */
 
+/**
+ * SECTION:glyphs
+ * @short_description:Structures for storing information about glyphs
+ * @title:Glyph Storage
+ *
+ * pango_shape() produces a string of glyphs which
+ * can be measured or drawn to the screen. The following
+ * structures are used to store information about
+ * glyphs.
+ */
 #include "config.h"
 
 #include "pango-impl-utils.h"
@@ -56,7 +66,7 @@ pango_shape (const gchar      *text,
  * pango_shape_full:
  * @item_text:        valid UTF-8 text to shape.
  * @item_length:      the length (in bytes) of @item_text. -1 means nul-terminated text.
- * @paragraph_text: (allow-none)  text of the paragraph (see details).  May be %NULL.
+ * @paragraph_text: (allow-none): text of the paragraph (see details).  May be %NULL.
  * @paragraph_length: the length (in bytes) of @paragraph_text. -1 means nul-terminated text.
  * @analysis:  #PangoAnalysis structure from pango_itemize().
  * @glyphs:    glyph string in which to store results.

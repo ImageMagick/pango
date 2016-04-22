@@ -19,6 +19,17 @@
  * Boston, MA 02111-1307, USA.
  */
 
+/**
+ * SECTION:text-attributes
+ * @short_description:Font and other attributes for annotating text
+ * @title:Text Attributes
+ *
+ * Attributed text is used in a number of places in Pango. It
+ * is used as the input to the itemization process and also when
+ * creating a #PangoLayout. The data types and functions in
+ * this section are used to represent and manipulate sets
+ * of attributes applied to a portion of text.
+ */
 #include "config.h"
 #include <string.h>
 
@@ -99,8 +110,8 @@ pango_attr_type_register (const gchar *name)
  * The returned value is an interned string (see g_intern_string() for what
  * that means) that should not be modified or freed.
  *
- * Return value: the type ID name (which may be %NULL), or %NULL if @type is
- * a built-in Pango attribute type or invalid. 
+ * Return value: (nullable): the type ID name (which may be %NULL), or
+ * %NULL if @type is a built-in Pango attribute type or invalid.
  *
  * Since: 1.22
  **/
@@ -122,7 +133,7 @@ pango_attr_type_get_name (PangoAttrType type)
 /**
  * pango_attribute_init:
  * @attr: a #PangoAttribute
- * @klass: a #PangoAttributeClass
+ * @klass: a #PangoAttrClass
  *
  * Initializes @attr's klass to @klass,
  * it's start_index to %PANGO_ATTR_INDEX_FROM_TEXT_BEGINNING
@@ -1090,6 +1101,79 @@ pango_attr_gravity_hint_new (PangoGravityHint hint)
   return pango_attr_int_new (&klass, (int)hint);
 }
 
+/**
+ * pango_attr_font_features_new:
+ * @features: a string with OpenType font features, in CSS syntax
+ *
+ * Create a new font features tag attribute.
+ *
+ * Return value: (transfer full): the newly allocated #PangoAttribute,
+ *               which should be freed with pango_attribute_destroy().
+ *
+ * Since: 1.38
+ **/
+PangoAttribute *
+pango_attr_font_features_new (const gchar *features)
+{
+  static const PangoAttrClass klass = {
+    PANGO_ATTR_FONT_FEATURES,
+    pango_attr_string_copy,
+    pango_attr_string_destroy,
+    pango_attr_string_equal
+  };
+
+  g_return_val_if_fail (features != NULL, NULL);
+
+  return pango_attr_string_new (&klass, features);
+}
+
+/**
+ * pango_attr_foreground_alpha_new:
+ * @alpha: the alpha value, between 1 and 65536
+ *
+ * Create a new foreground alpha attribute.
+ *
+ * Return value: (transfer full): the new allocated #PangoAttribute,
+ *               which should be freed with pango_attribute_destroy().
+ *
+ * Since: 1.38
+ */
+PangoAttribute *
+pango_attr_foreground_alpha_new (guint16 alpha)
+{
+  static const PangoAttrClass klass = {
+    PANGO_ATTR_FOREGROUND_ALPHA,
+    pango_attr_int_copy,
+    pango_attr_int_destroy,
+    pango_attr_int_equal
+  };
+
+  return pango_attr_int_new (&klass, (int)alpha);
+}
+
+/**
+ * pango_attr_background_alpha_new:
+ * @alpha: the alpha value, between 1 and 65536
+ *
+ * Create a new background alpha attribute.
+ *
+ * Return value: (transfer full): the new allocated #PangoAttribute,
+ *               which should be freed with pango_attribute_destroy().
+ *
+ * Since: 1.38
+ */
+PangoAttribute *
+pango_attr_background_alpha_new (guint16 alpha)
+{
+  static const PangoAttrClass klass = {
+    PANGO_ATTR_BACKGROUND_ALPHA,
+    pango_attr_int_copy,
+    pango_attr_int_destroy,
+    pango_attr_int_equal
+  };
+
+  return pango_attr_int_new (&klass, (int)alpha);
+}
 
 /*
  * Attribute List
@@ -1121,7 +1205,7 @@ pango_attr_list_new (void)
 
 /**
  * pango_attr_list_ref:
- * @list: a #PangoAttrList, may be %NULL
+ * @list: (nullable): a #PangoAttrList, may be %NULL
  *
  * Increase the reference count of the given attribute list by one.
  *
@@ -1142,7 +1226,7 @@ pango_attr_list_ref (PangoAttrList *list)
 
 /**
  * pango_attr_list_unref:
- * @list: a #PangoAttrList, may be %NULL
+ * @list: (nullable): a #PangoAttrList, may be %NULL
  *
  * Decrease the reference count of the given attribute list by one.
  * If the result is zero, free the attribute list and the attributes
@@ -1177,11 +1261,11 @@ pango_attr_list_unref (PangoAttrList *list)
 
 /**
  * pango_attr_list_copy:
- * @list: a #PangoAttrList, may be %NULL
+ * @list: (nullable): a #PangoAttrList, may be %NULL
  *
  * Copy @list and return an identical new list.
  *
- * Return value: the newly allocated #PangoAttrList, with a
+ * Return value: (nullable): the newly allocated #PangoAttrList, with a
  *               reference count of one, which should
  *               be freed with pango_attr_list_unref().
  *               Returns %NULL if @list was %NULL.
@@ -1759,9 +1843,9 @@ pango_attr_iterator_destroy (PangoAttrIterator *iterator)
  * the attribute whose range starts closest to the current location
  * is used.
  *
- * Return value: the current attribute of the given type, or %NULL if
- *               no attribute of that type applies to the current
- *               location.
+ * Return value: (nullable): the current attribute of the given type,
+ *               or %NULL if no attribute of that type applies to the
+ *               current location.
  **/
 PangoAttribute *
 pango_attr_iterator_get (PangoAttrIterator *iterator,
@@ -1917,17 +2001,21 @@ pango_attr_iterator_get_font (PangoAttrIterator     *iterator,
 	      gboolean found = FALSE;
 
 	      tmp_list2 = *extra_attrs;
-	      while (tmp_list2)
-		{
-		  PangoAttribute *old_attr = tmp_list2->data;
-		  if (attr->klass->type == old_attr->klass->type)
-		    {
-		      found = TRUE;
-		      break;
-		    }
+	      /* Hack: special-case FONT_FEATURES.  We don't want them to
+	       * override each other, so we never merge them.  This should
+	       * be fixed when we implement attr-merging. */
+	      if (attr->klass->type != PANGO_ATTR_FONT_FEATURES)
+		while (tmp_list2)
+		  {
+		    PangoAttribute *old_attr = tmp_list2->data;
+		    if (attr->klass->type == old_attr->klass->type)
+		      {
+			found = TRUE;
+			break;
+		      }
 
-		  tmp_list2 = tmp_list2->next;
-		}
+		    tmp_list2 = tmp_list2->next;
+		  }
 
 	      if (!found)
 		*extra_attrs = g_slist_prepend (*extra_attrs, pango_attribute_copy (attr));
@@ -1936,8 +2024,12 @@ pango_attr_iterator_get_font (PangoAttrIterator     *iterator,
     }
 
   if (have_scale)
-    pango_font_description_set_size (desc, scale * pango_font_description_get_size (desc));
-
+    {
+      if (pango_font_description_get_size_is_absolute (desc))
+        pango_font_description_set_absolute_size (desc, scale * pango_font_description_get_size (desc));
+      else
+        pango_font_description_set_size (desc, scale * pango_font_description_get_size (desc));
+    }
 }
 
 /**
@@ -1951,8 +2043,8 @@ pango_attr_iterator_get_font (PangoAttrIterator     *iterator,
  * of @list for which @func returns %TRUE and inserts them into
  * a new list.
  *
- * Return value: (transfer full): the new #PangoAttrList or %NULL if
- *  no attributes of the given types were found.
+ * Return value: (transfer full) (nullable): the new #PangoAttrList or
+ *  %NULL if no attributes of the given types were found.
  *
  * Since: 1.2
  **/

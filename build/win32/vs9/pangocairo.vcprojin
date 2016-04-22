@@ -20,7 +20,7 @@
 		<Configuration
 			Name="Debug_FC|Win32"
 			ConfigurationType="2"
-			InheritedPropertySheets=".\pango.vsprops"
+			InheritedPropertySheets=".\pango-build-defines.vsprops"
 			CharacterSet="2"
 			>
 			<Tool
@@ -29,7 +29,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="."
+				AdditionalIncludeDirectories="$(PangoFT2Incs)"
 				PreprocessorDefinitions="_DEBUG;$(PangoDefines)"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -40,20 +40,20 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="cairo.lib fontconfig.lib freetype.lib"
+				AdditionalDependencies="cairo.lib $(PangoFT2Libs)"
 				OutputFile="$(OutDir)\$(PangoDllPrefix)$(ProjectName)$(PangoDllSuffix).dll"
 				LinkIncremental="2"
 				ModuleDefinitionFile="..\..\..\pango\pangocairo.def"
 				GenerateDebugInformation="true"
 				SubSystem="2"
-				ImportLibrary="$(TargetDir)$(ProjectName)-$(PangoApiVersion).lib"
+				ImportLibrary="$(TargetDir)$(ProjectName)-$(ApiVersion).lib"
 				TargetMachine="1"
 			/>
 		</Configuration>
 		<Configuration
 			Name="Debug|Win32"
 			ConfigurationType="2"
-			InheritedPropertySheets=".\pango.vsprops"
+			InheritedPropertySheets=".\pango-build-defines.vsprops;.\pango-ignore-fc.vsprops"
 			CharacterSet="2"
 			>
 			<Tool
@@ -62,7 +62,6 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="."
 				PreprocessorDefinitions="_DEBUG;$(PangoDefines);$(NoFCDef)"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -76,18 +75,18 @@
 				AdditionalDependencies="cairo.lib"
 				OutputFile="$(OutDir)\$(PangoDllPrefix)$(ProjectName)$(PangoDllSuffix).dll"
 				LinkIncremental="2"
-				IgnoreDefaultLibraryNames="$(OutDir)\pangoft2-$(PangoApiVersion).lib"
+				IgnoreDefaultLibraryNames="$(OutDir)\pangoft2-$(ApiVersion).lib"
 				ModuleDefinitionFile="..\..\..\pango\pangocairo.def"
 				GenerateDebugInformation="true"
 				SubSystem="2"
-				ImportLibrary="$(TargetDir)$(ProjectName)-$(PangoApiVersion).lib"
+				ImportLibrary="$(TargetDir)$(ProjectName)-$(ApiVersion).lib"
 				TargetMachine="1"
 			/>
 		</Configuration>
 		<Configuration
 			Name="Release_FC|Win32"
 			ConfigurationType="2"
-			InheritedPropertySheets=".\pango.vsprops"
+			InheritedPropertySheets=".\pango-build-defines.vsprops"
 			CharacterSet="2"
 			>
 			<Tool
@@ -95,7 +94,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="."
+				AdditionalIncludeDirectories="$(PangoFT2Incs)"
 				PreprocessorDefinitions="$(PangoDefines)"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
@@ -104,22 +103,22 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="cairo.lib fontconfig.lib freetype.lib"
+				AdditionalDependencies="cairo.lib $(PangoFT2Libs)"
 				OutputFile="$(OutDir)\$(PangoDllPrefix)$(ProjectName)$(PangoDllSuffix).dll"
-				LinkIncremental="2"
+				LinkIncremental="1"
 				ModuleDefinitionFile="..\..\..\pango\pangocairo.def"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
-				ImportLibrary="$(TargetDir)$(ProjectName)-$(PangoApiVersion).lib"
+				ImportLibrary="$(TargetDir)$(ProjectName)-$(ApiVersion).lib"
 				TargetMachine="1"
 			/>
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
 			ConfigurationType="2"
-			InheritedPropertySheets=".\pango.vsprops"
+			InheritedPropertySheets=".\pango-build-defines.vsprops;.\pango-ignore-fc.vsprops"
 			CharacterSet="2"
 			>
 			<Tool
@@ -127,7 +126,6 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="."
 				PreprocessorDefinitions="$(PangoDefines);$(NoFCDef)"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
@@ -138,27 +136,27 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="cairo.lib"
 				OutputFile="$(OutDir)\$(PangoDllPrefix)$(ProjectName)$(PangoDllSuffix).dll"
-				LinkIncremental="2"
-				IgnoreDefaultLibraryNames="$(OutDir)\pangoft2-$(PangoApiVersion).lib"
+				LinkIncremental="1"
+				IgnoreDefaultLibraryNames="$(OutDir)\pangoft2-$(ApiVersion).lib"
 				ModuleDefinitionFile="..\..\..\pango\pangocairo.def"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
-				ImportLibrary="$(TargetDir)$(ProjectName)-$(PangoApiVersion).lib"
+				ImportLibrary="$(TargetDir)$(ProjectName)-$(ApiVersion).lib"
 				TargetMachine="1"
 			/>
 		</Configuration>
 		<Configuration
 			Name="Debug_FC|x64"
-			InheritedPropertySheets=".\pango.vsprops"
+			InheritedPropertySheets=".\pango-build-defines.vsprops"
 			ConfigurationType="2"
 			CharacterSet="2"
 			>
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="."
+				AdditionalIncludeDirectories="$(PangoFT2Incs)"
 				PreprocessorDefinitions="_DEBUG;$(PangoDefines)"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -169,26 +167,25 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="cairo.lib fontconfig.lib freetype.lib"
+				AdditionalDependencies="cairo.lib $(PangoFT2Libs)"
 				OutputFile="$(OutDir)\$(PangoDllPrefix)$(ProjectName)$(PangoDllSuffix).dll"
 				LinkIncremental="2"
 				ModuleDefinitionFile="..\..\..\pango\pangocairo.def"
 				GenerateDebugInformation="true"
 				SubSystem="2"
-				ImportLibrary="$(TargetDir)$(ProjectName)-$(PangoApiVersion).lib"
+				ImportLibrary="$(TargetDir)$(ProjectName)-$(ApiVersion).lib"
 				TargetMachine="17"
 			/>
 		</Configuration>
 		<Configuration
 			Name="Debug|x64"
-			InheritedPropertySheets=".\pango.vsprops"
+			InheritedPropertySheets=".\pango-build-defines.vsprops;.\pango-ignore-fc.vsprops"
 			ConfigurationType="2"
 			CharacterSet="2"
 			>
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="."
 				PreprocessorDefinitions="_DEBUG;$(PangoDefines);$(NoFCDef)"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -202,23 +199,23 @@
 				AdditionalDependencies="cairo.lib"
 				OutputFile="$(OutDir)\$(PangoDllPrefix)$(ProjectName)$(PangoDllSuffix).dll"
 				LinkIncremental="2"
-				IgnoreDefaultLibraryNames="$(OutDir)\pangoft2-$(PangoApiVersion).lib"
+				IgnoreDefaultLibraryNames="$(OutDir)\pangoft2-$(ApiVersion).lib"
 				ModuleDefinitionFile="..\..\..\pango\pangocairo.def"
 				GenerateDebugInformation="true"
 				SubSystem="2"
-				ImportLibrary="$(TargetDir)$(ProjectName)-$(PangoApiVersion).lib"
+				ImportLibrary="$(TargetDir)$(ProjectName)-$(ApiVersion).lib"
 				TargetMachine="17"
 			/>
 		</Configuration>
 		<Configuration
 			Name="Release_FC|x64"
-			InheritedPropertySheets=".\pango.vsprops"
+			InheritedPropertySheets=".\pango-build-defines.vsprops"
 			ConfigurationType="2"
 			CharacterSet="2"
 			>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="."
+				AdditionalIncludeDirectories="$(PangoFT2Incs)"
 				PreprocessorDefinitions="$(PangoDefines)"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
@@ -227,27 +224,26 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="cairo.lib fontconfig.lib freetype.lib"
+				AdditionalDependencies="cairo.lib $(PangoFT2Libs)"
 				OutputFile="$(OutDir)\$(PangoDllPrefix)$(ProjectName)$(PangoDllSuffix).dll"
-				LinkIncremental="2"
+				LinkIncremental="1"
 				ModuleDefinitionFile="..\..\..\pango\pangocairo.def"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
-				ImportLibrary="$(TargetDir)$(ProjectName)-$(PangoApiVersion).lib"
+				ImportLibrary="$(TargetDir)$(ProjectName)-$(ApiVersion).lib"
 				TargetMachine="17"
 			/>
 		</Configuration>
 		<Configuration
 			Name="Release|x64"
-			InheritedPropertySheets=".\pango.vsprops"
+			InheritedPropertySheets=".\pango-build-defines.vsprops;.\pango-ignore-fc.vsprops"
 			ConfigurationType="2"
 			CharacterSet="2"
 			>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="."
 				PreprocessorDefinitions="$(PangoDefines);$(NoFCDef)"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
@@ -258,13 +254,13 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="cairo.lib"
 				OutputFile="$(OutDir)\$(PangoDllPrefix)$(ProjectName)$(PangoDllSuffix).dll"
-				LinkIncremental="2"
+				LinkIncremental="1"
 				ModuleDefinitionFile="..\..\..\pango\pangocairo.def"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
-				ImportLibrary="$(TargetDir)$(ProjectName)-$(PangoApiVersion).lib"
+				ImportLibrary="$(TargetDir)$(ProjectName)-$(ApiVersion).lib"
 				TargetMachine="17"
 			/>
 		</Configuration>
@@ -283,10 +279,7 @@
 			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav"
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
-			<File
-				RelativePath="..\..\..\pango\pangocairo.rc"
-				>
-			</File>
+			<File RelativePath="..\..\..\pango\pangocairo.rc" />
 		</Filter>
 		<Filter
 			Name="Source Files"
@@ -307,7 +300,7 @@
 			</File>
 			<File RelativePath="..\..\..\pango\pangocairo-win32font.c" />
 			<File RelativePath="..\..\..\pango\pangocairo-win32fontmap.c" />
-#include "libpangocairo.sourcefiles"
+#include "pangocairo.sourcefiles"
 		</Filter>
 	</Files>
 </VisualStudioProject>

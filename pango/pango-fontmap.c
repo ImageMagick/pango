@@ -82,8 +82,8 @@ pango_font_map_create_context (PangoFontMap *fontmap)
  *
  * Load the font in the fontmap that is the closest match for @desc.
  *
- * Returns: (transfer full): the newly allocated #PangoFont loaded,
- *          or %NULL if no font matched.
+ * Returns: (transfer full) (nullable): the newly allocated #PangoFont
+ *          loaded, or %NULL if no font matched.
  **/
 PangoFont *
 pango_font_map_load_font  (PangoFontMap               *fontmap,
@@ -124,8 +124,8 @@ pango_font_map_list_families (PangoFontMap      *fontmap,
  * Load a set of fonts in the fontmap that can be used to render
  * a font matching @desc.
  *
- * Returns: (transfer full): the newly allocated #PangoFontset
- *          loaded, or %NULL if no font matched.
+ * Returns: (transfer full) (nullable): the newly allocated
+ *          #PangoFontset loaded, or %NULL if no font matched.
  **/
 PangoFontset *
 pango_font_map_load_fontset (PangoFontMap                 *fontmap,
@@ -275,6 +275,7 @@ pango_font_map_real_load_fontset (PangoFontMap               *fontmap,
  *  or freed.
  *
  * Since: 1.4
+ * Deprecated: 1.38
  **/
 const char *
 pango_font_map_get_shape_engine_type (PangoFontMap *fontmap)
@@ -327,7 +328,7 @@ pango_font_map_get_serial (PangoFontMap *fontmap)
  * call this function if they have attached extra data to the context
  * and such data is changed.
  *
- * Since: 1.34.0
+ * Since: 1.34
  **/
 void
 pango_font_map_changed (PangoFontMap *fontmap)

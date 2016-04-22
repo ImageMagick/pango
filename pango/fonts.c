@@ -19,6 +19,19 @@
  * Boston, MA 02111-1307, USA.
  */
 
+/**
+ * SECTION:fonts
+ * @short_description:Structures representing abstract fonts
+ * @title: Fonts
+ *
+ * Pango supports a flexible architecture where a
+ * particular rendering architecture can supply an
+ * implementation of fonts. The #PangoFont structure
+ * represents an abstract rendering-system-independent font.
+ * Pango provides routines to list available fonts, and
+ * to load a font of a given description.
+ */
+
 #include "config.h"
 #include <stdlib.h>
 #include <math.h>
@@ -151,9 +164,10 @@ pango_font_description_set_family_static (PangoFontDescription *desc,
  * Gets the family name field of a font description. See
  * pango_font_description_set_family().
  *
- * Return value: the family name field for the font description, or
- *               %NULL if not previously set.  This has the same life-time
- *               as the font description itself and should not be freed.
+ * Return value: (nullable): the family name field for the font
+ *               description, or %NULL if not previously set.  This
+ *               has the same life-time as the font description itself
+ *               and should not be freed.
  **/
 const char *
 pango_font_description_get_family (const PangoFontDescription *desc)
@@ -656,13 +670,14 @@ pango_font_description_better_match (const PangoFontDescription *desc,
 
 /**
  * pango_font_description_copy:
- * @desc: a #PangoFontDescription, may be %NULL
+ * @desc: (nullable): a #PangoFontDescription, may be %NULL
  *
  * Make a copy of a #PangoFontDescription.
  *
- * Return value: the newly allocated #PangoFontDescription, which should
- *               be freed with pango_font_description_free(), or %NULL
- *               if @desc was %NULL.
+ * Return value: (nullable): the newly allocated
+ *               #PangoFontDescription, which should be freed with
+ *               pango_font_description_free(), or %NULL if @desc was
+ *               %NULL.
  **/
 PangoFontDescription *
 pango_font_description_copy  (const PangoFontDescription  *desc)
@@ -687,16 +702,17 @@ pango_font_description_copy  (const PangoFontDescription  *desc)
 
 /**
  * pango_font_description_copy_static:
- * @desc: a #PangoFontDescription, may be %NULL
+ * @desc: (nullable): a #PangoFontDescription, may be %NULL
  *
  * Like pango_font_description_copy(), but only a shallow copy is made
  * of the family name and other allocated fields. The result can only
  * be used until @desc is modified or freed. This is meant to be used
  * when the copy is only needed temporarily.
  *
- * Return value: the newly allocated #PangoFontDescription, which should
- *               be freed with pango_font_description_free(), or %NULL
- *               if @desc was %NULL.
+ * Return value: (nullable): the newly allocated
+ *               #PangoFontDescription, which should be freed with
+ *               pango_font_description_free(), or %NULL if @desc was
+ *               %NULL.
  **/
 PangoFontDescription *
 pango_font_description_copy_static (const PangoFontDescription *desc)
@@ -797,7 +813,7 @@ pango_font_description_hash (const PangoFontDescription *desc)
 
 /**
  * pango_font_description_free:
- * @desc: a #PangoFontDescription, may be %NULL
+ * @desc: (nullable): a #PangoFontDescription, may be %NULL
  *
  * Frees a font description.
  **/
@@ -858,6 +874,8 @@ static const FieldMap weight_map[] = {
   { PANGO_WEIGHT_ULTRALIGHT, "Ultra-Light" },
   { PANGO_WEIGHT_ULTRALIGHT, "Extra-Light" },
   { PANGO_WEIGHT_LIGHT, "Light" },
+  { PANGO_WEIGHT_SEMILIGHT, "Semi-Light" },
+  { PANGO_WEIGHT_SEMILIGHT, "Demi-Light" },
   { PANGO_WEIGHT_BOOK, "Book" },
   { PANGO_WEIGHT_NORMAL, "" },
   { PANGO_WEIGHT_NORMAL, "Regular" },
@@ -1062,7 +1080,7 @@ parse_size (const char *word,
  * Creates a new font description from a string representation in the
  * form "[FAMILY-LIST] [STYLE-OPTIONS] [SIZE]", where FAMILY-LIST is a
  * comma separated list of families optionally terminated by a comma,
- * STYLE_OPTIONS is a whitespace separated list of words where each WORD
+ * STYLE_OPTIONS is a whitespace separated list of words where each word
  * describes one of style, variant, weight, stretch, or gravity, and SIZE
  * is a decimal number (size in points) or optionally followed by the
  * unit modifier "px" for absolute size. Any one of the options may
@@ -1540,7 +1558,8 @@ pango_font_find_shaper (PangoFont     *font,
 {
   PangoEngineShape* shaper;
 
-  g_return_val_if_fail (font != NULL, NULL);
+  if (G_UNLIKELY (!font))
+    return NULL;
 
   shaper = PANGO_FONT_GET_CLASS (font)->find_shaper (font, language, ch);
 
@@ -1549,7 +1568,7 @@ pango_font_find_shaper (PangoFont     *font,
 
 /**
  * pango_font_get_glyph_extents:
- * @font: a #PangoFont
+ * @font: (nullable): a #PangoFont
  * @glyph: the glyph index
  * @ink_rect: (out) (allow-none): rectangle used to store the extents of the glyph
  *            as drawn or %NULL to indicate that the result is not needed.
@@ -1597,7 +1616,7 @@ pango_font_get_glyph_extents  (PangoFont      *font,
 
 /**
  * pango_font_get_metrics:
- * @font: a #PangoFont
+ * @font: (nullable): a #PangoFont
  * @language: (allow-none): language tag used to determine which script to get the metrics
  *            for, or %NULL to indicate to get the metrics for the entire font.
  *
@@ -1637,7 +1656,7 @@ pango_font_get_metrics (PangoFont        *font,
 
 /**
  * pango_font_get_font_map:
- * @font: a #PangoFont, or %NULL
+ * @font: (nullable): a #PangoFont, or %NULL
  *
  * Gets the font map for which the font was created.
  *
@@ -1649,8 +1668,8 @@ pango_font_get_metrics (PangoFont        *font,
  * alive.  In most uses this is not an issue as a #PangoContext holds
  * a reference to the font map.
  *
- * Return value: (transfer none): the #PangoFontMap for the font, or %NULL
- *               if @font is %NULL.
+ * Return value: (transfer none) (nullable): the #PangoFontMap for the
+ *               font, or %NULL if @font is %NULL.
  *
  * Since: 1.10
  **/
@@ -1691,11 +1710,11 @@ pango_font_metrics_new (void)
 
 /**
  * pango_font_metrics_ref:
- * @metrics: a #PangoFontMetrics structure, may be %NULL
+ * @metrics: (nullable): a #PangoFontMetrics structure, may be %NULL
  *
  * Increase the reference count of a font metrics structure by one.
  *
- * Return value: @metrics
+ * Return value: (nullable): @metrics
  **/
 PangoFontMetrics *
 pango_font_metrics_ref (PangoFontMetrics *metrics)
@@ -1710,7 +1729,7 @@ pango_font_metrics_ref (PangoFontMetrics *metrics)
 
 /**
  * pango_font_metrics_unref:
- * @metrics: a #PangoFontMetrics structure, may be %NULL
+ * @metrics: (nullable): a #PangoFontMetrics structure, may be %NULL
  *
  * Decrease the reference count of a font metrics structure by one. If
  * the result is zero, frees the structure and any associated
@@ -2058,9 +2077,9 @@ pango_font_face_get_face_name (PangoFontFace *face)
 /**
  * pango_font_face_list_sizes:
  * @face: a #PangoFontFace.
- * @sizes: (out) (array length=n_sizes): location to store a pointer
- *         to an array of int. This array should be freed with
- *         g_free().
+ * @sizes: (out) (array length=n_sizes) (nullable) (optional):
+ *         location to store a pointer to an array of int. This array
+ *         should be freed with g_free().
  * @n_sizes: location to store the number of elements in @sizes
  *
  * List the available sizes for a font. This is only applicable to bitmap

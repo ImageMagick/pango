@@ -50,11 +50,6 @@
     <xi:include href="xml/pango-version.xml"/>
     </chapter>
 
-  <chapter id="tools">
-    <title>Pango Tools</title>
-    <xi:include href="pango-querymodules.xml"/>
-  </chapter>
-
   <chapter id="pango-hierarchy">
     <title>Object Hierarchy</title>
     <xi:include href="xml/tree_index.sgml"/>
@@ -123,17 +118,33 @@
     <title>Index of new symbols in 1.26</title>
     <xi:include href="xml/api-index-1.26.xml"><xi:fallback /></xi:include>
   </index>
-  <index id="api-index-1-28" role="1.28">
-    <title>Index of new symbols in 1.28</title>
-    <xi:include href="xml/api-index-1.28.xml"><xi:fallback /></xi:include>
-  </index>
   <index id="api-index-1-30" role="1.30">
     <title>Index of new symbols in 1.30</title>
     <xi:include href="xml/api-index-1.30.xml"><xi:fallback /></xi:include>
   </index>
+  <index id="api-index-1-31-0" role="1.31.0">
+    <title>Index of new symbols in 1.31</title>
+    <xi:include href="xml/api-index-1.31.0.xml"><xi:fallback /></xi:include>
+  </index>
   <index id="api-index-1-32" role="1.32">
     <title>Index of new symbols in 1.32</title>
     <xi:include href="xml/api-index-1.32.xml"><xi:fallback /></xi:include>
+  </index>
+  <index id="api-index-1-32-4" role="1.32.4">
+    <title>Index of new symbols in 1.32.4</title>
+    <xi:include href="xml/api-index-1.32.4.xml"><xi:fallback /></xi:include>
+  </index>
+  <index id="api-index-1-34" role="1.34">
+    <title>Index of new symbols in 1.34</title>
+    <xi:include href="xml/api-index-1.34.xml"><xi:fallback /></xi:include>
+  </index>
+  <index id="api-index-1-38" role="1.38">
+    <title>Index of new symbols in 1.38</title>
+    <xi:include href="xml/api-index-1.38.xml"><xi:fallback /></xi:include>
+  </index>
+  <index id="api-index-1-40" role="1.40">
+    <title>Index of new symbols in 1.40</title>
+    <xi:include href="xml/api-index-1.40.xml"><xi:fallback /></xi:include>
   </index>
 
 </book>

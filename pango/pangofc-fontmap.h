@@ -22,8 +22,8 @@
 #ifndef __PANGO_FC_FONT_MAP_H__
 #define __PANGO_FC_FONT_MAP_H__
 
+#include <pango/pango.h>
 #include <fontconfig/fontconfig.h>
-#include <pango/pango-fontmap.h>
 #include <pango/pangofc-decoder.h>
 #include <pango/pangofc-font.h>
 
@@ -102,10 +102,10 @@ struct _PangoFcFontMap
 
 /**
  * PangoFcFontMapClass:
- * @default_substitute: Substitutes in default values for
- *  unspecified fields in a #FcPattern. This will be called
- *  prior to creating a font for the pattern. May be %NULL.
- *  Deprecated in favor of @font_key_substitute().
+ * @default_substitute: (nullable): Substitutes in default
+ *  values for unspecified fields in a #FcPattern. This will
+ *  be called prior to creating a font for the pattern. May be
+ *  %NULL.  Deprecated in favor of @font_key_substitute().
  * @new_font: Creates a new #PangoFcFont for the specified
  *  pattern of the appropriate type for this font map. The
  *  @pattern argument must be passed to the "pattern" property
@@ -117,7 +117,7 @@ struct _PangoFcFontMap
  *  may be null.
  * @context_key_get: Gets an opaque key holding backend
  *  specific options for the context that will affect
- *  fonts created by create_font(). The result must point to
+ *  fonts created by @create_font(). The result must point to
  *  persistant storage owned by the fontmap. This key
  *  is used to index hash tables used to look up fontsets
  *  and fonts.
@@ -128,17 +128,17 @@ struct _PangoFcFontMap
  *  @context_key_copy.
  * @context_key_hash: Gets a hash value for a context key
  * @context_key_equal: Compares two context keys for equality.
- * @fontset_key_substitute: Substitutes in default values for
- *  unspecified fields in a #FcPattern. This will be called
- *  prior to creating a font for the pattern. May be %NULL.
- *  (Since: 1.24)
- * @create_font: Creates a new #PangoFcFont for the specified
- *  pattern of the appropriate type for this font map using
- *  information from the font key that is passed in. The
- *  @pattern member of @font_key can be retrieved using
- *  pango_fc_font_key_get_pattern() and must be passed to
- *  the "pattern" property of #PangoFcFont when you call
- *  g_object_new().  If %NULL, new_font() is used.
+ * @fontset_key_substitute: (nullable): Substitutes in
+ *  default values for unspecified fields in a
+ *  #FcPattern. This will be called prior to creating a font
+ *  for the pattern. May be %NULL.  (Since: 1.24)
+ * @create_font: (nullable): Creates a new #PangoFcFont for
+ *  the specified pattern of the appropriate type for this
+ *  font map using information from the font key that is
+ *  passed in. The @pattern member of @font_key can be
+ *  retrieved using pango_fc_font_key_get_pattern() and must
+ *  be passed to the "pattern" property of #PangoFcFont when
+ *  you call g_object_new().  If %NULL, new_font() is used.
  *  (Since: 1.24)
  *
  * Class structure for #PangoFcFontMap.
@@ -197,6 +197,15 @@ GType pango_fc_font_map_get_type (void) G_GNUC_CONST;
 
 void           pango_fc_font_map_cache_clear    (PangoFcFontMap *fcfontmap);
 
+void
+pango_fc_font_map_config_changed (PangoFcFontMap *fcfontmap);
+
+void
+pango_fc_font_map_set_config (PangoFcFontMap *fcfontmap,
+			      FcConfig       *fcconfig);
+FcConfig *
+pango_fc_font_map_get_config (PangoFcFontMap *fcfontmap);
+
 /**
  * PangoFcDecoderFindFunc:
  * @pattern: a fully resolved #FcPattern specifying the font on the system
@@ -225,7 +234,7 @@ PangoFontDescription *pango_fc_font_description_from_pattern (FcPattern *pattern
  *
  * String representing a fontconfig property name that Pango sets on any
  * fontconfig pattern it passes to fontconfig if a #PangoGravity other
- * than %PangoGravitySouth is desired.
+ * than %PANGO_GRAVITY_SOUTH is desired.
  *
  * The property will have a #PangoGravity value as a string, like "east".
  * This can be used to write fontconfig configuration rules to choose

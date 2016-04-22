@@ -22,7 +22,6 @@
 #ifndef __PANGO_LAYOUT_H__
 #define __PANGO_LAYOUT_H__
 
-#include "pango-macros.h"
 #include <pango/pango-attributes.h>
 #include <pango/pango-context.h>
 #include <pango/pango-glyph-item.h>
@@ -34,14 +33,41 @@ typedef struct _PangoLayout      PangoLayout;
 typedef struct _PangoLayoutClass PangoLayoutClass;
 typedef struct _PangoLayoutLine  PangoLayoutLine;
 
+/**
+ * PangoLayoutRun:
+ *
+ * The #PangoLayoutRun structure represents a single run within
+ * a #PangoLayoutLine; it is simply an alternate name for
+ * #PangoGlyphItem.
+ * See the #PangoGlyphItem docs for details on the fields.
+ */
 typedef PangoGlyphItem PangoLayoutRun;
 
+/**
+ * PangoAlignment:
+ * @PANGO_ALIGN_LEFT: Put all available space on the right
+ * @PANGO_ALIGN_CENTER: Center the line within the available space
+ * @PANGO_ALIGN_RIGHT: Put all available space on the left
+ *
+ * A #PangoAlignment describes how to align the lines of a #PangoLayout within the
+ * available space. If the #PangoLayout is set to justify
+ * using pango_layout_set_justify(), this only has effect for partial lines.
+ */
 typedef enum {
   PANGO_ALIGN_LEFT,
   PANGO_ALIGN_CENTER,
   PANGO_ALIGN_RIGHT
 } PangoAlignment;
 
+/**
+ * PangoWrapMode:
+ * @PANGO_WRAP_WORD: wrap lines at word boundaries.
+ * @PANGO_WRAP_CHAR: wrap lines at character boundaries.
+ * @PANGO_WRAP_WORD_CHAR: wrap lines at word boundaries, but fall back to character boundaries if there is not
+ * enough space for a full word.
+ *
+ * A #PangoWrapMode describes how to wrap the lines of a #PangoLayout to the desired width.
+ */
 typedef enum {
   PANGO_WRAP_WORD,
   PANGO_WRAP_CHAR,
@@ -68,6 +94,25 @@ typedef enum {
   PANGO_ELLIPSIZE_END
 } PangoEllipsizeMode;
 
+/**
+ * PangoLayoutLine:
+ * @layout: (allow-none): the layout this line belongs to, might be %NULL
+ * @start_index: start of line as byte index into layout->text
+ * @length: length of line in bytes
+ * @runs: (allow-none) (element-type: Pango.LayoutRun): list of runs in the
+ *        line, from left to right
+ * @is_paragraph_start: #TRUE if this is the first line of the paragraph
+ * @resolved_dir: #Resolved PangoDirection of line
+ *
+ * The #PangoLayoutLine structure represents one of the lines resulting
+ * from laying out a paragraph via #PangoLayout. #PangoLayoutLine
+ * structures are obtained by calling pango_layout_get_line() and
+ * are only valid until the text, attributes, or settings of the
+ * parent #PangoLayout are modified.
+ *
+ * Routines for rendering PangoLayout objects are provided in
+ * code specific to each rendering system.
+ */
 struct _PangoLayoutLine
 {
   PangoLayout *layout;
@@ -90,19 +135,15 @@ struct _PangoLayoutLine
  */
 
 GType        pango_layout_get_type       (void) G_GNUC_CONST;
-PANGO_EXTERN
 PangoLayout *pango_layout_new            (PangoContext   *context);
 PangoLayout *pango_layout_copy           (PangoLayout    *src);
 
-PANGO_EXTERN
 PangoContext  *pango_layout_get_context    (PangoLayout    *layout);
 
-PANGO_EXTERN
 void           pango_layout_set_attributes (PangoLayout    *layout,
 					    PangoAttrList  *attrs);
 PangoAttrList *pango_layout_get_attributes (PangoLayout    *layout);
 
-PANGO_EXTERN
 void           pango_layout_set_text       (PangoLayout    *layout,
 					    const char     *text,
 					    int             length);
@@ -110,7 +151,6 @@ const char    *pango_layout_get_text       (PangoLayout    *layout);
 
 gint           pango_layout_get_character_count (PangoLayout *layout);
 
-PANGO_EXTERN
 void           pango_layout_set_markup     (PangoLayout    *layout,
 					    const char     *markup,
 					    int             length);
@@ -121,41 +161,33 @@ void           pango_layout_set_markup_with_accel (PangoLayout    *layout,
 						   gunichar        accel_marker,
 						   gunichar       *accel_char);
 
-PANGO_EXTERN
 void           pango_layout_set_font_description (PangoLayout                *layout,
 						  const PangoFontDescription *desc);
 
 const PangoFontDescription *pango_layout_get_font_description (PangoLayout *layout);
 
-PANGO_EXTERN
 void           pango_layout_set_width            (PangoLayout                *layout,
 						  int                         width);
 int            pango_layout_get_width            (PangoLayout                *layout);
-PANGO_EXTERN
 void           pango_layout_set_height           (PangoLayout                *layout,
 						  int                         height);
 int            pango_layout_get_height           (PangoLayout                *layout);
-PANGO_EXTERN
 void           pango_layout_set_wrap             (PangoLayout                *layout,
 						  PangoWrapMode               wrap);
 PangoWrapMode  pango_layout_get_wrap             (PangoLayout                *layout);
 gboolean       pango_layout_is_wrapped           (PangoLayout                *layout);
-PANGO_EXTERN
 void           pango_layout_set_indent           (PangoLayout                *layout,
 						  int                         indent);
 int            pango_layout_get_indent           (PangoLayout                *layout);
 void           pango_layout_set_spacing          (PangoLayout                *layout,
 						  int                         spacing);
 int            pango_layout_get_spacing          (PangoLayout                *layout);
-PANGO_EXTERN
 void           pango_layout_set_justify          (PangoLayout                *layout,
 						  gboolean                    justify);
 gboolean       pango_layout_get_justify          (PangoLayout                *layout);
-PANGO_EXTERN
 void           pango_layout_set_auto_dir         (PangoLayout                *layout,
 						  gboolean                    auto_dir);
 gboolean       pango_layout_get_auto_dir         (PangoLayout                *layout);
-PANGO_EXTERN
 void           pango_layout_set_alignment        (PangoLayout                *layout,
 						  PangoAlignment              alignment);
 PangoAlignment pango_layout_get_alignment        (PangoLayout                *layout);
@@ -165,12 +197,10 @@ void           pango_layout_set_tabs             (PangoLayout                *la
 
 PangoTabArray* pango_layout_get_tabs             (PangoLayout                *layout);
 
-PANGO_EXTERN
 void           pango_layout_set_single_paragraph_mode (PangoLayout                *layout,
 						       gboolean                    setting);
 gboolean       pango_layout_get_single_paragraph_mode (PangoLayout                *layout);
 
-PANGO_EXTERN
 void               pango_layout_set_ellipsize (PangoLayout        *layout,
 					       PangoEllipsizeMode  ellipsize);
 PangoEllipsizeMode pango_layout_get_ellipsize (PangoLayout        *layout);
@@ -178,7 +208,6 @@ gboolean           pango_layout_is_ellipsized (PangoLayout        *layout);
 
 int      pango_layout_get_unknown_glyphs_count (PangoLayout    *layout);
 
-PANGO_EXTERN
 void     pango_layout_context_changed (PangoLayout    *layout);
 guint    pango_layout_get_serial      (PangoLayout    *layout);
 
@@ -213,14 +242,12 @@ gboolean pango_layout_xy_to_index          (PangoLayout    *layout,
 					    int             y,
 					    int            *index_,
 					    int            *trailing);
-PANGO_EXTERN
 void     pango_layout_get_extents          (PangoLayout    *layout,
 					    PangoRectangle *ink_rect,
 					    PangoRectangle *logical_rect);
 void     pango_layout_get_pixel_extents    (PangoLayout    *layout,
 					    PangoRectangle *ink_rect,
 					    PangoRectangle *logical_rect);
-PANGO_EXTERN
 void     pango_layout_get_size             (PangoLayout    *layout,
 					    int            *width,
 					    int            *height);
@@ -271,10 +298,8 @@ typedef struct _PangoLayoutIter PangoLayoutIter;
 
 GType            pango_layout_iter_get_type (void) G_GNUC_CONST;
 
-PANGO_EXTERN
 PangoLayoutIter *pango_layout_get_iter  (PangoLayout     *layout);
 PangoLayoutIter *pango_layout_iter_copy (PangoLayoutIter *iter);
-PANGO_EXTERN
 void             pango_layout_iter_free (PangoLayoutIter *iter);
 
 int              pango_layout_iter_get_index  (PangoLayoutIter *iter);
@@ -310,7 +335,6 @@ void pango_layout_iter_get_line_yrange     (PangoLayoutIter *iter,
 void pango_layout_iter_get_layout_extents  (PangoLayoutIter *iter,
 					    PangoRectangle  *ink_rect,
 					    PangoRectangle  *logical_rect);
-PANGO_EXTERN
 int  pango_layout_iter_get_baseline        (PangoLayoutIter *iter);
 
 G_END_DECLS

@@ -1,3 +1,120 @@
+Overview of changes between 1.40.0 and 1.40.1
+=============================================
+- Use $PKG_CONFIG consistently (#764191)
+- Fix a PangoWin32FontMap memory leak (#7640890)
+
+Overview of changes between 1.39.1 and 1.40.0
+=============================================
+- Fix typos
+- Don't treat OGHAM SPACE MARK as whitespace
+
+Overview of changes between 1.38.1 and 1.39.0
+=============================================
+- Update PangoScript to Unicode 8.0
+
+Overview of changes between 1.38.0 and 1.38.1
+=============================================
+- Require 0.9.30
+- Fix make check with --enable-debug=no
+- Win32 build fixes
+
+Overview of changes between 1.37.5 and 1.38.0
+=============================================
+- No changes
+
+Overview of changes between 1.37.4 and 1.37.5
+=============================================
+- Small optimizations
+
+Overview of changes between 1.37.3 and 1.37.4
+=============================================
+- Use grapheme boundaries in justification
+- Support coloring marks and bases independently (#541608)
+- Fix a crash (#753167)
+- Make Thai and Arabic support thread-safe
+- Fix justification (#753772)
+
+Overview of changes between 1.37.2 and 1.37.3
+=============================================
+- Fix pango_glyph_item_iter_prev
+- Add alpha attributes
+- Add support for alpha in markup
+
+Overview of changes between 1.37.1 and 1.37.2
+=============================================
+- Don't use hb_glib_get_unicode_funcs
+- Warning fixes
+
+Overview of changes between 1.37.0 and 1.37.1
+=============================================
+- Add attributes for OpenType font features (#738505)
+- CoreText: locale handling improvements (#750017)
+- Fix ellipsization with line space (#750383)
+- Fix issues with hex boxes (#750463)
+
+Overview of changes between 1.36.8 and 1.37.0
+=============================================
+- Pango modules, engines, and config have been removed (#733882)
+- Added pango_fc_font_map_config_changed() (#748767)
+- Added pango_fc_font_map_[sg]et_config() (#547671)
+- Added pango_matrix_get_font_scale_factors
+- Lot of API has been deprecated
+- Fix CoreText font fallback
+- General build fixes
+- Win32 build fixes
+
+Overview of changes between 1.36.7 and 1.36.8
+=============================================
+- Make tests not fail on build.gnome.org
+
+Overview of changes between 1.36.6 and 1.36.7
+=============================================
+- Add tests for pango markup
+- Add tests for PangoLayout
+- Add an analysis flag for ellipsis (#735719)
+- Treat attributes in ellipsis better (#735732)
+
+Overview of changes between 1.36.5 and 1.36.6
+=============================================
+- Cope with lack of LC_CTYPE (#732276)
+- Prevent harfbuzz from using replacement char
+- Don't force static builds on win32 (#733137)
+- Allow backend selection via PANGOCAIRO_BACKEND
+- Support more font weights (#733764)
+- Fix vertical positioning on win32
+- Don't break in the middle of jamo (#705727)
+
+Overview of changes between 1.36.4 and 1.36.5
+=============================================
+- Lower the harfbuzz requirement
+
+Overview of changes between 1.36.3 and 1.36.4
+=============================================
+- Improve thread-safety on Windows (#695913)
+- Add missing annotations (#729840)
+- Update PangoWeight documentation
+- Require harfbuzz 0.9.29
+
+Overview of changes between 1.36.2 and 1.36.3
+=============================================
+- Fix builddir != srdir builds
+- Avoid a crash when FT_Face is NULL (#724006)
+- Win32 build fixes
+- Update pango_color_parse docs (#711061)
+
+Overview of changes between 1.36.1 and 1.36.2
+=============================================
+- Win32 build fixes
+- Fix a possible strtol(NULL) (#719549)
+- Fix --with-included-modules
+- Fix a FPE in pango_layout_iter_get_char_extents (#720379)
+- Use 96 dpi for CoreText by default
+
+Overview of changes between 1.36.0 and 1.36.1
+=============================================
+- Handle scaling absolute font sizes (#708778)
+- Small documentation fixes
+
 Overview of changes between 1.35.3 and 1.36.0
 =============================================
 - Remove a useless test (#707131)
@@ -2701,9 +2818,3 @@ Changes between 0.12 and 0.13
 What is new in GScript 0.1:
 
 * Initial release
-
-
-# Local Variables:
-# coding: utf-8
-# End:
-# vim: encoding=utf-8:

@@ -19,6 +19,16 @@
  * Boston, MA 02111-1307, USA.
  */
 
+/**
+ * SECTION:main
+ * @title:Rendering
+ * @short_description:Functions to run the rendering pipeline
+ *
+ * The Pango rendering pipeline takes a string of
+ * Unicode characters and converts it into glyphs.
+ * The functions described in this section accomplish
+ * various steps of this process.
+ */
 #include "config.h"
 #include <string.h>
 #include <stdlib.h>
@@ -26,11 +36,15 @@
 #include "pango-context.h"
 #include "pango-impl-utils.h"
 
-#include "pango-engine.h"
 #include "pango-engine-private.h"
-#include "pango-modules.h"
 #include "pango-script-private.h"
 
+/**
+ * PangoContext:
+ *
+ * The #PangoContext structure stores global information
+ * used to control the itemization process.
+ */
 struct _PangoContext
 {
   GObject parent_instance;
@@ -187,10 +201,9 @@ pango_context_set_matrix (PangoContext       *context,
  * Gets the transformation matrix that will be applied when
  * rendering with this context. See pango_context_set_matrix().
  *
- * Return value: the matrix, or %NULL if no matrix has been set
- *  (which is the same as the identity matrix). The returned
- *  matrix is owned by Pango and must not be modified or
- *  freed.
+ * Return value: (nullable): the matrix, or %NULL if no matrix has
+ *  been set (which is the same as the identity matrix). The returned
+ *  matrix is owned by Pango and must not be modified or freed.
  *
  * Since: 1.6
  **/
@@ -237,7 +250,7 @@ pango_context_set_font_map (PangoContext *context,
  * pango_context_get_font_map:
  * @context: a #PangoContext
  *
- * Gets the #PangoFontmap used to look up fonts for this context.
+ * Gets the #PangoFontMap used to look up fonts for this context.
  *
  * Return value: (transfer none): the font map for the #PangoContext.
  *               This value is owned by Pango and should not be unreferenced.
@@ -293,8 +306,8 @@ pango_context_list_families (PangoContext          *context,
  * Loads the font in one of the fontmaps in the context
  * that is the closest match for @desc.
  *
- * Returns: (transfer full): the newly allocated #PangoFont that
- *          was loaded, or %NULL if no font matched.
+ * Returns: (transfer full) (nullable): the newly allocated #PangoFont
+ *          that was loaded, or %NULL if no font matched.
  **/
 PangoFont *
 pango_context_load_font (PangoContext               *context,
@@ -315,8 +328,8 @@ pango_context_load_font (PangoContext               *context,
  * Load a set of fonts in the context that can be used to render
  * a font matching @desc.
  *
- * Returns: (transfer full): the newly allocated #PangoFontset loaded,
- *          or %NULL if no font matched.
+ * Returns: (transfer full) (nullable): the newly allocated
+ *          #PangoFontset loaded, or %NULL if no font matched.
  **/
 PangoFontset *
 pango_context_load_fontset (PangoContext               *context,
@@ -592,34 +605,31 @@ advance_attr_iterator_to (PangoAttrIterator *iterator,
 
 typedef struct {
   GHashTable *hash;
-} ShaperFontCache;
+} FontCache;
 
 typedef struct {
-  PangoEngineShape *shape_engine;
   PangoFont *font;
-} ShaperFontElement;
+} FontElement;
 
 static void
-shaper_font_cache_destroy (ShaperFontCache *cache)
+font_cache_destroy (FontCache *cache)
 {
   g_hash_table_destroy (cache->hash);
-  g_slice_free (ShaperFontCache, cache);
+  g_slice_free (FontCache, cache);
 }
 
 static void
-shaper_font_element_destroy (ShaperFontElement *element)
+font_element_destroy (FontElement *element)
 {
-  if (element->shape_engine)
-    g_object_unref (element->shape_engine);
   if (element->font)
     g_object_unref (element->font);
-  g_slice_free (ShaperFontElement, element);
+  g_slice_free (FontElement, element);
 }
 
-static ShaperFontCache *
-get_shaper_font_cache (PangoFontset *fontset)
+static FontCache *
+get_font_cache (PangoFontset *fontset)
 {
-  ShaperFontCache *cache;
+  FontCache *cache;
 
   static GQuark cache_quark = 0; /* MT-safe */
   if (G_UNLIKELY (!cache_quark))
@@ -629,14 +639,14 @@ retry:
   cache = g_object_get_qdata (G_OBJECT (fontset), cache_quark);
   if (G_UNLIKELY (!cache))
     {
-      cache = g_slice_new (ShaperFontCache);
+      cache = g_slice_new (FontCache);
       cache->hash = g_hash_table_new_full (g_direct_hash, NULL,
-					   NULL, (GDestroyNotify)shaper_font_element_destroy);
+					   NULL, (GDestroyNotify)font_element_destroy);
       if (!g_object_replace_qdata (G_OBJECT (fontset), cache_quark, NULL,
-                                   cache, (GDestroyNotify)shaper_font_cache_destroy,
+                                   cache, (GDestroyNotify)font_cache_destroy,
                                    NULL))
         {
-          shaper_font_cache_destroy (cache);
+          font_cache_destroy (cache);
           goto retry;
         }
     }
@@ -645,17 +655,15 @@ retry:
 }
 
 static gboolean
-shaper_font_cache_get (ShaperFontCache   *cache,
-		       gunichar           wc,
-		       PangoEngineShape **shape_engine,
-		       PangoFont        **font)
+font_cache_get (FontCache   *cache,
+		gunichar     wc,
+		PangoFont  **font)
 {
-  ShaperFontElement *element;
+  FontElement *element;
 
   element = g_hash_table_lookup (cache->hash, GUINT_TO_POINTER (wc));
   if (element)
     {
-      *shape_engine = element->shape_engine;
       *font = element->font;
 
       return TRUE;
@@ -665,13 +673,11 @@ shaper_font_cache_get (ShaperFontCache   *cache,
 }
 
 static void
-shaper_font_cache_insert (ShaperFontCache   *cache,
-			  gunichar           wc,
-			  PangoEngineShape  *shape_engine,
-			  PangoFont         *font)
+font_cache_insert (FontCache   *cache,
+		   gunichar           wc,
+		   PangoFont         *font)
 {
-  ShaperFontElement *element = g_slice_new (ShaperFontElement);
-  element->shape_engine = shape_engine ? g_object_ref (shape_engine) : NULL;
+  FontElement *element = g_slice_new (FontElement);
   element->font = font ? g_object_ref (font) : NULL;
 
   g_hash_table_insert (cache->hash, GUINT_TO_POINTER (wc), element);
@@ -748,12 +754,9 @@ struct _ItemizeState
   PangoEngineLang *lang_engine;
 
   PangoFontset *current_fonts;
-  ShaperFontCache *cache;
+  FontCache *cache;
   PangoFont *base_font;
   gboolean enable_fallback;
-
-  GSList *exact_engines;
-  GSList *fallback_engines;
 };
 
 static void
@@ -838,6 +841,27 @@ update_end (ItemizeState *state)
     state->run_end = state->width_iter.end;
 }
 
+/* g_unichar_iswide() uses EastAsianWidth, which is broken.
+ * We should switch to using VerticalTextLayout:
+ * http://www.unicode.org/reports/tr50/#Data50
+ *
+ * In the mean time, fixup Hangul jamo to be all wide so we
+ * don't break run in the middle.  The EastAsianWidth has
+ * 'W' for L-jamo, and 'N' for T and V jamo!
+ *
+ * https://bugzilla.gnome.org/show_bug.cgi?id=705727
+ */
+static gboolean
+width_iter_iswide (gunichar ch)
+{
+  if ((0x1100u <= ch && ch <= 0x11FFu) ||
+      (0xA960u <= ch && ch <= 0xA97Cu) ||
+      (0xD7B0u <= ch && ch <= 0xD7FBu))
+    return TRUE;
+
+  return g_unichar_iswide (ch);
+}
+
 static void
 width_iter_next(PangoWidthIter* iter)
 {
@@ -846,13 +870,13 @@ width_iter_next(PangoWidthIter* iter)
   if (iter->end < iter->text_end)
     {
       gunichar ch = g_utf8_get_char (iter->end);
-      iter->wide = g_unichar_iswide (ch);
+      iter->wide = width_iter_iswide (ch);
     }
 
   while (iter->end < iter->text_end)
     {
       gunichar ch = g_utf8_get_char (iter->end);
-      if (g_unichar_iswide (ch) != iter->wide)
+      if (width_iter_iswide (ch) != iter->wide)
         break;
       iter->end = g_utf8_next_char (iter->end);
     }
@@ -959,8 +983,6 @@ itemize_state_init (ItemizeState      *state,
   state->lang_engine = NULL;
   state->current_fonts = NULL;
   state->cache = NULL;
-  state->exact_engines = NULL;
-  state->fallback_engines = NULL;
   state->base_font = NULL;
 
   state->changed = EMBEDDING_CHANGED | SCRIPT_CHANGED | LANG_CHANGED | FONT_CHANGED | WIDTH_CHANGED;
@@ -1131,60 +1153,34 @@ itemize_state_add_character (ItemizeState     *state,
   state->result = g_list_prepend (state->result, state->item);
 }
 
-static void
-get_engines (PangoContext  *context,
-	     PangoLanguage *lang,
-	     PangoScript    script,
-	     GSList       **exact_engines,
-	     GSList       **fallback_engines)
-{
-  const char *engine_type = pango_font_map_get_shape_engine_type (context->font_map);
-  PangoMap *shaper_map = pango_find_map (lang,
-					 g_quark_from_string (PANGO_ENGINE_TYPE_SHAPE),
-					 g_quark_from_string (engine_type));
-  pango_map_get_engines (shaper_map, script,
-			 exact_engines, fallback_engines);
-}
-
 typedef struct {
   PangoLanguage *lang;
   gunichar wc;
-  GSList *engines;
-  PangoEngineShape *shape_engine;
   PangoFont *font;
-} GetShaperFontInfo;
+} GetFontInfo;
 
 static gboolean
-get_shaper_and_font_foreach (PangoFontset *fontset,
-			     PangoFont    *font,
-			     gpointer      data)
+get_font_foreach (PangoFontset *fontset,
+		  PangoFont    *font,
+		  gpointer      data)
 {
-  GetShaperFontInfo *info = data;
-  GSList *l;
+  GetFontInfo *info = data;
+  PangoEngineShape *engine;
+  PangoCoverageLevel level;
 
   if (G_UNLIKELY (!font))
     return FALSE;
 
-  for (l = info->engines; l; l = l->next)
+  engine = pango_font_find_shaper (font, info->lang, info->wc),
+  level = _pango_engine_shape_covers (engine, font, info->lang, info->wc);
+  if (level != PANGO_COVERAGE_NONE)
     {
-      PangoEngineShape *engine = l->data;
-      PangoCoverageLevel level;
-
-      level = _pango_engine_shape_covers (engine, font,
-					  info->lang, info->wc);
-      if (level != PANGO_COVERAGE_NONE)
-	{
-	  info->shape_engine = engine;
-	  info->font = font;
-	  return TRUE;
-	}
+      info->font = font;
+      return TRUE;
     }
 
-  if (!fontset && info->engines && info->engines->next == NULL)
+  if (!fontset)
     {
-      /* We are in no-fallback mode and there's only one engine, just
-       * return it. */
-      info->shape_engine = (PangoEngineShape *) info->engines->data;
       info->font = font;
       return TRUE;
     }
@@ -1223,69 +1219,33 @@ get_shaper_and_font (ItemizeState      *state,
 		     PangoEngineShape **shape_engine,
 		     PangoFont        **font)
 {
-  GetShaperFontInfo info;
+  GetFontInfo info;
 
   /* We'd need a separate cache when fallback is disabled, but since lookup
    * with fallback disabled is faster anyways, we just skip caching */
-  if (state->enable_fallback && shaper_font_cache_get (state->cache, wc, shape_engine, font))
-    return *shape_engine != NULL;
-
-  if (!state->exact_engines && !state->fallback_engines)
-    get_engines (state->context, state->derived_lang, get_script (state),
-		 &state->exact_engines, &state->fallback_engines);
+  if (state->enable_fallback && font_cache_get (state->cache, wc, font))
+  {
+    *shape_engine = pango_font_find_shaper (*font, state->derived_lang, wc);
+    return TRUE;
+  }
 
   info.lang = state->derived_lang;
   info.wc = wc;
-  info.shape_engine = NULL;
   info.font = NULL;
 
-  info.engines = state->exact_engines;
-  if (info.engines)
-    {
-      if (state->enable_fallback)
-	pango_fontset_foreach (state->current_fonts, get_shaper_and_font_foreach, &info);
-      else
-	get_shaper_and_font_foreach (NULL, get_base_font (state), &info);
+  if (state->enable_fallback)
+    pango_fontset_foreach (state->current_fonts, get_font_foreach, &info);
+  else
+    get_font_foreach (NULL, get_base_font (state), &info);
 
-      if (info.shape_engine)
-	{
-	  *shape_engine = info.shape_engine;
-	  *font = info.font;
-
-	  /* skip caching if fallback disabled (see above) */
-	  if (state->enable_fallback)
-	    shaper_font_cache_insert (state->cache, wc, *shape_engine, *font);
-
-	  return TRUE;
-	}
-    }
-
-  info.engines = state->fallback_engines;
-  if (info.engines)
-    {
-      if (state->enable_fallback)
-	pango_fontset_foreach (state->current_fonts, get_shaper_and_font_foreach, &info);
-      else
-	get_shaper_and_font_foreach (NULL, get_base_font (state), &info);
-    }
-
-  *shape_engine = info.shape_engine;
   *font = info.font;
+  *shape_engine = pango_font_find_shaper (*font, state->derived_lang, wc);
 
   /* skip caching if fallback disabled (see above) */
   if (state->enable_fallback)
-    shaper_font_cache_insert (state->cache, wc, *shape_engine, *font);
+    font_cache_insert (state->cache, wc, *font);
 
-  return *shape_engine != NULL;
-}
-
-static void
-itemize_state_reset_shape_engines (ItemizeState *state)
-{
-  g_slist_free (state->exact_engines);
-  state->exact_engines = NULL;
-  g_slist_free (state->fallback_engines);
-  state->fallback_engines = NULL;
+  return TRUE;
 }
 
 static PangoLanguage *
@@ -1315,20 +1275,6 @@ compute_derived_language (PangoLanguage *lang,
     }
 
   return derived_lang;
-}
-
-static PangoMap *
-get_lang_map (PangoLanguage *lang)
-{
-  static guint engine_type_id = 0; /* MT-safe */
-  static guint render_type_id = 0; /* MT-safe */
-
-  if (engine_type_id == 0)
-    engine_type_id = g_quark_from_static_string (PANGO_ENGINE_TYPE_LANG);
-  if (render_type_id == 0)
-    render_type_id = g_quark_from_static_string (PANGO_RENDER_TYPE_NONE);
-
-  return pango_find_map (lang, engine_type_id, render_type_id);
 }
 
 static void
@@ -1376,12 +1322,8 @@ itemize_state_update_for_new_run (ItemizeState *state)
 
   if ((state->changed & DERIVED_LANG_CHANGED) || !state->lang_engine)
     {
-      PangoMap *lang_map = get_lang_map (state->derived_lang);
-      state->lang_engine = (PangoEngineLang *)pango_map_get_engine (lang_map, state->script);
+      state->lang_engine = _pango_get_language_engine ();
     }
-
-  if (state->changed & (SCRIPT_CHANGED | DERIVED_LANG_CHANGED))
-    itemize_state_reset_shape_engines (state);
 
   if (state->changed & (FONT_CHANGED | DERIVED_LANG_CHANGED) &&
       state->current_fonts)
@@ -1397,7 +1339,7 @@ itemize_state_update_for_new_run (ItemizeState *state)
 							  state->context,
 							  state->font_desc,
 							  state->derived_lang);
-      state->cache = get_shaper_font_cache (state->current_fonts);
+      state->cache = get_font_cache (state->current_fonts);
     }
 
   if ((state->changed & FONT_CHANGED) && state->base_font)
@@ -1445,6 +1387,7 @@ itemize_state_process_run (ItemizeState *state)
       gboolean is_forced_break = (wc == '\t' || wc == LINE_SEPARATOR);
       PangoEngineShape *shape_engine;
       PangoFont *font;
+      GUnicodeType type;
 
       /* We don't want space characters to affect font selection; in general,
        * it's always wrong to select a font just to render a space.
@@ -1452,20 +1395,18 @@ itemize_state_process_run (ItemizeState *state)
        * characters if they don't, HarfBuzz will compatibility-decompose them
        * to ASCII space...
        * See bugs #355987 and #701652.
-       *
-       * The exception of PrivateUse and Unassigned characters is necessary
-       * to be able to render any of them. (for private or being encoded
-       * scripts, etc.) (Recent glib returns true in isprint for PrivateUse.)
        */
-      if (G_UNLIKELY (!g_unichar_isgraph (wc) &&
-		      g_unichar_type (wc) != G_UNICODE_PRIVATE_USE &&
-		      g_unichar_type (wc) != G_UNICODE_UNASSIGNED))
-	{
+      type = g_unichar_type (wc);
+      if (G_UNLIKELY (type == G_UNICODE_CONTROL ||
+                      type == G_UNICODE_FORMAT ||
+                      type == G_UNICODE_SURROGATE ||
+                      (type == G_UNICODE_SPACE_SEPARATOR && wc != 0x1680u /* OGHAM SPACE MARK */)))
+        {
 	  shape_engine = NULL;
 	  font = NULL;
-	}
+        }
       else
-	{
+        {
 	  get_shaper_and_font (state, wc, &shape_engine, &font);
 	}
 
@@ -1518,7 +1459,6 @@ itemize_state_finish (ItemizeState *state)
   _pango_script_iter_fini (&state->script_iter);
   pango_font_description_free (state->font_desc);
 
-  itemize_state_reset_shape_engines (state);
   if (state->current_fonts)
     g_object_unref (state->current_fonts);
   if (state->base_font)

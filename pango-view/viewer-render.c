@@ -60,7 +60,7 @@ PangoGravityHint opt_gravity_hint = PANGO_GRAVITY_HINT_NATURAL;
 HintMode opt_hinting = HINT_DEFAULT;
 PangoWrapMode opt_wrap = PANGO_WRAP_WORD_CHAR;
 gboolean opt_wrap_set = FALSE;
-const char *opt_pangorc = NULL;
+static const char *opt_pangorc = NULL; /* Unused */
 const PangoViewer *opt_viewer = NULL;
 const char *opt_language = NULL;
 gboolean opt_single_par = FALSE;
@@ -552,7 +552,7 @@ parse_margin (const char *name G_GNUC_UNUSED,
 	      gpointer    data G_GNUC_UNUSED,
 	      GError    **error)
 {
-  switch (sscanf (arg, "%d %d %d %d", &opt_margin_t, &opt_margin_r, &opt_margin_b, &opt_margin_l))
+  switch (sscanf (arg, "%d%*[ ,]%d%*[ ,]%d%*[ ,]%d", &opt_margin_t, &opt_margin_r, &opt_margin_b, &opt_margin_l))
   {
     case 0:
     {
@@ -657,7 +657,6 @@ show_version(const char *name G_GNUC_UNUSED,
 	     GError    **error G_GNUC_UNUSED)
 {
   g_printf("%s (%s) %s\n", g_get_prgname (), PACKAGE_NAME, PACKAGE_VERSION);
-  g_printf("\nPango module interface version: %s\n", MODULE_VERSION);
 
   if (PANGO_VERSION != pango_version())
     g_printf("Linked Pango library has a different version: %s\n", pango_version_string ());
@@ -713,8 +712,8 @@ parse_options (int argc, char *argv[])
      "Interpret text as Pango markup",					NULL},
     {"output",		'o', 0, G_OPTION_ARG_STRING,			&opt_output,
      "Save rendered image to output file",			      "file"},
-    {"pangorc",		0, 0, G_OPTION_ARG_STRING,			&opt_pangorc,
-     "pangorc file to use (default is ./pangorc)",		      "file"},
+    {"pangorc",		0, G_OPTION_FLAG_HIDDEN, G_OPTION_ARG_STRING,	&opt_pangorc,
+     "Deprecated",		      "file"},
     {"pixels",		0, 0, G_OPTION_ARG_NONE,			&opt_pixels,
      "Use pixel units instead of points (sets dpi to 72)",		NULL},
     {"rtl",		0, 0, G_OPTION_ARG_NONE,			&opt_rtl,
@@ -812,14 +811,6 @@ parse_options (int argc, char *argv[])
   if (opt_markup &&
       !pango_parse_markup (text, -1, 0, NULL, NULL, NULL, &error))
     fail ("Cannot parse input as markup: %s", error->message);
-
-  /* Setup PANGO_RC_FILE
-   */
-  if (!opt_pangorc)
-    if (g_file_test ("./pangorc", G_FILE_TEST_IS_REGULAR))
-      opt_pangorc = "./pangorc";
-  if (opt_pangorc)
-    g_setenv ("PANGO_RC_FILE", opt_pangorc, TRUE);
 }
 
 
