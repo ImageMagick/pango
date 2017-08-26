@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Engines: Pango Reference Manual</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
+<meta name="generator" content="DocBook XSL Stylesheets Vsnapshot">
 <link rel="home" href="index.html" title="Pango Reference Manual">
 <link rel="up" href="lowlevel.html" title="Low Level Functionality">
 <link rel="prev" href="pango-Coverage-Maps.html" title="Coverage Maps">
@@ -34,7 +34,7 @@
 </tr></table></div>
 <div class="refsect1">
 <a name="pango-Engines.functions"></a><h2>Functions</h2>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="functions_return">
 <col class="functions_name">
@@ -77,7 +77,7 @@
 </div>
 <a name="PangoEngine"></a><div class="refsect1">
 <a name="pango-Engines.other"></a><h2>Types and Values</h2>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="name">
 <col class="description">
@@ -108,7 +108,7 @@
 </div>
 <div class="refsect1">
 <a name="pango-Engines.object-hierarchy"></a><h2>Object Hierarchy</h2>
-<pre class="screen">    <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GObject-struct">GObject</a>
+<pre class="screen">    <a href="../gobject/gobject-The-Base-Object-Type.html#GObject-struct">GObject</a>
     <span class="lineart">╰──</span> PangoEngine
         <span class="lineart">├──</span> <a class="link" href="PangoEngineLang.html" title="PangoEngineLang">PangoEngineLang</a>
         <span class="lineart">╰──</span> <a class="link" href="PangoEngineShape.html" title="PangoEngineShape">PangoEngineShape</a>
@@ -138,9 +138,10 @@ script_engine_list (<em class="parameter"><code><a class="link" href="pango-Engi
                     <em class="parameter"><code><span class="type">int</span> *n_engines</code></em>);</pre>
 <div class="warning"><p><code class="literal">script_engine_list</code> has been deprecated since version 1.38 and should not be used in newly-written code.</p></div>
 <p>Do not use.</p>
+<p><span class="annotation">[<acronym title="Exposed in C code, not necessarily available in other languages."><span class="acronym">skip</span></acronym>]</span></p>
 <div class="refsect3">
 <a name="script-engine-list.parameters"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -166,12 +167,13 @@ script_engine_list (<em class="parameter"><code><a class="link" href="pango-Engi
 <div class="refsect2">
 <a name="script-engine-init"></a><h3>script_engine_init ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
-script_engine_init (<em class="parameter"><code><a href="https://developer.gnome.org/gobject/unstable/GTypeModule.html#GTypeModule-struct"><span class="type">GTypeModule</span></a> *module</code></em>);</pre>
+script_engine_init (<em class="parameter"><code><a href="../gobject/GTypeModule.html#GTypeModule-struct"><span class="type">GTypeModule</span></a> *module</code></em>);</pre>
 <div class="warning"><p><code class="literal">script_engine_init</code> has been deprecated since version 1.38 and should not be used in newly-written code.</p></div>
 <p>Do not use.</p>
+<p><span class="annotation">[<acronym title="Exposed in C code, not necessarily available in other languages."><span class="acronym">skip</span></acronym>]</span></p>
 <div class="refsect3">
 <a name="script-engine-init.parameters"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -179,7 +181,7 @@ script_engine_init (<em class="parameter"><code><a href="https://developer.gnome
 </colgroup>
 <tbody><tr>
 <td class="parameter_name"><p>module</p></td>
-<td class="parameter_description"><p>a <a href="https://developer.gnome.org/gobject/unstable/GTypeModule.html#GTypeModule-struct"><span class="type">GTypeModule</span></a> structure used to associate any
+<td class="parameter_description"><p>a <a href="../gobject/GTypeModule.html#GTypeModule-struct"><span class="type">GTypeModule</span></a> structure used to associate any
 GObject types created in this module with the module.</p></td>
 <td class="parameter_annotations"> </td>
 </tr></tbody>
@@ -193,6 +195,7 @@ GObject types created in this module with the module.</p></td>
 script_engine_exit (<em class="parameter"><code><span class="type">void</span></code></em>);</pre>
 <div class="warning"><p><code class="literal">script_engine_exit</code> has been deprecated since version 1.38 and should not be used in newly-written code.</p></div>
 <p>Do not use.</p>
+<p><span class="annotation">[<acronym title="Exposed in C code, not necessarily available in other languages."><span class="acronym">skip</span></acronym>]</span></p>
 </div>
 <hr>
 <div class="refsect2">
@@ -201,9 +204,10 @@ script_engine_exit (<em class="parameter"><code><span class="type">void</span></
 script_engine_create (<em class="parameter"><code>const <span class="type">char</span> *id</code></em>);</pre>
 <div class="warning"><p><code class="literal">script_engine_create</code> has been deprecated since version 1.38 and should not be used in newly-written code.</p></div>
 <p>Do not use.</p>
+<p><span class="annotation">[<acronym title="Exposed in C code, not necessarily available in other languages."><span class="acronym">skip</span></acronym>]</span></p>
 <div class="refsect3">
 <a name="script-engine-create.parameters"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -235,7 +239,7 @@ script_engine_create (<em class="parameter"><code>const <span class="type">char<
 engine. It contains the following fields:</p>
 <div class="refsect3">
 <a name="PangoEngineInfo.members"></a><h4>Members</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="300px" class="struct_members_name">
 <col class="struct_members_description">
@@ -243,17 +247,17 @@ engine. It contains the following fields:</p>
 </colgroup>
 <tbody>
 <tr>
-<td class="struct_member_name"><p>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="PangoEngineInfo.id"></a>id</code></em>;</p></td>
+<td class="struct_member_name"><p>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="PangoEngineInfo.id"></a>id</code></em>;</p></td>
 <td class="struct_member_description"><p>a unique string ID for the engine.</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
 <tr>
-<td class="struct_member_name"><p>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="PangoEngineInfo.engine-type"></a>engine_type</code></em>;</p></td>
+<td class="struct_member_name"><p>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="PangoEngineInfo.engine-type"></a>engine_type</code></em>;</p></td>
 <td class="struct_member_description"><p>a string identifying the engine type.</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
 <tr>
-<td class="struct_member_name"><p>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="PangoEngineInfo.render-type"></a>render_type</code></em>;</p></td>
+<td class="struct_member_name"><p>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="PangoEngineInfo.render-type"></a>render_type</code></em>;</p></td>
 <td class="struct_member_description"><p>a string identifying the render type.</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
@@ -263,7 +267,7 @@ engine. It contains the following fields:</p>
 <td class="struct_member_annotations"> </td>
 </tr>
 <tr>
-<td class="struct_member_name"><p><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> <em class="structfield"><code><a name="PangoEngineInfo.n-scripts"></a>n_scripts</code></em>;</p></td>
+<td class="struct_member_name"><p><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> <em class="structfield"><code><a name="PangoEngineInfo.n-scripts"></a>n_scripts</code></em>;</p></td>
 <td class="struct_member_description"><p>number of items in <em class="parameter"><code>scripts</code></em>
 .</p></td>
 <td class="struct_member_annotations"> </td>
@@ -285,7 +289,7 @@ engine. It contains the following fields:</p>
 information about how the shaper covers a particular script.</p>
 <div class="refsect3">
 <a name="PangoEngineScriptInfo.members"></a><h4>Members</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="300px" class="struct_members_name">
 <col class="struct_members_description">
@@ -299,7 +303,7 @@ the special meaning here of "all scripts"</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
 <tr>
-<td class="struct_member_name"><p>const <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="PangoEngineScriptInfo.langs"></a>langs</code></em>;</p></td>
+<td class="struct_member_name"><p>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="PangoEngineScriptInfo.langs"></a>langs</code></em>;</p></td>
 <td class="struct_member_description"><p>a semicolon separated list of languages that this
 engine handles for this script. This may be empty,
 in which case the engine is saying that it is a

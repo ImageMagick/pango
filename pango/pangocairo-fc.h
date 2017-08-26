@@ -43,6 +43,7 @@ struct _PangoCairoFcFontMap
   FT_Library library;
 };
 
+PANGO_AVAILABLE_IN_ALL
 GType pango_cairo_fc_font_map_get_type (void) G_GNUC_CONST;
 
 PangoFcFont *_pango_cairo_fc_font_new (PangoCairoFcFontMap *cffontmap,

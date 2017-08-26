@@ -23,9 +23,20 @@
 #define __PANGO_FC_FONT_H__
 
 #include <pango/pango.h>
+
+/* Freetype has undefined macros in its header */
+#ifdef PANGO_COMPILATION
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wundef"
+#endif
+
 #include <ft2build.h>
 #include FT_FREETYPE_H
 #include <fontconfig/fontconfig.h>
+
+#ifdef PANGO_COMPILATION
+#pragma GCC diagnostic pop
+#endif
 
 G_BEGIN_DECLS
 
@@ -126,24 +137,29 @@ struct _PangoFcFontClass
 
 #endif /* PANGO_ENABLE_BACKEND */
 
+PANGO_AVAILABLE_IN_1_4
 gboolean   pango_fc_font_has_char          (PangoFcFont      *font,
 					    gunichar          wc);
+PANGO_AVAILABLE_IN_1_4
 guint      pango_fc_font_get_glyph         (PangoFcFont      *font,
 					    gunichar          wc);
 #ifndef PANGO_DISABLE_DEPRECATED
-G_DEPRECATED_FOR(PANGO_GET_UNKNOWN_GLYPH)
+PANGO_DEPRECATED_FOR(PANGO_GET_UNKNOWN_GLYPH)
 PangoGlyph pango_fc_font_get_unknown_glyph (PangoFcFont      *font,
 					    gunichar          wc);
-G_DEPRECATED
+PANGO_DEPRECATED_IN_1_32
 void       pango_fc_font_kern_glyphs       (PangoFcFont      *font,
 					    PangoGlyphString *glyphs);
 #endif /* PANGO_DISABLE_DEPRECATED */
 
 #endif /* PANGO_ENABLE_ENGINE || PANGO_ENABLE_BACKEND */
 
+PANGO_AVAILABLE_IN_ALL
 GType      pango_fc_font_get_type (void) G_GNUC_CONST;
 
+PANGO_AVAILABLE_IN_1_4
 FT_Face    pango_fc_font_lock_face         (PangoFcFont      *font);
+PANGO_AVAILABLE_IN_1_4
 void       pango_fc_font_unlock_face       (PangoFcFont      *font);
 
 G_END_DECLS

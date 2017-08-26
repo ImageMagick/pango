@@ -143,3 +143,6 @@
 
 /* Version number of package */
 #undef VERSION
+
+/* defines how to decorate public symbols while building */
+#undef _PANGO_EXTERN

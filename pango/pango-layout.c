@@ -2144,7 +2144,11 @@ pango_layout_index_to_pos (PangoLayout    *layout,
 	    {
 	      /* index is in the paragraph delimiters, move to
 	       * end of previous line
+	       *
+	       * This shouldn’t occur in the first loop iteration as the first
+	       * line’s start_index should always be 0.
 	       */
+	      g_assert (layout_line != NULL);
 	      index = layout_line->start_index + layout_line->length;
 	      break;
 	    }
@@ -2816,8 +2820,8 @@ pango_layout_get_pixel_extents (PangoLayout *layout,
 /**
  * pango_layout_get_size:
  * @layout: a #PangoLayout
- * @width: (out caller-allocates) (allow-none): location to store the logical width, or %NULL
- * @height: (out caller-allocates) (allow-none): location to store the logical height, or %NULL
+ * @width: (out) (allow-none): location to store the logical width, or %NULL
+ * @height: (out) (allow-none): location to store the logical height, or %NULL
  *
  * Determines the logical width and height of a #PangoLayout
  * in Pango units (device units scaled by %PANGO_SCALE). This
@@ -5190,7 +5194,7 @@ justify_clusters (PangoLayoutLine *line,
     {
       gboolean leftedge = TRUE;
       PangoGlyphString *rightmost_glyphs = NULL;
-      int rightmost_space;
+      int rightmost_space = 0;
       int residual = 0;
 
       added_so_far = 0;

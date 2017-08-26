@@ -92,7 +92,7 @@ testattributes_LDADD = $(TEST_PANGOCAIRO_LIBS) $(GLIB_LIBS)
 if HAVE_CXX
 check_PROGRAMS += cxx-test
 endif
-cxx_test_SOURCES = cxx-test.C
+cxx_test_SOURCES = cxx-test.cpp
 
 all-unicode.txt: gen-all-unicode$(EXEEXT)
 	./gen-all-unicode > all-unicode.txt
@@ -100,8 +100,8 @@ all-unicode.txt: gen-all-unicode$(EXEEXT)
 noinst_PROGRAMS = $(check_PROGRAMS) gen-all-unicode dump-boundaries
 
 markup_tests = \
-	valid-1 valid-2 valid-3 valid-4 \
-	fail-1 \
+	valid-1 valid-2 valid-3 valid-4 valid-5 valid-6 valid-7 valid-8 valid-9 \
+	fail-1 fail-2 fail-3 fail-4 fail-5 \
 	$(NULL)
 
 all_markup_data = \

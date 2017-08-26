@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>PangoFcDecoder: Pango Reference Manual</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
+<meta name="generator" content="DocBook XSL Stylesheets Vsnapshot">
 <link rel="home" href="index.html" title="Pango Reference Manual">
 <link rel="up" href="lowlevel.html" title="Low Level Functionality">
 <link rel="prev" href="PangoFcFont.html" title="PangoFcFont">
@@ -34,7 +34,7 @@
 </tr></table></div>
 <div class="refsect1">
 <a name="PangoFcDecoder.functions"></a><h2>Functions</h2>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="functions_return">
 <col class="functions_name">
@@ -61,7 +61,7 @@
 </div>
 <div class="refsect1">
 <a name="PangoFcDecoder.other"></a><h2>Types and Values</h2>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="name">
 <col class="description">
@@ -80,7 +80,7 @@
 </div>
 <div class="refsect1">
 <a name="PangoFcDecoder.object-hierarchy"></a><h2>Object Hierarchy</h2>
-<pre class="screen">    <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GObject-struct">GObject</a>
+<pre class="screen">    <a href="../gobject/gobject-The-Base-Object-Type.html#GObject-struct">GObject</a>
     <span class="lineart">╰──</span> PangoFcDecoder
 </pre>
 </div>
@@ -102,7 +102,7 @@ internal value stored by the <a class="link" href="PangoFcDecoder.html" title="P
 be modified or freed.</p>
 <div class="refsect3">
 <a name="pango-fc-decoder-get-charset.parameters"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -136,7 +136,7 @@ or freed.</p>
 <pre class="programlisting"><a class="link" href="pango-Glyph-Storage.html#PangoGlyph" title="PangoGlyph"><span class="returnvalue">PangoGlyph</span></a>
 pango_fc_decoder_get_glyph (<em class="parameter"><code><a class="link" href="PangoFcDecoder.html" title="PangoFcDecoder"><span class="type">PangoFcDecoder</span></a> *decoder</code></em>,
                             <em class="parameter"><code><a class="link" href="PangoFcFont.html" title="PangoFcFont"><span class="type">PangoFcFont</span></a> *fcfont</code></em>,
-                            <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint32"><span class="type">guint32</span></a> wc</code></em>);</pre>
+                            <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#guint32"><span class="type">guint32</span></a> wc</code></em>);</pre>
 <p>Generates a <a class="link" href="pango-Glyph-Storage.html#PangoGlyph" title="PangoGlyph"><span class="type">PangoGlyph</span></a> for the given Unicode point using the
 custom decoder. For complex scripts where there can be multiple
 glyphs for a single character, the decoder will return whatever
@@ -144,7 +144,7 @@ glyph is most convenient for it. (Usually whatever glyph is directly
 in the fonts character map table.)</p>
 <div class="refsect3">
 <a name="pango-fc-decoder-get-glyph.parameters"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -207,7 +207,7 @@ object implementation.</p>
 <p>Class structure for <a class="link" href="PangoFcDecoder.html" title="PangoFcDecoder"><span class="type">PangoFcDecoder</span></a>.</p>
 <div class="refsect3">
 <a name="PangoFcDecoderClass.members"></a><h4>Members</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="300px" class="struct_members_name">
 <col class="struct_members_description">

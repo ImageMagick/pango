@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Coverage Maps: Pango Reference Manual</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
+<meta name="generator" content="DocBook XSL Stylesheets Vsnapshot">
 <link rel="home" href="index.html" title="Pango Reference Manual">
 <link rel="up" href="lowlevel.html" title="Low Level Functionality">
 <link rel="prev" href="pango-OpenType-Font-Handling.html" title="OpenType Font Handling">
@@ -34,7 +34,7 @@
 </tr></table></div>
 <div class="refsect1">
 <a name="pango-Coverage-Maps.functions"></a><h2>Functions</h2>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="functions_return">
 <col class="functions_name">
@@ -117,7 +117,7 @@
 </div>
 <div class="refsect1">
 <a name="pango-Coverage-Maps.other"></a><h2>Types and Values</h2>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="name">
 <col class="description">
@@ -140,7 +140,7 @@
 </div>
 <div class="refsect1">
 <a name="pango-Coverage-Maps.object-hierarchy"></a><h2>Object Hierarchy</h2>
-<pre class="screen">    <a href="https://developer.gnome.org/gobject/unstable/gobject-Enumeration-and-Flag-Types.html">GEnum</a>
+<pre class="screen">    <a href="/home/mclasen/gnome/share/gtk-doc/html/gobject/gobject-Enumeration-and-Flag-Types.html">GEnum</a>
     <span class="lineart">╰──</span> PangoCoverageLevel
 </pre>
 </div>
@@ -174,7 +174,7 @@ pango_coverage_ref (<em class="parameter"><code><a class="link" href="pango-Cove
 <p>Increase the reference count on the <a class="link" href="pango-Coverage-Maps.html#PangoCoverage" title="PangoCoverage"><span class="type">PangoCoverage</span></a> by one</p>
 <div class="refsect3">
 <a name="pango-coverage-ref.parameters"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -202,7 +202,7 @@ pango_coverage_unref (<em class="parameter"><code><a class="link" href="pango-Co
 If the result is zero, free the coverage and all associated memory.</p>
 <div class="refsect3">
 <a name="pango-coverage-unref.parameters"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -225,7 +225,7 @@ pango_coverage_copy (<em class="parameter"><code><a class="link" href="pango-Cov
 since we refcount the structure. File a bug if you use it.)</p>
 <div class="refsect3">
 <a name="pango-coverage-copy.parameters"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -256,7 +256,7 @@ pango_coverage_get (<em class="parameter"><code><a class="link" href="pango-Cove
 </p>
 <div class="refsect3">
 <a name="pango-coverage-get.parameters"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -296,7 +296,7 @@ the corresponding index in <em class="parameter"><code>other</code></em>
 .</p>
 <div class="refsect3">
 <a name="pango-coverage-max.parameters"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -328,7 +328,7 @@ pango_coverage_set (<em class="parameter"><code><a class="link" href="pango-Cove
 </p>
 <div class="refsect3">
 <a name="pango-coverage-set.parameters"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -360,12 +360,12 @@ pango_coverage_set (<em class="parameter"><code><a class="link" href="pango-Cove
 <a name="pango-coverage-to-bytes"></a><h3>pango_coverage_to_bytes ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 pango_coverage_to_bytes (<em class="parameter"><code><a class="link" href="pango-Coverage-Maps.html#PangoCoverage" title="PangoCoverage"><span class="type">PangoCoverage</span></a> *coverage</code></em>,
-                         <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guchar"><span class="type">guchar</span></a> **bytes</code></em>,
+                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#guchar"><span class="type">guchar</span></a> **bytes</code></em>,
                          <em class="parameter"><code><span class="type">int</span> *n_bytes</code></em>);</pre>
 <p>Convert a <a class="link" href="pango-Coverage-Maps.html#PangoCoverage" title="PangoCoverage"><span class="type">PangoCoverage</span></a> structure into a flat binary format</p>
 <div class="refsect3">
 <a name="pango-coverage-to-bytes.parameters"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -379,7 +379,7 @@ pango_coverage_to_bytes (<em class="parameter"><code><a class="link" href="pango
 </tr>
 <tr>
 <td class="parameter_name"><p>bytes</p></td>
-<td class="parameter_description"><p>  location to store result (must be freed with <a href="https://developer.gnome.org/glib/unstable/glib-Memory-Allocation.html#g-free"><code class="function">g_free()</code></a>). </p></td>
+<td class="parameter_description"><p>  location to store result (must be freed with <a href="../glib/glib-Memory-Allocation.html#g-free"><code class="function">g_free()</code></a>). </p></td>
 <td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="Parameter points to an array of items."><span class="acronym">array</span></acronym> length=n_bytes][<acronym title="Generics and defining elements of containers and arrays."><span class="acronym">element-type</span></acronym> guint8]</span></td>
 </tr>
 <tr>
@@ -395,13 +395,13 @@ pango_coverage_to_bytes (<em class="parameter"><code><a class="link" href="pango
 <div class="refsect2">
 <a name="pango-coverage-from-bytes"></a><h3>pango_coverage_from_bytes ()</h3>
 <pre class="programlisting"><a class="link" href="pango-Coverage-Maps.html#PangoCoverage" title="PangoCoverage"><span class="returnvalue">PangoCoverage</span></a> *
-pango_coverage_from_bytes (<em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guchar"><span class="type">guchar</span></a> *bytes</code></em>,
+pango_coverage_from_bytes (<em class="parameter"><code><a href="../glib/glib-Basic-Types.html#guchar"><span class="type">guchar</span></a> *bytes</code></em>,
                            <em class="parameter"><code><span class="type">int</span> n_bytes</code></em>);</pre>
 <p>Convert data generated from <a class="link" href="pango-Coverage-Maps.html#pango-coverage-to-bytes" title="pango_coverage_to_bytes ()"><code class="function">pango_coverage_to_bytes()</code></a> back
 to a <a class="link" href="pango-Coverage-Maps.html#PangoCoverage" title="PangoCoverage"><span class="type">PangoCoverage</span></a></p>
 <div class="refsect3">
 <a name="pango-coverage-from-bytes.parameters"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -426,7 +426,7 @@ in bytes</p></td>
 <div class="refsect3">
 <a name="pango-coverage-from-bytes.returns"></a><h4>Returns</h4>
 <p> a newly allocated
-<a class="link" href="pango-Coverage-Maps.html#PangoCoverage" title="PangoCoverage"><span class="type">PangoCoverage</span></a>, or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if the data was invalid. </p>
+<a class="link" href="pango-Coverage-Maps.html#PangoCoverage" title="PangoCoverage"><span class="type">PangoCoverage</span></a>, or <a href="../glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if the data was invalid. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>][<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></p>
 </div>
 </div>
@@ -439,7 +439,7 @@ in bytes</p></td>
 character point for a particular script.</p>
 <div class="refsect3">
 <a name="PangoCoverageLevel.members"></a><h4>Members</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="300px" class="enum_members_name">
 <col class="enum_members_description">

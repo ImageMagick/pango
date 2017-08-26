@@ -21,9 +21,13 @@
 
 #include <glib.h>
 #include <string.h>
-#include <unistd.h>
 #include <locale.h>
 
+#ifndef G_OS_WIN32
+#include <unistd.h>
+#endif
+
+#include "config.h"
 #include <pango/pangocairo.h>
 #include "test-common.h"
 
@@ -261,8 +265,16 @@ test_file (const gchar *filename, GString *string)
   parse_params (contents, &width, &ellipsize_at, &ellipsize, &wrap);
 
   layout = pango_layout_new (context);
-
+/* The layout tests are predicated on scaling fonts to 90 DPI, but
+ * Apple's font APIs (CoreText and CoreGraphics) don't work that way
+ * so we have to use a bigger font to get the results to agree with
+ * the expected values.
+ */
+#if defined (HAVE_CORE_TEXT) && defined (HAVE_CAIRO_QUARTZ)
+  desc = pango_font_description_from_string ("Cantarell 14.5");
+#else
   desc = pango_font_description_from_string ("Cantarell 11");
+#endif
   pango_layout_set_font_description (layout, desc);
   pango_font_description_free (desc); 
 

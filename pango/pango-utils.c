@@ -47,6 +47,7 @@
 #include "pango-font.h"
 #include "pango-features.h"
 #include "pango-impl-utils.h"
+#include "pango-utils-internal.h"
 
 #include <glib/gstdio.h>
 
@@ -145,8 +146,8 @@ pango_version_check (int required_major,
 
   if (required_major < PANGO_VERSION_MAJOR)
     return "Pango version too new (major mismatch)";
-//  if (required_effective_micro < pango_effective_micro - PANGO_BINARY_AGE)
-//    return "Pango version too new (micro mismatch)";
+  if (required_effective_micro < pango_effective_micro - PANGO_BINARY_AGE)
+    return "Pango version too new (micro mismatch)";
   if (required_effective_micro > pango_effective_micro)
     return "Pango version too old (micro mismatch)";
   return NULL;
@@ -164,6 +165,12 @@ pango_version_check (int required_major,
  **/
 char *
 pango_trim_string (const char *str)
+{
+  return _pango_trim_string (str);
+}
+
+char *
+_pango_trim_string (const char *str)
 {
   int len;
 
@@ -202,7 +209,7 @@ pango_split_file_list (const char *str)
 
   while (files[i])
     {
-      char *file = pango_trim_string (files[i]);
+      char *file = _pango_trim_string (files[i]);
 
       /* If the resulting file is empty, skip it */
       if (file[0] == '\0')
@@ -331,11 +338,12 @@ pango_read_line (FILE *stream, GString *str)
 	      if (!comment)
 		quoted = TRUE;
 	      break;
+	    case '\r':
 	    case '\n':
 	      {
 		int next_c = getc_unlocked (stream);
 
-		if (!(c == EOF ||
+		if (!(next_c == EOF ||
 		      (c == '\r' && next_c == '\n') ||
 		      (c == '\n' && next_c == '\r')))
 		  ungetc (next_c, stream);
@@ -531,6 +539,12 @@ pango_scan_string (const char **pos, GString *out)
 gboolean
 pango_scan_int (const char **pos, int *out)
 {
+  return _pango_scan_int (pos, out);
+}
+
+gboolean
+_pango_scan_int (const char **pos, int *out)
+{
   char *end;
   long temp;
 
@@ -552,7 +566,6 @@ pango_scan_int (const char **pos, int *out)
 
   return TRUE;
 }
-
 
 /**
  * pango_config_key_get_system:
@@ -585,6 +598,65 @@ pango_config_key_get (const char *key)
 {
   return NULL;
 }
+
+/**
+ * pango_get_sysconf_subdirectory:
+ *
+ * Returns the name of the "pango" subdirectory of SYSCONFDIR
+ * (which is set at compile time).
+ *
+ * Return value: the Pango sysconf directory. The returned string should
+ * not be freed.
+ *
+ * Deprecated: 1.38
+ */
+const char *
+pango_get_sysconf_subdirectory (void)
+{
+  static const gchar *result = NULL; /* MT-safe */
+
+  if (g_once_init_enter (&result))
+    {
+      const char *tmp_result = NULL;
+      const char *sysconfdir = g_getenv ("PANGO_SYSCONFDIR");
+      if (sysconfdir != NULL)
+	tmp_result = g_build_filename (sysconfdir, "pango", NULL);
+      else
+	tmp_result = SYSCONFDIR "/pango";
+      g_once_init_leave(&result, tmp_result);
+    }
+  return result;
+}
+
+/**
+ * pango_get_lib_subdirectory:
+ *
+ * Returns the name of the "pango" subdirectory of LIBDIR
+ * (which is set at compile time).
+ *
+ * Return value: the Pango lib directory. The returned string should
+ * not be freed.
+ *
+ * Deprecated: 1.38
+ */
+const char *
+pango_get_lib_subdirectory (void)
+{
+  static const gchar *result = NULL; /* MT-safe */
+
+  if (g_once_init_enter (&result))
+    {
+      const gchar *tmp_result = NULL;
+      const char *libdir = g_getenv ("PANGO_LIBDIR");
+      if (libdir != NULL)
+	tmp_result = g_build_filename (libdir, "pango", NULL);
+      else
+	tmp_result = LIBDIR "/pango";
+      g_once_init_leave(&result, tmp_result);
+    }
+  return result;
+}
+
 
 static gboolean
 parse_int (const char *word,
@@ -641,6 +713,16 @@ pango_parse_enum (GType       type,
 		  int        *value,
 		  gboolean    warn,
 		  char      **possible_values)
+{
+  return _pango_parse_enum (type, str, value, warn, possible_values);
+}
+
+gboolean
+_pango_parse_enum (GType       type,
+		   const char *str,
+ 		   int        *value,
+		   gboolean    warn,
+		   char      **possible_values)
 {
   GEnumClass *class = NULL;
   gboolean ret = TRUE;

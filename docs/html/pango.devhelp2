@@ -791,6 +791,27 @@
     <keyword type="macro" name="PANGO_VERSION_MINOR" link="pango-Version-Checking.html#PANGO-VERSION-MINOR:CAPS"/>
     <keyword type="macro" name="PANGO_VERSION_MICRO" link="pango-Version-Checking.html#PANGO-VERSION-MICRO:CAPS"/>
     <keyword type="macro" name="PANGO_VERSION_STRING" link="pango-Version-Checking.html#PANGO-VERSION-STRING:CAPS"/>
+    <keyword type="macro" name="PANGO_VERSION_1_2" link="pango-Version-Checking.html#PANGO-VERSION-1-2:CAPS" since="1.42"/>
+    <keyword type="macro" name="PANGO_VERSION_1_4" link="pango-Version-Checking.html#PANGO-VERSION-1-4:CAPS" since="1.42"/>
+    <keyword type="macro" name="PANGO_VERSION_1_6" link="pango-Version-Checking.html#PANGO-VERSION-1-6:CAPS" since="1.42"/>
+    <keyword type="macro" name="PANGO_VERSION_1_8" link="pango-Version-Checking.html#PANGO-VERSION-1-8:CAPS" since="1.42"/>
+    <keyword type="macro" name="PANGO_VERSION_1_10" link="pango-Version-Checking.html#PANGO-VERSION-1-10:CAPS" since="1.42"/>
+    <keyword type="macro" name="PANGO_VERSION_1_12" link="pango-Version-Checking.html#PANGO-VERSION-1-12:CAPS" since="1.42"/>
+    <keyword type="macro" name="PANGO_VERSION_1_14" link="pango-Version-Checking.html#PANGO-VERSION-1-14:CAPS" since="1.42"/>
+    <keyword type="macro" name="PANGO_VERSION_1_16" link="pango-Version-Checking.html#PANGO-VERSION-1-16:CAPS" since="1.42"/>
+    <keyword type="macro" name="PANGO_VERSION_1_18" link="pango-Version-Checking.html#PANGO-VERSION-1-18:CAPS" since="1.42"/>
+    <keyword type="macro" name="PANGO_VERSION_1_20" link="pango-Version-Checking.html#PANGO-VERSION-1-20:CAPS" since="1.42"/>
+    <keyword type="macro" name="PANGO_VERSION_1_22" link="pango-Version-Checking.html#PANGO-VERSION-1-22:CAPS" since="1.42"/>
+    <keyword type="macro" name="PANGO_VERSION_1_24" link="pango-Version-Checking.html#PANGO-VERSION-1-24:CAPS" since="1.42"/>
+    <keyword type="macro" name="PANGO_VERSION_1_26" link="pango-Version-Checking.html#PANGO-VERSION-1-26:CAPS" since="1.42"/>
+    <keyword type="macro" name="PANGO_VERSION_1_28" link="pango-Version-Checking.html#PANGO-VERSION-1-28:CAPS" since="1.42"/>
+    <keyword type="macro" name="PANGO_VERSION_1_30" link="pango-Version-Checking.html#PANGO-VERSION-1-30:CAPS" since="1.42"/>
+    <keyword type="macro" name="PANGO_VERSION_1_32" link="pango-Version-Checking.html#PANGO-VERSION-1-32:CAPS" since="1.42"/>
+    <keyword type="macro" name="PANGO_VERSION_1_34" link="pango-Version-Checking.html#PANGO-VERSION-1-34:CAPS" since="1.42"/>
+    <keyword type="macro" name="PANGO_VERSION_1_36" link="pango-Version-Checking.html#PANGO-VERSION-1-36:CAPS" since="1.42"/>
+    <keyword type="macro" name="PANGO_VERSION_1_38" link="pango-Version-Checking.html#PANGO-VERSION-1-38:CAPS" since="1.42"/>
+    <keyword type="macro" name="PANGO_VERSION_1_40" link="pango-Version-Checking.html#PANGO-VERSION-1-40:CAPS" since="1.42"/>
+    <keyword type="macro" name="PANGO_VERSION_1_42" link="pango-Version-Checking.html#PANGO-VERSION-1-42:CAPS" since="1.42"/>
     <keyword type="constant" name="PANGO_STYLE_NORMAL" link="pango-Fonts.html#PANGO-STYLE-NORMAL:CAPS"/>
     <keyword type="constant" name="PANGO_STYLE_OBLIQUE" link="pango-Fonts.html#PANGO-STYLE-OBLIQUE:CAPS"/>
     <keyword type="constant" name="PANGO_STYLE_ITALIC" link="pango-Fonts.html#PANGO-STYLE-ITALIC:CAPS"/>

@@ -22,7 +22,7 @@ dnl
 dnl The triplet
 m4_define([pango_version_major], [1])
 m4_define([pango_version_minor], [40])
-m4_define([pango_version_micro], [1])
+m4_define([pango_version_micro], [11])
 
 m4_define([pango_version],
           [pango_version_major.pango_version_minor.pango_version_micro])
@@ -208,7 +208,7 @@ AM_CONDITIONAL(CROSS_COMPILING, [test $cross_compiling = yes])
 # Checks for HarfBuzz
 #
 have_harfbuzz=false
-PKG_CHECK_MODULES(HARFBUZZ, harfbuzz >= 0.9.30, have_harfbuzz=true, :)
+PKG_CHECK_MODULES(HARFBUZZ, harfbuzz >= 1.2.3, have_harfbuzz=true, :)
 AM_CONDITIONAL(HAVE_HARFBUZZ, $have_harfbuzz)
 
 #
@@ -556,8 +556,47 @@ AC_ARG_ENABLE(installed_tests,
 AM_CONDITIONAL(BUILDOPT_INSTALL_TESTS, test x$enable_installed_tests = xyes)
 
 
+dnl *********************************************************************
+dnl * Check for -fvisibility=hidden to determine if we can do GNU-style *
+dnl * visibility attributes for symbol export control                   *
+dnl *********************************************************************
+
+PANGO_HIDDEN_VISIBILITY_CFLAGS=""
+case "$host" in
+  *-*-mingw*)
+    dnl on mingw32 we do -fvisibility=hidden and __declspec(dllexport)
+    AC_DEFINE([_PANGO_EXTERN], [__attribute__((visibility("default"))) __declspec(dllexport) extern],
+              [defines how to decorate public symbols while building])
+    CFLAGS="${CFLAGS} -fvisibility=hidden"
+    ;;
+  *)
+    dnl on other compilers, check if we can do -fvisibility=hidden
+    SAVED_CFLAGS="${CFLAGS}"
+    CFLAGS="-fvisibility=hidden"
+    AC_MSG_CHECKING([for -fvisibility=hidden compiler flag])
+    AC_TRY_COMPILE([], [return 0],
+                   AC_MSG_RESULT(yes)
+                   enable_fvisibility_hidden=yes,
+                   AC_MSG_RESULT(no)
+                   enable_fvisibility_hidden=no)
+    CFLAGS="${SAVED_CFLAGS}"
+
+    AS_IF([test "${enable_fvisibility_hidden}" = "yes"], [
+      AC_DEFINE([_PANGO_EXTERN], [__attribute__((visibility("default"))) extern],
+                [defines how to decorate public symbols while building])
+      PANGO_HIDDEN_VISIBILITY_CFLAGS="-fvisibility=hidden"
+    ])
+    ;;
+esac
+AC_SUBST(PANGO_HIDDEN_VISIBILITY_CFLAGS)
+
+
 AC_HEADER_DIRENT
 AC_CHECK_HEADERS(unistd.h)
+
+# Check whether MSVC toolset is explicitly set
+AM_CONDITIONAL(MSVC_BASE_NO_TOOLSET_SET, [test x$MSVC_BASE_TOOLSET = x])
+AM_CONDITIONAL(MSVC_NO_TOOLSET_SET, [test x$MSVC_TOOLSET = x])
 
 # Honor aclocal flags
 ACLOCAL="$ACLOCAL $ACLOCAL_FLAGS"
@@ -610,23 +649,20 @@ docs/Makefile
 docs/version.xml
 tools/Makefile
 tests/Makefile
-build/Makefile
-build/win32/Makefile
-build/win32/vs9/Makefile
-build/win32/vs10/Makefile
-build/win32/vs11/Makefile
-build/win32/vs12/Makefile
-build/win32/vs14/Makefile
+win32/Makefile
+win32/vs9/Makefile
+win32/vs9/pango-version-paths.vsprops
+win32/vs10/Makefile
+win32/vs10/pango-version-paths.props
+win32/vs11/Makefile
+win32/vs12/Makefile
+win32/vs14/Makefile
+win32/vs15/Makefile
 pango.pc
 pangowin32.pc
 pangoft2.pc
 pangoxft.pc
 pangocairo.pc
-pango-uninstalled.pc
-pangowin32-uninstalled.pc
-pangoft2-uninstalled.pc
-pangoxft-uninstalled.pc
-pangocairo-uninstalled.pc
 config.h.win32
 ])
 

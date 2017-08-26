@@ -1,0 +1,8 @@
+..\pango\pangocairo-context.c
+..\pango\pangocairo-font.c
+..\pango\pangocairo-fontmap.c
+..\pango\pangocairo-render.c
+..\pango\pangocairo-win32font.c
+..\pango\pangocairo-win32fontmap.c
+..\pango\pangocairo-win32.h
+..\pango\pangocairo.h

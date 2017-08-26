@@ -1,3 +1,66 @@
+Overview of changes between 1.40.10 and 1.40.11
+===============================================
+- Fix backspacing for more Emoji sequences
+- Make tests run faster
+
+Overview of changes between 1.40.9 and 1.40.10
+==============================================
+- Update Emoji data to version 5
+- Apply gravity across spans in markup (#784243)
+- Support variation selectors for shaping
+- CoreText: Rely on CGFont for scaling (#782393)
+- Fix grapheme breaks and backspacing for Emoji
+
+Overview of changes between 1.40.8 and 1.40.9
+=============================================
+- Build and dist fixes
+- Fix build on Windows with MSVC (#783274)
+
+Overview of changes between 1.40.7 and 1.40.8
+=============================================
+- Support emoji sequences in boundary determination
+- Choose emoji font for color emoji
+
+Overview of changes between 1.40.6 and 1.40.7
+=============================================
+- Some fixes for meson build support
+- Don't change fonts for variation selectors (#781123)
+- Fix some bugs in the libthai glue layer
+- Pass text along when calling into cairo (#784394)
+
+Overview of changes between 1.40.5 and 1.40.6
+=============================================
+- Don't use deprecated harfbuzz api
+- Correctly implement min-required/max-allowed support
+- Avoid compiler warnings
+- Drop -uninstalled.pd files
+- Add support for building with meson
+
+Overview of changes between 1.40.4 and 1.40.5
+=============================================
+- Add missing introspection annotations (#778663)
+- Fix line-end handling in pango_read_line (#778816)
+- Make alpha attribute work without color (#773767)
+- win32: Enable rendering colored texti and underlines (#768779)
+
+Overview of changes between 1.40.3 and 1.40.4
+=============================================
+- Fix some Coverity findings (#778601, #778602, #778654, #778656)
+- Fix introspection annotation of pango_lkayout_get_size (#779232)
+
+Overview of changes between 1.40.2 and 1.40.3
+=============================================
+- Fix export of pango_cairo_win32_font_map_get_type (#771004)
+- Fix build on OS X (#770729)
+
+Overview of changes between 1.40.1 and 1.40.2
+=============================================
+- Improve introspection builds in msvc (#764984)
+- Properly handle UTF32 chars in coretext
+- Add rebeccapurple to list of colors
+- Correct font weight mapping in coretext (#766148)
+- Use version macros for exports (#767587)
+
 Overview of changes between 1.40.0 and 1.40.1
 =============================================
 - Use $PKG_CONFIG consistently (#764191)

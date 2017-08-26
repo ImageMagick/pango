@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Modules: Pango Reference Manual</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
+<meta name="generator" content="DocBook XSL Stylesheets Vsnapshot">
 <link rel="home" href="index.html" title="Pango Reference Manual">
 <link rel="up" href="lowlevel.html" title="Low Level Functionality">
 <link rel="prev" href="PangoEngineShape.html" title="PangoEngineShape">
@@ -33,7 +33,7 @@
 </tr></table></div>
 <div class="refsect1">
 <a name="pango-Modules.functions"></a><h2>Functions</h2>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="functions_return">
 <col class="functions_name">
@@ -76,7 +76,7 @@
 </div>
 <div class="refsect1">
 <a name="pango-Modules.other"></a><h2>Types and Values</h2>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="name">
 <col class="description">
@@ -108,13 +108,13 @@ modules that add engines to Pango at run time.</p>
 <a name="pango-find-map"></a><h3>pango_find_map ()</h3>
 <pre class="programlisting"><a class="link" href="pango-Modules.html#PangoMap" title="PangoMap"><span class="returnvalue">PangoMap</span></a> *
 pango_find_map (<em class="parameter"><code><a class="link" href="pango-Scripts-and-Languages.html#PangoLanguage"><span class="type">PangoLanguage</span></a> *language</code></em>,
-                <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> engine_type_id</code></em>,
-                <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint"><span class="type">guint</span></a> render_type_id</code></em>);</pre>
+                <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> engine_type_id</code></em>,
+                <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#guint"><span class="type">guint</span></a> render_type_id</code></em>);</pre>
 <div class="warning"><p><code class="literal">pango_find_map</code> has been deprecated since version 1.38 and should not be used in newly-written code.</p></div>
 <p>Do not use.  Does not do anything.</p>
 <div class="refsect3">
 <a name="pango-find-map.parameters"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -141,7 +141,7 @@ pango_find_map (<em class="parameter"><code><a class="link" href="pango-Scripts-
 </div>
 <div class="refsect3">
 <a name="pango-find-map.returns"></a><h4>Returns</h4>
-<p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>.</p>
+<p> <a href="../glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>.</p>
 </div>
 </div>
 <hr>
@@ -152,9 +152,10 @@ pango_map_get_engine (<em class="parameter"><code><a class="link" href="pango-Mo
                       <em class="parameter"><code><a class="link" href="pango-Scripts-and-Languages.html#PangoScript" title="enum PangoScript"><span class="type">PangoScript</span></a> script</code></em>);</pre>
 <div class="warning"><p><code class="literal">pango_map_get_engine</code> has been deprecated since version 1.38 and should not be used in newly-written code.</p></div>
 <p>Do not use.  Does not do anything.</p>
+<p><span class="annotation">[<acronym title="Exposed in C code, not necessarily available in other languages."><span class="acronym">skip</span></acronym>]</span></p>
 <div class="refsect3">
 <a name="pango-map-get-engine.parameters"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -176,7 +177,7 @@ pango_map_get_engine (<em class="parameter"><code><a class="link" href="pango-Mo
 </div>
 <div class="refsect3">
 <a name="pango-map-get-engine.returns"></a><h4>Returns</h4>
-<p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>.</p>
+<p> <a href="../glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>.</p>
 </div>
 </div>
 <hr>
@@ -185,13 +186,14 @@ pango_map_get_engine (<em class="parameter"><code><a class="link" href="pango-Mo
 <pre class="programlisting"><span class="returnvalue">void</span>
 pango_map_get_engines (<em class="parameter"><code><a class="link" href="pango-Modules.html#PangoMap" title="PangoMap"><span class="type">PangoMap</span></a> *map</code></em>,
                        <em class="parameter"><code><a class="link" href="pango-Scripts-and-Languages.html#PangoScript" title="enum PangoScript"><span class="type">PangoScript</span></a> script</code></em>,
-                       <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Singly-Linked-Lists.html#GSList"><span class="type">GSList</span></a> **exact_engines</code></em>,
-                       <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Singly-Linked-Lists.html#GSList"><span class="type">GSList</span></a> **fallback_engines</code></em>);</pre>
+                       <em class="parameter"><code><a href="../glib/glib-Singly-Linked-Lists.html#GSList"><span class="type">GSList</span></a> **exact_engines</code></em>,
+                       <em class="parameter"><code><a href="../glib/glib-Singly-Linked-Lists.html#GSList"><span class="type">GSList</span></a> **fallback_engines</code></em>);</pre>
 <div class="warning"><p><code class="literal">pango_map_get_engines</code> has been deprecated since version 1.38 and should not be used in newly-written code.</p></div>
 <p>Do not use.  Does not do anything.</p>
+<p><span class="annotation">[<acronym title="Exposed in C code, not necessarily available in other languages."><span class="acronym">skip</span></acronym>]</span></p>
 <div class="refsect3">
 <a name="pango-map-get-engines.parameters"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -234,7 +236,7 @@ pango_module_register (<em class="parameter"><code><a class="link" href="pango-M
 <p>Do not use.  Does not do anything.</p>
 <div class="refsect3">
 <a name="pango-module-register.parameters"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -267,7 +269,7 @@ contains the functions that would otherwise be loaded from a dynamically
 loaded module.</p>
 <div class="refsect3">
 <a name="PangoIncludedModule.members"></a><h4>Members</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="300px" class="struct_members_name">
 <col class="struct_members_description">

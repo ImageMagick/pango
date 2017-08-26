@@ -106,25 +106,29 @@ static PangoCoreTextFontsetKey *pango_core_text_fontset_get_key (PangoCoreTextFo
 
 typedef struct
 {
-    float bound;
-    PangoWeight weight;
+    float ct_weight;
+    PangoWeight pango_weight;
 } PangoCTWeight;
 
-const float ct_weight_min = -1.00f;
-const float ct_weight_max = 1.00f;
+#define ct_weight_min -0.7f
+#define ct_weight_max  0.8f
 
-static const PangoCTWeight ct_weight_limits[] = {
-    { -0.00, PANGO_WEIGHT_THIN },
-    { -0.75, PANGO_WEIGHT_ULTRALIGHT },
-    { -0.50, PANGO_WEIGHT_LIGHT },
-    { -0.25, PANGO_WEIGHT_SEMILIGHT },
-    { -0.10, PANGO_WEIGHT_BOOK },
+/* This map is based on empirical data from analyzing a large collection of
+ * fonts and comparing the opentype value with the value that OSX returns.
+ * see: https://bugzilla.gnome.org/show_bug.cgi?id=766148
+ */
+
+static const PangoCTWeight ct_weight_map[] = {
+    { ct_weight_min, PANGO_WEIGHT_THIN },
+    { -0.5, PANGO_WEIGHT_ULTRALIGHT },
+    { -0.23, PANGO_WEIGHT_LIGHT },
+    { -0.115, PANGO_WEIGHT_SEMILIGHT },
     {  0.00, PANGO_WEIGHT_NORMAL },
-    {  0.10, PANGO_WEIGHT_MEDIUM },
-    {  0.25, PANGO_WEIGHT_SEMIBOLD },
-    {  0.50, PANGO_WEIGHT_BOLD },
-    {  0.75, PANGO_WEIGHT_ULTRABOLD },
-    {  1.00, PANGO_WEIGHT_HEAVY }
+    {  0.2, PANGO_WEIGHT_MEDIUM },
+    {  0.3, PANGO_WEIGHT_SEMIBOLD },
+    {  0.4, PANGO_WEIGHT_BOLD },
+    {  0.6, PANGO_WEIGHT_ULTRABOLD },
+    {  ct_weight_max, PANGO_WEIGHT_HEAVY }
 };
 
 static const char *
@@ -285,6 +289,13 @@ cf_font_descriptor_copy_with_traits (CTFontDescriptorRef        desc,
   return new_desc;
 }
 
+static int
+lerp(float x, float x1, float x2, int y1, int y2) {
+  float dx = x2 - x1;
+  int dy = y2 - y1;
+  return y1 + (dy*(x-x1) + dx/2) / dx;
+}
+
 static PangoWeight
 ct_font_descriptor_get_weight (CTFontDescriptorRef desc)
 {
@@ -299,25 +310,24 @@ ct_font_descriptor_get_weight (CTFontDescriptorRef desc)
 
   if (cf_number != NULL && CFNumberGetValue (cf_number, kCFNumberCGFloatType, &value))
     {
-      if (value < ct_weight_min || value > ct_weight_max)
-	{
-          /* This is really an error */
-          weight = PANGO_WEIGHT_NORMAL;
-	}
-      else
-	{
-	  guint i;
-	  for (i = 0; i < G_N_ELEMENTS(ct_weight_limits); i++)
-	    if (value < ct_weight_limits[i].bound)
-	      {
-	        /* TODO interpolate weight. */
-                weight = ct_weight_limits[i].weight;
-                break;
-	      }
-	}
+    if (value < ct_weight_min || value > ct_weight_max)
+      {
+        /* This is really an error */
+        weight = PANGO_WEIGHT_NORMAL;
+      }
+    else
+      {
+        guint i;
+        for (i = 1; value > ct_weight_map[i].ct_weight; ++i)
+          ;
+
+        weight = lerp(value, ct_weight_map[i-1].ct_weight, ct_weight_map[i].ct_weight,
+                      ct_weight_map[i-1].pango_weight, ct_weight_map[i].pango_weight);
+
+      }
     }
- else
-   weight = PANGO_WEIGHT_NORMAL;
+  else
+    weight = PANGO_WEIGHT_NORMAL;
 
   CFRelease (dict);
 
@@ -817,12 +827,6 @@ get_scaled_size (PangoCoreTextFontMap       *fontmap,
 {
   double size = pango_font_description_get_size (desc);
 
-  if (!pango_font_description_get_size_is_absolute (desc))
-    {
-      double dpi = pango_core_text_font_map_get_resolution (fontmap, context);
-      size = size * dpi / 72.;
-    }
-
   return .5 + pango_matrix_get_font_scale_factor (pango_context_get_matrix (context)) * size;
 }
 
@@ -836,7 +840,7 @@ struct _PangoCoreTextFontsetKey
   PangoLanguage *language;
   PangoFontDescription *desc;
   PangoMatrix matrix;
-  int pixelsize;
+  int pointsize;
   double resolution;
   PangoGravity gravity;
   gpointer context_key;
@@ -855,7 +859,7 @@ pango_core_text_fontset_key_init (PangoCoreTextFontsetKey    *key,
   key->fontmap = fontmap;
   get_context_matrix (context, &key->matrix);
   key->language = language;
-  key->pixelsize = get_scaled_size (fontmap, context, desc);
+  key->pointsize = get_scaled_size (fontmap, context, desc);
   key->resolution = pango_core_text_font_map_get_resolution (fontmap, context);
   key->gravity = pango_context_get_gravity (context);
   key->desc = pango_font_description_copy_static (desc);
@@ -875,7 +879,7 @@ pango_core_text_fontset_key_copy (const PangoCoreTextFontsetKey *old)
   key->fontmap = old->fontmap;
   key->matrix = old->matrix;
   key->language = old->language;
-  key->pixelsize = old->pixelsize;
+  key->pointsize = old->pointsize;
   key->resolution = old->resolution;
   key->gravity = old->gravity;
   key->desc = pango_font_description_copy (old->desc);
@@ -919,7 +923,7 @@ pango_core_text_fontset_key_equal (const PangoCoreTextFontsetKey *key_a,
                                    const PangoCoreTextFontsetKey *key_b)
 {
   if (key_a->language == key_b->language &&
-      key_a->pixelsize == key_b->pixelsize &&
+      key_a->pointsize == key_b->pointsize &&
       key_a->resolution == key_b->resolution &&
       key_a->gravity == key_b->gravity &&
       pango_font_description_equal (key_a->desc, key_b->desc) &&
@@ -969,7 +973,7 @@ struct _PangoCoreTextFontKey
   CTFontDescriptorRef ctfontdescriptor;
   PangoMatrix matrix;
   PangoGravity gravity;
-  int pixelsize;
+  int pointsize;
   double resolution;
   gboolean synthetic_italic;
   gpointer context_key;
@@ -985,7 +989,7 @@ pango_core_text_font_key_init (PangoCoreTextFontKey    *key,
   key->fontmap = ctfontmap;
   key->ctfontdescriptor = ctdescriptor;
   key->matrix = *pango_core_text_fontset_key_get_matrix (fontset_key);
-  key->pixelsize = fontset_key->pixelsize;
+  key->pointsize = fontset_key->pointsize;
   key->resolution = fontset_key->resolution;
   key->synthetic_italic = synthetic_italic;
   key->gravity = pango_core_text_fontset_key_get_gravity (fontset_key);
@@ -1001,7 +1005,7 @@ pango_core_text_font_key_copy (const PangoCoreTextFontKey *old)
   key->ctfontdescriptor = old->ctfontdescriptor;
   CFRetain (key->ctfontdescriptor);
   key->matrix = old->matrix;
-  key->pixelsize = old->pixelsize;
+  key->pointsize = old->pointsize;
   key->resolution = old->resolution;
   key->synthetic_italic = old->synthetic_italic;
   key->gravity = old->gravity;
@@ -1047,7 +1051,7 @@ pango_core_text_font_key_equal (const PangoCoreTextFontKey *key_a,
   if (CFEqual (key_a->ctfontdescriptor, key_b->ctfontdescriptor) &&
       memcmp (&key_a->matrix, &key_b->matrix, 4 * sizeof (double)) == 0 &&
       key_a->gravity == key_b->gravity &&
-      key_a->pixelsize == key_b->pixelsize &&
+      key_a->pointsize == key_b->pointsize &&
       key_a->resolution == key_b->resolution &&
       key_a->synthetic_italic == key_b->synthetic_italic)
     {
@@ -1063,9 +1067,9 @@ pango_core_text_font_key_equal (const PangoCoreTextFontKey *key_a,
 }
 
 int
-pango_core_text_font_key_get_absolute_size (const PangoCoreTextFontKey *key)
+pango_core_text_font_key_get_size (const PangoCoreTextFontKey *key)
 {
-  return key->pixelsize;
+  return key->pointsize;
 }
 
 double
@@ -1152,32 +1156,34 @@ pango_core_text_font_map_new_font (PangoCoreTextFontMap    *fontmap,
 static gboolean
 find_best_match (PangoCoreTextFamily         *font_family,
                  const PangoFontDescription  *description,
-                 PangoFontDescription       **best_description,
                  PangoCoreTextFace          **best_face)
 {
   PangoFontDescription *new_desc;
+  PangoFontDescription *best_description = NULL;
   int i;
 
-  *best_description = NULL;
   *best_face = NULL;
 
   for (i = 0; i < font_family->n_faces; i++)
     {
       new_desc = pango_font_face_describe (font_family->faces[i]);
 
-      if (pango_font_description_better_match (description, *best_description, new_desc))
+      if (pango_font_description_better_match (description, best_description,
+                                               new_desc))
 	{
-	  pango_font_description_free (*best_description);
-	  *best_description = new_desc;
+	  pango_font_description_free (best_description);
+	  best_description = new_desc;
 	  *best_face = (PangoCoreTextFace *)font_family->faces[i];
 	}
       else
 	pango_font_description_free (new_desc);
     }
 
-  if (*best_description)
-    return TRUE;
-
+  if (best_description)
+    {
+      pango_font_description_free (best_description);
+      return TRUE;
+    }
   return FALSE;
 }
 
@@ -1547,33 +1553,20 @@ pango_core_text_fontset_new (PangoCoreTextFontsetKey    *key,
 
   if (font_family)
     {
-      PangoFontDescription *best_description;
       PangoCoreTextFace *best_face;
-      gint size;
-      gboolean is_absolute;
 
       /* Force a listing of the available faces */
       pango_font_family_list_faces ((PangoFontFamily *)font_family, NULL, NULL);
 
-      if (!find_best_match (font_family, description, &best_description, &best_face))
+      if (!find_best_match (font_family, description, &best_face))
 	return NULL;
 
-      size = pango_font_description_get_size (description);
-      if (size < 0)
-        return NULL;
+      best_font =
+           pango_core_text_font_map_new_font (key->fontmap,
+                                              key,
+                                              best_face->ctfontdescriptor,
+                                              best_face->synthetic_italic);
 
-      is_absolute = pango_font_description_get_size_is_absolute (description);
-      if (is_absolute)
-        pango_font_description_set_absolute_size (best_description, size);
-      else
-        pango_font_description_set_size (best_description, size);
-
-      best_font = pango_core_text_font_map_new_font (key->fontmap,
-                                                     key,
-                                                     best_face->ctfontdescriptor,
-                                                     best_face->synthetic_italic);
-
-      pango_font_description_free (best_description);
     }
   else
     return NULL;

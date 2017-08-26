@@ -52,9 +52,9 @@
  * functions in Pango report results in integer Pango units. To get
  * to the floating point units used in Cairo divide by %PANGO_SCALE.
  *
- * <example id="rotated-example">
- * <title>Using Pango with Cairo</title>
- *  <programlisting>
+ * ## Using Pango with Cairo ## {#rotated-example}
+ *
+ * |[<!-- language="C" -->
  * #include <math.h>
  * #include <pango/pangocairo.h>
  *
@@ -145,12 +145,12 @@
  *
  *   return 0;
  * }
- * </programlisting>
- * </example>
- * <figure id="rotated-example-output">
- *   <title>Output of <xref linkend="rotated-example"/></title>
- *   <graphic fileref="rotated-text.png" format="PNG"/>
- * </figure>
+ * ]|
+ *
+ * Once you build and run the example code above, you should see the
+ * following result:
+ *
+ * ![Output of rotated-example](rotated-text.png)
  */
 #include "config.h"
 
@@ -191,17 +191,38 @@ set_color (PangoCairoRenderer *crenderer,
 	   PangoRenderPart     part)
 {
   PangoColor *color = pango_renderer_get_color ((PangoRenderer *) (crenderer), part);
-  guint16 alpha = pango_renderer_get_alpha ((PangoRenderer *) (crenderer), part);
+  guint16 a = pango_renderer_get_alpha ((PangoRenderer *) (crenderer), part);
+  gdouble red, green, blue, alpha;
 
-  if (!alpha)
-    alpha = 0xffff;
+  if (!a && !color)
+    return;
 
   if (color)
-    cairo_set_source_rgba (crenderer->cr,
-			   color->red / 65535.,
-			   color->green / 65535.,
-			   color->blue / 65535.,
-                           alpha / 65535.);
+    {
+      red = color->red / 65535.;
+      green = color->green / 65535.;
+      blue = color->blue / 65535.;
+      alpha = 1.;
+    }
+  else
+    {
+      cairo_pattern_t *pattern = cairo_get_source (crenderer->cr);
+
+      if (pattern && cairo_pattern_get_type (pattern) == CAIRO_PATTERN_TYPE_SOLID)
+        cairo_pattern_get_rgba (pattern, &red, &green, &blue, &alpha);
+      else
+        {
+          red = 0.;
+          green = 0.;
+          blue = 0.;
+          alpha = 1.;
+        }
+    }
+
+  if (a)
+    alpha = a / 65535.;
+
+  cairo_set_source_rgba (crenderer->cr, red, green, blue, alpha);
 }
 
 /* note: modifies crenderer->cr without doing cairo_save/restore() */
@@ -577,7 +598,7 @@ pango_cairo_renderer_draw_glyph_item (PangoRenderer     *renderer,
         num_glyphs = backward ? iter.start_glyph - iter.end_glyph : iter.end_glyph - iter.start_glyph;
 
 	if (num_bytes < 1)
-	  g_warning ("pango_cairo_renderer_draw_glyph_item: bad cluster has num_bytess %d", num_bytes);
+	  g_warning ("pango_cairo_renderer_draw_glyph_item: bad cluster has num_bytes %d", num_bytes);
 	if (num_glyphs < 1)
 	  g_warning ("pango_cairo_renderer_draw_glyph_item: bad cluster has num_glyphs %d", num_glyphs);
 

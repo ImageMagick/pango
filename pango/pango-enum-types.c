@@ -1,8 +1,9 @@
 
 /* Generated data (by glib-mkenums) */
 
-#include <pango.h>
+#include "config.h"
 
+#include <pango.h>
 /* enumerations from "pango-attributes.h" */
 GType
 pango_attr_type_get_type (void)
@@ -47,7 +48,6 @@ pango_attr_type_get_type (void)
 
   return g_define_type_id__volatile;
 }
-
 GType
 pango_underline_get_type (void)
 {
@@ -70,7 +70,6 @@ pango_underline_get_type (void)
 
   return g_define_type_id__volatile;
 }
-
 /* enumerations from "pango-bidi-type.h" */
 GType
 pango_bidi_type_get_type (void)
@@ -108,7 +107,6 @@ pango_bidi_type_get_type (void)
 
   return g_define_type_id__volatile;
 }
-
 GType
 pango_direction_get_type (void)
 {
@@ -133,7 +131,6 @@ pango_direction_get_type (void)
 
   return g_define_type_id__volatile;
 }
-
 /* enumerations from "pango-coverage.h" */
 GType
 pango_coverage_level_get_type (void)
@@ -156,7 +153,6 @@ pango_coverage_level_get_type (void)
 
   return g_define_type_id__volatile;
 }
-
 /* enumerations from "pango-font.h" */
 GType
 pango_style_get_type (void)
@@ -178,7 +174,6 @@ pango_style_get_type (void)
 
   return g_define_type_id__volatile;
 }
-
 GType
 pango_variant_get_type (void)
 {
@@ -198,7 +193,6 @@ pango_variant_get_type (void)
 
   return g_define_type_id__volatile;
 }
-
 GType
 pango_weight_get_type (void)
 {
@@ -228,7 +222,6 @@ pango_weight_get_type (void)
 
   return g_define_type_id__volatile;
 }
-
 GType
 pango_stretch_get_type (void)
 {
@@ -255,7 +248,6 @@ pango_stretch_get_type (void)
 
   return g_define_type_id__volatile;
 }
-
 GType
 pango_font_mask_get_type (void)
 {
@@ -280,7 +272,6 @@ pango_font_mask_get_type (void)
 
   return g_define_type_id__volatile;
 }
-
 /* enumerations from "pango-gravity.h" */
 GType
 pango_gravity_get_type (void)
@@ -304,7 +295,6 @@ pango_gravity_get_type (void)
 
   return g_define_type_id__volatile;
 }
-
 GType
 pango_gravity_hint_get_type (void)
 {
@@ -325,7 +315,6 @@ pango_gravity_hint_get_type (void)
 
   return g_define_type_id__volatile;
 }
-
 /* enumerations from "pango-layout.h" */
 GType
 pango_alignment_get_type (void)
@@ -347,7 +336,6 @@ pango_alignment_get_type (void)
 
   return g_define_type_id__volatile;
 }
-
 GType
 pango_wrap_mode_get_type (void)
 {
@@ -368,7 +356,6 @@ pango_wrap_mode_get_type (void)
 
   return g_define_type_id__volatile;
 }
-
 GType
 pango_ellipsize_mode_get_type (void)
 {
@@ -390,7 +377,6 @@ pango_ellipsize_mode_get_type (void)
 
   return g_define_type_id__volatile;
 }
-
 /* enumerations from "pango-renderer.h" */
 GType
 pango_render_part_get_type (void)
@@ -413,7 +399,6 @@ pango_render_part_get_type (void)
 
   return g_define_type_id__volatile;
 }
-
 /* enumerations from "pango-script.h" */
 GType
 pango_script_get_type (void)
@@ -550,7 +535,6 @@ pango_script_get_type (void)
 
   return g_define_type_id__volatile;
 }
-
 /* enumerations from "pango-tabs.h" */
 GType
 pango_tab_align_get_type (void)
@@ -570,7 +554,6 @@ pango_tab_align_get_type (void)
 
   return g_define_type_id__volatile;
 }
-
 
 /* Generated data ends here */
 

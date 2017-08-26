@@ -84,7 +84,8 @@ ct_font_descriptor_get_coverage (CTFontDescriptorRef desc)
   CFCharacterSetRef charset;
   CFIndex i, length;
   CFDataRef bitmap;
-  const UInt8 *ptr;
+  const UInt8 *ptr, *plane_ptr;
+  const UInt32 plane_size = 8192;
   PangoCoverage *coverage;
 
   coverage = pango_coverage_new ();
@@ -96,10 +97,10 @@ ct_font_descriptor_get_coverage (CTFontDescriptorRef desc)
 
   bitmap = CFCharacterSetCreateBitmapRepresentation (kCFAllocatorDefault,
                                                      charset);
-
-  /* We only handle the BMP plane */
-  length = MIN (CFDataGetLength (bitmap), 8192);
   ptr = CFDataGetBytePtr (bitmap);
+
+  /* First handle the BMP plane. */
+  length = MIN (CFDataGetLength (bitmap), plane_size);
 
   /* FIXME: can and should this be done more efficiently? */
   for (i = 0; i < length; i++)
@@ -107,9 +108,31 @@ ct_font_descriptor_get_coverage (CTFontDescriptorRef desc)
       int j;
 
       for (j = 0; j < 8; j++)
-        pango_coverage_set (coverage, i * 8 + j,
-                            ((ptr[i] & (1 << j)) == (1 << j)) ?
-                            PANGO_COVERAGE_EXACT : PANGO_COVERAGE_NONE);
+        if ((ptr[i] & (1 << j)) == (1 << j))
+          pango_coverage_set (coverage, i * 8 + j, PANGO_COVERAGE_EXACT);
+    }
+
+  /* Next, handle the other planes. The plane number is encoded first as
+   * a single byte. In the following 8192 bytes that plane's coverage bitmap
+   * is stored.
+   */
+  plane_ptr = ptr + plane_size;
+  while (plane_ptr - ptr < CFDataGetLength (bitmap))
+    {
+      const UInt8 plane_number = *plane_ptr;
+      plane_ptr++;
+
+      for (i = 0; i < plane_size; i++)
+        {
+          int j;
+
+          for (j = 0; j < 8; j++)
+            if ((plane_ptr[i] & (1 << j)) == (1 << j))
+              pango_coverage_set (coverage, (plane_number * plane_size + i) * 8 + j,
+                                  PANGO_COVERAGE_EXACT);
+        }
+
+      plane_ptr += plane_size;
     }
 
   CFRelease (bitmap);
@@ -202,6 +225,10 @@ pango_core_text_font_class_init (PangoCoreTextFontClass *class)
   object_class->finalize = pango_core_text_font_finalize;
 
   font_class->describe = pango_core_text_font_describe;
+  /* In CoreText the device unit is points so describe_absoulute and
+   * describe are the same.
+   */
+  font_class->describe_absolute = pango_core_text_font_describe;
   font_class->get_coverage = pango_core_text_font_get_coverage;
   font_class->find_shaper = pango_core_text_font_find_shaper;
   font_class->get_font_map = pango_core_text_font_get_font_map;

@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>PangoFcFontMap: Pango Reference Manual</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
+<meta name="generator" content="DocBook XSL Stylesheets Vsnapshot">
 <link rel="home" href="index.html" title="Pango Reference Manual">
 <link rel="up" href="lowlevel.html" title="Low Level Functionality">
 <link rel="prev" href="PangoRenderer.html" title="PangoRenderer">
@@ -34,7 +34,7 @@
 </tr></table></div>
 <div class="refsect1">
 <a name="PangoFcFontMap.functions"></a><h2>Functions</h2>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="functions_return">
 <col class="functions_name">
@@ -122,7 +122,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="returnvalue">gpointer</span></a>
+<a href="../glib/glib-Basic-Types.html#gpointer"><span class="returnvalue">gpointer</span></a>
 </td>
 <td class="function_name">
 <a class="link" href="PangoFcFontMap.html#pango-fc-fontset-key-get-context-key" title="pango_fc_fontset_key_get_context_key ()">pango_fc_fontset_key_get_context_key</a> <span class="c_punctuation">()</span>
@@ -168,7 +168,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="returnvalue">gpointer</span></a>
+<a href="../glib/glib-Basic-Types.html#gpointer"><span class="returnvalue">gpointer</span></a>
 </td>
 <td class="function_name">
 <a class="link" href="PangoFcFontMap.html#pango-fc-font-key-get-context-key" title="pango_fc_font_key_get_context_key ()">pango_fc_font_key_get_context_key</a> <span class="c_punctuation">()</span>
@@ -193,7 +193,7 @@
 </div>
 <div class="refsect1">
 <a name="PangoFcFontMap.other"></a><h2>Types and Values</h2>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="name">
 <col class="description">
@@ -236,7 +236,7 @@
 </div>
 <div class="refsect1">
 <a name="PangoFcFontMap.object-hierarchy"></a><h2>Object Hierarchy</h2>
-<pre class="screen">    <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GObject-struct">GObject</a>
+<pre class="screen">    <a href="../gobject/gobject-The-Base-Object-Type.html#GObject-struct">GObject</a>
     <span class="lineart">╰──</span> <a class="link" href="pango-Fonts.html#PangoFontMap">PangoFontMap</a>
         <span class="lineart">╰──</span> PangoFcFontMap
             <span class="lineart">├──</span> <a class="link" href="pango-FreeType-Fonts-and-Rendering.html#PangoFT2FontMap">PangoFT2FontMap</a>
@@ -270,7 +270,7 @@ needed for correct operation on the <a class="link" href="pango-Text-Processing.
 this function.</p>
 <div class="refsect3">
 <a name="pango-fc-font-map-create-context.parameters"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -294,11 +294,11 @@ this function.</p>
 <a name="PangoFcDecoderFindFunc"></a><h3>PangoFcDecoderFindFunc ()</h3>
 <pre class="programlisting"><a class="link" href="PangoFcDecoder.html" title="PangoFcDecoder"><span class="returnvalue">PangoFcDecoder</span></a> *
 <span class="c_punctuation">(</span>*PangoFcDecoderFindFunc<span class="c_punctuation">)</span> (<em class="parameter"><code><span class="type">FcPattern</span> *pattern</code></em>,
-                           <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data</code></em>);</pre>
+                           <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data</code></em>);</pre>
 <p>Callback function passed to <a class="link" href="PangoFcFontMap.html#pango-fc-font-map-add-decoder-find-func" title="pango_fc_font_map_add_decoder_find_func ()"><code class="function">pango_fc_font_map_add_decoder_find_func()</code></a>.</p>
 <div class="refsect3">
 <a name="PangoFcDecoderFindFunc.parameters"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -321,7 +321,7 @@ this function.</p>
 <div class="refsect3">
 <a name="PangoFcDecoderFindFunc.returns"></a><h4>Returns</h4>
 <p> a new reference to a custom decoder for this pattern,
-or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if the default decoder handling should be used.</p>
+or <a href="../glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if the default decoder handling should be used.</p>
 </div>
 </div>
 <hr>
@@ -331,8 +331,8 @@ or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#
 pango_fc_font_map_add_decoder_find_func
                                (<em class="parameter"><code><a class="link" href="PangoFcFontMap.html" title="PangoFcFontMap"><span class="type">PangoFcFontMap</span></a> *fcfontmap</code></em>,
                                 <em class="parameter"><code><a class="link" href="PangoFcFontMap.html#PangoFcDecoderFindFunc" title="PangoFcDecoderFindFunc ()"><span class="type">PangoFcDecoderFindFunc</span></a> findfunc</code></em>,
-                                <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data</code></em>,
-                                <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Datasets.html#GDestroyNotify"><span class="type">GDestroyNotify</span></a> dnotify</code></em>);</pre>
+                                <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> user_data</code></em>,
+                                <em class="parameter"><code><a href="../glib/glib-Datasets.html#GDestroyNotify"><span class="type">GDestroyNotify</span></a> dnotify</code></em>);</pre>
 <p>This function saves a callback method in the <a class="link" href="PangoFcFontMap.html" title="PangoFcFontMap"><span class="type">PangoFcFontMap</span></a> that
 will be called whenever new fonts are created.  If the
 function returns a <a class="link" href="PangoFcDecoder.html" title="PangoFcDecoder"><span class="type">PangoFcDecoder</span></a>, that decoder will be used to
@@ -341,7 +341,7 @@ characters to glyphs.  This will allow applications to have
 application-specific encodings for various fonts.</p>
 <div class="refsect3">
 <a name="pango-fc-font-map-add-decoder-find-func.parameters"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -365,7 +365,7 @@ application-specific encodings for various fonts.</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>dnotify</p></td>
-<td class="parameter_description"><p>A <a href="https://developer.gnome.org/glib/unstable/glib-Datasets.html#GDestroyNotify"><span class="type">GDestroyNotify</span></a> callback that will be called when the
+<td class="parameter_description"><p>A <a href="../glib/glib-Datasets.html#GDestroyNotify"><span class="type">GDestroyNotify</span></a> callback that will be called when the
 fontmap is finalized and the decoder is released.</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
@@ -385,7 +385,7 @@ pango_fc_font_map_find_decoder (<em class="parameter"><code><a class="link" href
 a font map using <a class="link" href="PangoFcFontMap.html#pango-fc-font-map-add-decoder-find-func" title="pango_fc_font_map_add_decoder_find_func ()"><code class="function">pango_fc_font_map_add_decoder_find_func()</code></a>.</p>
 <div class="refsect3">
 <a name="pango-fc-font-map-find-decoder.parameters"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -408,7 +408,7 @@ a font map using <a class="link" href="PangoFcFontMap.html#pango-fc-font-map-add
 <div class="refsect3">
 <a name="pango-fc-font-map-find-decoder.returns"></a><h4>Returns</h4>
 <p> a newly created <a class="link" href="PangoFcDecoder.html" title="PangoFcDecoder"><span class="type">PangoFcDecoder</span></a> object or
-<a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if no decoder is set for <em class="parameter"><code>pattern</code></em>
+<a href="../glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if no decoder is set for <em class="parameter"><code>pattern</code></em>
 . </p>
 <p><span class="annotation">[<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></p>
 </div>
@@ -426,7 +426,7 @@ font map, or if fontconfig has been reinitialized to new
 configuration.</p>
 <div class="refsect3">
 <a name="pango-fc-font-map-cache-clear.parameters"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -452,7 +452,7 @@ used by this font map has changed.  This currently calls
 will be regenerated using the updated configuration.</p>
 <div class="refsect3">
 <a name="pango-fc-font-map-config-changed.parameters"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -480,7 +480,7 @@ map exits. This function is only intended to be called
 only for backend implementations deriving from <a class="link" href="PangoFcFontMap.html" title="PangoFcFontMap"><span class="type">PangoFcFontMap</span></a>.</p>
 <div class="refsect3">
 <a name="pango-fc-font-map-shutdown.parameters"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -502,7 +502,7 @@ only for backend implementations deriving from <a class="link" href="PangoFcFont
 pango_fc_font_map_set_config (<em class="parameter"><code><a class="link" href="PangoFcFontMap.html" title="PangoFcFontMap"><span class="type">PangoFcFontMap</span></a> *fcfontmap</code></em>,
                               <em class="parameter"><code><span class="type">FcConfig</span> *fcconfig</code></em>);</pre>
 <p>Set the FcConfig for this font map to use.  The default value
-is <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>, which causes Fontconfig to use its global "current config".
+is <a href="../glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>, which causes Fontconfig to use its global "current config".
 You can create a new FcConfig object and use this API to attach it
 to a font map.</p>
 <p>This is particularly useful for example, if you want to use application
@@ -515,7 +515,7 @@ app fonts to it, and attach it to a new Pango font map.</p>
 does NOT need to retain a reference.</p>
 <div class="refsect3">
 <a name="pango-fc-font-map-set-config.parameters"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -529,8 +529,8 @@ does NOT need to retain a reference.</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>fcconfig</p></td>
-<td class="parameter_description"><p>(nullable) a <span class="type">FcConfig</span>, or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a></p></td>
-<td class="parameter_annotations"> </td>
+<td class="parameter_description"><p> a <span class="type">FcConfig</span>, or <a href="../glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
+<td class="parameter_annotations"><span class="annotation">[<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></td>
 </tr>
 </tbody>
 </table></div>
@@ -545,7 +545,7 @@ pango_fc_font_map_get_config (<em class="parameter"><code><a class="link" href="
 <p>Fetches FcConfig attached to a font map.  See <a class="link" href="PangoFcFontMap.html#pango-fc-font-map-set-config" title="pango_fc_font_map_set_config ()"><code class="function">pango_fc_font_map_set_config()</code></a>.</p>
 <div class="refsect3">
 <a name="pango-fc-font-map-get-config.parameters"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -562,7 +562,7 @@ pango_fc_font_map_get_config (<em class="parameter"><code><a class="link" href="
 <a name="pango-fc-font-map-get-config.returns"></a><h4>Returns</h4>
 <p> the <span class="type">FcConfig</span> object attached to <em class="parameter"><code>fcfontmap</code></em>
 , which
-might be <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p>
+might be <a href="../glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p>
 <p><span class="annotation">[<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></p>
 </div>
 <p class="since">Since: <a class="link" href="api-index-1-38.html#api-index-1.38">1.38</a></p>
@@ -573,14 +573,14 @@ might be <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros
 <pre class="programlisting"><a class="link" href="pango-Fonts.html#PangoFontDescription"><span class="returnvalue">PangoFontDescription</span></a> *
 pango_fc_font_description_from_pattern
                                (<em class="parameter"><code><span class="type">FcPattern</span> *pattern</code></em>,
-                                <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> include_size</code></em>);</pre>
+                                <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> include_size</code></em>);</pre>
 <p>Creates a <a class="link" href="pango-Fonts.html#PangoFontDescription"><span class="type">PangoFontDescription</span></a> that matches the specified
 Fontconfig pattern as closely as possible. Many possible Fontconfig
 pattern values, such as <code class="literal">FC_RASTERIZER</code> or <code class="literal">FC_DPI</code>, don't make sense in
 the context of <a class="link" href="pango-Fonts.html#PangoFontDescription"><span class="type">PangoFontDescription</span></a>, so will be ignored.</p>
 <div class="refsect3">
 <a name="pango-fc-font-description-from-pattern.parameters"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -594,7 +594,7 @@ the context of <a class="link" href="pango-Fonts.html#PangoFontDescription"><spa
 </tr>
 <tr>
 <td class="parameter_name"><p>include_size</p></td>
-<td class="parameter_description"><p>if <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>, the pattern will include the size from
+<td class="parameter_description"><p>if <a href="../glib/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a>, the pattern will include the size from
 the <em class="parameter"><code>pattern</code></em>
 ; otherwise the resulting pattern will be unsized.
 (only <code class="literal">FC_SIZE</code> is examined, not <code class="literal">FC_PIXEL_SIZE</code>)</p></td>
@@ -613,13 +613,13 @@ the <em class="parameter"><code>pattern</code></em>
 <hr>
 <div class="refsect2">
 <a name="pango-fc-fontset-key-get-context-key"></a><h3>pango_fc_fontset_key_get_context_key ()</h3>
-<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="returnvalue">gpointer</span></a>
+<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gpointer"><span class="returnvalue">gpointer</span></a>
 pango_fc_fontset_key_get_context_key (<em class="parameter"><code>const <a class="link" href="PangoFcFontMap.html#PangoFcFontsetKey" title="PangoFcFontsetKey"><span class="type">PangoFcFontsetKey</span></a> *key</code></em>);</pre>
 <p>Gets the context key member of <em class="parameter"><code>key</code></em>
 .</p>
 <div class="refsect3">
 <a name="pango-fc-fontset-key-get-context-key.parameters"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -648,7 +648,7 @@ pango_fc_fontset_key_get_description (<em class="parameter"><code>const <a class
 .</p>
 <div class="refsect3">
 <a name="pango-fc-fontset-key-get-description.parameters"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -677,7 +677,7 @@ pango_fc_fontset_key_get_language (<em class="parameter"><code>const <a class="l
 .</p>
 <div class="refsect3">
 <a name="pango-fc-fontset-key-get-language.parameters"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -705,7 +705,7 @@ pango_fc_fontset_key_get_matrix (<em class="parameter"><code>const <a class="lin
 .</p>
 <div class="refsect3">
 <a name="pango-fc-fontset-key-get-matrix.parameters"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -736,7 +736,7 @@ pango_fc_fontset_key_get_absolute_size
 for both resolution and transformation matrix.</p>
 <div class="refsect3">
 <a name="pango-fc-fontset-key-get-absolute-size.parameters"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -765,7 +765,7 @@ pango_fc_fontset_key_get_resolution (<em class="parameter"><code>const <a class=
 </p>
 <div class="refsect3">
 <a name="pango-fc-fontset-key-get-resolution.parameters"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -788,13 +788,13 @@ pango_fc_fontset_key_get_resolution (<em class="parameter"><code>const <a class=
 <hr>
 <div class="refsect2">
 <a name="pango-fc-font-key-get-context-key"></a><h3>pango_fc_font_key_get_context_key ()</h3>
-<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="returnvalue">gpointer</span></a>
+<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gpointer"><span class="returnvalue">gpointer</span></a>
 pango_fc_font_key_get_context_key (<em class="parameter"><code>const <a class="link" href="PangoFcFontMap.html#PangoFcFontKey" title="PangoFcFontKey"><span class="type">PangoFcFontKey</span></a> *key</code></em>);</pre>
 <p>Gets the context key member of <em class="parameter"><code>key</code></em>
 .</p>
 <div class="refsect3">
 <a name="pango-fc-font-key-get-context-key.parameters"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -823,7 +823,7 @@ pango_fc_font_key_get_matrix (<em class="parameter"><code>const <a class="link" 
 .</p>
 <div class="refsect3">
 <a name="pango-fc-font-key-get-matrix.parameters"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -852,7 +852,7 @@ pango_fc_font_key_get_pattern (<em class="parameter"><code>const <a class="link"
 .</p>
 <div class="refsect3">
 <a name="pango-fc-font-key-get-pattern.parameters"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -909,8 +909,8 @@ instance deriving from <a class="link" href="PangoFcFont.html" title="PangoFcFon
   gboolean     (*context_key_equal)  (PangoFcFontMap             *fcfontmap,
 				      gconstpointer               key_a,
 				      gconstpointer               key_b);
-
   void         (*fontset_key_substitute)(PangoFcFontMap             *fontmap,
+
 				      PangoFcFontsetKey          *fontsetkey,
 				      FcPattern                  *pattern);
   PangoFcFont  *(*create_font)       (PangoFcFontMap             *fontmap,
@@ -920,7 +920,7 @@ instance deriving from <a class="link" href="PangoFcFont.html" title="PangoFcFon
 <p>Class structure for <a class="link" href="PangoFcFontMap.html" title="PangoFcFontMap"><span class="type">PangoFcFontMap</span></a>.</p>
 <div class="refsect3">
 <a name="PangoFcFontMapClass.members"></a><h4>Members</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="300px" class="struct_members_name">
 <col class="struct_members_description">
@@ -932,7 +932,7 @@ instance deriving from <a class="link" href="PangoFcFont.html" title="PangoFcFon
 <td class="struct_member_description"><p> Substitutes in default
 values for unspecified fields in a <span class="type">FcPattern</span>. This will
 be called prior to creating a font for the pattern. May be
-<a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>.  Deprecated in favor of <em class="parameter"><code><code class="function">font_key_substitute()</code></code></em>
+<a href="../glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>.  Deprecated in favor of <em class="parameter"><code><code class="function">font_key_substitute()</code></code></em>
 . </p></td>
 <td class="struct_member_annotations"><span class="annotation">[<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></td>
 </tr>
@@ -942,7 +942,7 @@ be called prior to creating a font for the pattern. May be
 pattern of the appropriate type for this font map. The
 <em class="parameter"><code>pattern</code></em>
 argument must be passed to the "pattern" property
-of <a class="link" href="PangoFcFont.html" title="PangoFcFont"><span class="type">PangoFcFont</span></a> when you call <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#g-object-new"><code class="function">g_object_new()</code></a>. Deprecated
+of <a class="link" href="PangoFcFont.html" title="PangoFcFont"><span class="type">PangoFcFont</span></a> when you call <a href="../gobject/gobject-The-Base-Object-Type.html#g-object-new"><code class="function">g_object_new()</code></a>. Deprecated
 in favor of <em class="parameter"><code><code class="function">create_font()</code></code></em>
 .</p></td>
 <td class="struct_member_annotations"> </td>
@@ -996,7 +996,7 @@ to make a persistant copy of the value returned from
 <td class="struct_member_description"><p> Substitutes in
 default values for unspecified fields in a
 <span class="type">FcPattern</span>. This will be called prior to creating a font
-for the pattern. May be <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>.  (Since: 1.24). </p></td>
+for the pattern. May be <a href="../glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>.  (Since: 1.24). </p></td>
 <td class="struct_member_annotations"><span class="annotation">[<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></td>
 </tr>
 <tr>
@@ -1009,7 +1009,7 @@ member of <em class="parameter"><code>font_key</code></em>
 can be
 retrieved using <a class="link" href="PangoFcFontMap.html#pango-fc-font-key-get-pattern" title="pango_fc_font_key_get_pattern ()"><code class="function">pango_fc_font_key_get_pattern()</code></a> and must
 be passed to the "pattern" property of <a class="link" href="PangoFcFont.html" title="PangoFcFont"><span class="type">PangoFcFont</span></a> when
-you call <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#g-object-new"><code class="function">g_object_new()</code></a>.  If <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>, <code class="function">new_font()</code> is used.
+you call <a href="../gobject/gobject-The-Base-Object-Type.html#g-object-new"><code class="function">g_object_new()</code></a>.  If <a href="../glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>, <code class="function">new_font()</code> is used.
 (Since: 1.24). </p></td>
 <td class="struct_member_annotations"><span class="annotation">[<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></td>
 </tr>
@@ -1065,7 +1065,7 @@ non-pango-using applications).</p>
 <p>String representing a fontconfig property name that Pango sets on any
 fontconfig pattern it passes to fontconfig.</p>
 <p>The property will have a string equal to what
-<a href="https://developer.gnome.org/glib/unstable/glib-Miscellaneous-Utility-Functions.html#g-get-prgname"><code class="function">g_get_prgname()</code></a> returns.
+<a href="../glib/glib-Miscellaneous-Utility-Functions.html#g-get-prgname"><code class="function">g_get_prgname()</code></a> returns.
 This can be used to write fontconfig configuration rules that only affect
 certain applications.</p>
 <p>This is equivalent to FC_PRGNAME in versions of fontconfig that have that.</p>

@@ -6,9 +6,7 @@
 #define HAVE_CAIRO 1
 
 /* Whether Cairo can use FreeType for fonts */
-#ifndef PANGO_VISUALC_NO_FC
-#define HAVE_CAIRO_FREETYPE 1
-#endif
+/* HAVE_CAIRO_FREETYPE */
 
 /* Whether Cairo has PDF support */
 #define HAVE_CAIRO_PDF 1
@@ -98,18 +96,12 @@
 /* Define to 1 if you have the <unistd.h> header file. */
 /* #undef HAVE_UNISTD_H */
 
-/* Have X libraries */
-/* #undef HAVE_X */
-
 /* Have Xft library */
 /* #undef HAVE_XFT */
 
 /* Define to the sub-directory in which libtool stores uninstalled libraries.
    */
 #define LT_OBJDIR ".libs/"
-
-/* Module interface version */
-#define MODULE_VERSION "1.6.0"
 
 /* Name of package */
 #define PACKAGE "pango"
@@ -150,8 +142,12 @@
 /* Define to 1 if you have the ANSI C header files. */
 #define STDC_HEADERS 1
 
-/* Whether to load modules via .la files rather than directly */
-/* #undef USE_LA_MODULES */
-
 /* Version number of package */
 #define VERSION "@PANGO_VERSION@"
+
+/* defines how to decorate public symbols while building */
+#ifdef _MSC_VER
+#define _PANGO_EXTERN __declspec(dllexport) extern
+#else
+#define _PANGO_EXTERN __attribute__((visibility("default"))) __declspec(dllexport) extern
+#endif

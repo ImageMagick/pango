@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>FreeType Fonts and Rendering: Pango Reference Manual</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
+<meta name="generator" content="DocBook XSL Stylesheets Vsnapshot">
 <link rel="home" href="index.html" title="Pango Reference Manual">
 <link rel="up" href="rendering.html" title="Rendering with Pango">
 <link rel="prev" href="pango-Win32-Fonts-and-Rendering.html" title="Win32 Fonts and Rendering">
@@ -34,7 +34,7 @@
 </tr></table></div>
 <div class="refsect1">
 <a name="pango-FreeType-Fonts-and-Rendering.functions"></a><h2>Functions</h2>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="functions_return">
 <col class="functions_name">
@@ -197,7 +197,7 @@
 </div>
 <a name="PangoFT2FontMap"></a><div class="refsect1">
 <a name="pango-FreeType-Fonts-and-Rendering.other"></a><h2>Types and Values</h2>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="name">
 <col class="description">
@@ -216,7 +216,7 @@
 </div>
 <div class="refsect1">
 <a name="pango-FreeType-Fonts-and-Rendering.object-hierarchy"></a><h2>Object Hierarchy</h2>
-<pre class="screen">    <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GObject-struct">GObject</a>
+<pre class="screen">    <a href="../gobject/gobject-The-Base-Object-Type.html#GObject-struct">GObject</a>
     <span class="lineart">╰──</span> <a class="link" href="pango-Fonts.html#PangoFontMap">PangoFontMap</a>
         <span class="lineart">╰──</span> <a class="link" href="PangoFcFontMap.html" title="PangoFcFontMap">PangoFcFontMap</a>
             <span class="lineart">╰──</span> PangoFT2FontMap
@@ -241,7 +241,7 @@ the default substitute function (see
 <div class="refsect3">
 <a name="pango-ft2-font-map-new.returns"></a><h4>Returns</h4>
 <p> the newly created fontmap object. Unref
-with <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#g-object-unref"><code class="function">g_object_unref()</code></a> when you are finished with it.</p>
+with <a href="../gobject/gobject-The-Base-Object-Type.html#g-object-unref"><code class="function">g_object_unref()</code></a> when you are finished with it.</p>
 </div>
 <p class="since">Since: <a class="link" href="api-index-1-2.html#api-index-1.2">1.2</a></p>
 </div>
@@ -255,7 +255,7 @@ pango_ft2_font_map_set_resolution (<em class="parameter"><code><a class="link" h
 <p>Sets the horizontal and vertical resolutions for the fontmap.</p>
 <div class="refsect3">
 <a name="pango-ft2-font-map-set-resolution.parameters"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -295,7 +295,7 @@ pango_ft2_font_map_create_context (<em class="parameter"><code><a class="link" h
 <p><span class="annotation">[<acronym title="Exposed in C code, not necessarily available in other languages."><span class="acronym">skip</span></acronym>]</span></p>
 <div class="refsect3">
 <a name="pango-ft2-font-map-create-context.parameters"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -310,7 +310,9 @@ pango_ft2_font_map_create_context (<em class="parameter"><code><a class="link" h
 </div>
 <div class="refsect3">
 <a name="pango-ft2-font-map-create-context.returns"></a><h4>Returns</h4>
-<p> the newly created context; free with <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#g-object-unref"><code class="function">g_object_unref()</code></a>.</p>
+<p> the newly created context; free with
+<a href="../gobject/gobject-The-Base-Object-Type.html#g-object-unref"><code class="function">g_object_unref()</code></a>. </p>
+<p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
 <p class="since">Since: <a class="link" href="api-index-1-2.html#api-index-1.2">1.2</a></p>
 </div>
@@ -319,11 +321,11 @@ pango_ft2_font_map_create_context (<em class="parameter"><code><a class="link" h
 <a name="PangoFT2SubstituteFunc"></a><h3>PangoFT2SubstituteFunc ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 <span class="c_punctuation">(</span>*PangoFT2SubstituteFunc<span class="c_punctuation">)</span> (<em class="parameter"><code><span class="type">FcPattern</span> *pattern</code></em>,
-                           <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> data</code></em>);</pre>
+                           <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> data</code></em>);</pre>
 <p>Function type for doing final config tweaking on prepared FcPatterns.</p>
 <div class="refsect3">
 <a name="PangoFT2SubstituteFunc.parameters"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -351,15 +353,15 @@ pango_ft2_font_map_create_context (<em class="parameter"><code><a class="link" h
 pango_ft2_font_map_set_default_substitute
                                (<em class="parameter"><code><a class="link" href="pango-FreeType-Fonts-and-Rendering.html#PangoFT2FontMap"><span class="type">PangoFT2FontMap</span></a> *fontmap</code></em>,
                                 <em class="parameter"><code><a class="link" href="pango-FreeType-Fonts-and-Rendering.html#PangoFT2SubstituteFunc" title="PangoFT2SubstituteFunc ()"><span class="type">PangoFT2SubstituteFunc</span></a> func</code></em>,
-                                <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> data</code></em>,
-                                <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Datasets.html#GDestroyNotify"><span class="type">GDestroyNotify</span></a> notify</code></em>);</pre>
+                                <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> data</code></em>,
+                                <em class="parameter"><code><a href="../glib/glib-Datasets.html#GDestroyNotify"><span class="type">GDestroyNotify</span></a> notify</code></em>);</pre>
 <p>Sets a function that will be called to do final configuration
 substitution on a <span class="type">FcPattern</span> before it is used to load
 the font. This function can be used to do things like set
 hinting and antialiasing options.</p>
 <div class="refsect3">
 <a name="pango-ft2-font-map-set-default-substitute.parameters"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -406,7 +408,7 @@ That is, if your substitution function will return different
 results for the same input pattern, you must call this function.</p>
 <div class="refsect3">
 <a name="pango-ft2-font-map-substitute-changed.parameters"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -439,7 +441,7 @@ for the default fontmap to <em class="parameter"><code>dpi_x</code></em>
 <p><span class="annotation">[<acronym title="Exposed in C code, not necessarily available in other languages."><span class="acronym">skip</span></acronym>]</span></p>
 <div class="refsect3">
 <a name="pango-ft2-get-context.parameters"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -461,7 +463,8 @@ for the default fontmap to <em class="parameter"><code>dpi_x</code></em>
 </div>
 <div class="refsect3">
 <a name="pango-ft2-get-context.returns"></a><h4>Returns</h4>
-<p> the new <a class="link" href="pango-Text-Processing.html#PangoContext"><span class="type">PangoContext</span></a></p>
+<p> the new <a class="link" href="pango-Text-Processing.html#PangoContext"><span class="type">PangoContext</span></a>. </p>
+<p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
 </div>
 <hr>
@@ -471,12 +474,12 @@ for the default fontmap to <em class="parameter"><code>dpi_x</code></em>
 pango_ft2_render (<em class="parameter"><code><span class="type">FT_Bitmap</span> *bitmap</code></em>,
                   <em class="parameter"><code><a class="link" href="pango-Fonts.html#PangoFont"><span class="type">PangoFont</span></a> *font</code></em>,
                   <em class="parameter"><code><a class="link" href="pango-Glyph-Storage.html#PangoGlyphString"><span class="type">PangoGlyphString</span></a> *glyphs</code></em>,
-                  <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> x</code></em>,
-                  <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gint"><span class="type">gint</span></a> y</code></em>);</pre>
+                  <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> x</code></em>,
+                  <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> y</code></em>);</pre>
 <p>Renders a <a class="link" href="pango-Glyph-Storage.html#PangoGlyphString"><span class="type">PangoGlyphString</span></a> onto a FreeType2 bitmap.</p>
 <div class="refsect3">
 <a name="pango-ft2-render.parameters"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -532,7 +535,7 @@ must have been loaded using a <a class="link" href="pango-Text-Processing.html#P
 transformation matrix to that passed in to this function.</p>
 <div class="refsect3">
 <a name="pango-ft2-render-transformed.parameters"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -551,7 +554,7 @@ transformation matrix to that passed in to this function.</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>matrix</p></td>
-<td class="parameter_description"><p> a <a class="link" href="pango-Glyph-Storage.html#PangoMatrix"><span class="type">PangoMatrix</span></a>, or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> to use an identity
+<td class="parameter_description"><p> a <a class="link" href="pango-Glyph-Storage.html#PangoMatrix"><span class="type">PangoMatrix</span></a>, or <a href="../glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> to use an identity
 transformation. </p></td>
 <td class="parameter_annotations"><span class="annotation">[<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></td>
 </tr>
@@ -588,7 +591,7 @@ pango_ft2_render_layout_line (<em class="parameter"><code><span class="type">FT_
 <p>Render a <a class="link" href="pango-Layout-Objects.html#PangoLayoutLine"><span class="type">PangoLayoutLine</span></a> onto a FreeType2 bitmap</p>
 <div class="refsect3">
 <a name="pango-ft2-render-layout-line.parameters"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -634,7 +637,7 @@ rounding to integer pixels multiple times, even if the
 final glyph positions are integers.)</p>
 <div class="refsect3">
 <a name="pango-ft2-render-layout-line-subpixel.parameters"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -677,7 +680,7 @@ pango_ft2_render_layout (<em class="parameter"><code><span class="type">FT_Bitma
 <p>Render a <a class="link" href="pango-Layout-Objects.html#PangoLayout"><span class="type">PangoLayout</span></a> onto a FreeType2 bitmap</p>
 <div class="refsect3">
 <a name="pango-ft2-render-layout.parameters"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -723,7 +726,7 @@ rounding to integer pixels multiple times, even if the
 final glyph positions are integers.)</p>
 <div class="refsect3">
 <a name="pango-ft2-render-layout-subpixel.parameters"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -769,7 +772,7 @@ by the font,
 use <a class="link" href="pango-Glyph-Storage.html#PANGO-GET-UNKNOWN-GLYPH:CAPS" title="PANGO_GET_UNKNOWN_GLYPH()"><code class="function">PANGO_GET_UNKNOWN_GLYPH()</code></a> instead.</p>
 <div class="refsect3">
 <a name="pango-ft2-get-unknown-glyph.parameters"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -800,7 +803,7 @@ pango_ft2_font_get_kerning (<em class="parameter"><code><a class="link" href="pa
 <p>Use <a class="link" href="PangoFcFont.html#pango-fc-font-kern-glyphs" title="pango_fc_font_kern_glyphs ()"><code class="function">pango_fc_font_kern_glyphs()</code></a> instead.</p>
 <div class="refsect3">
 <a name="pango-ft2-font-get-kerning.parameters"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -844,7 +847,7 @@ face from <a class="link" href="PangoFcFont.html#pango-fc-font-lock-face" title=
 <a class="link" href="PangoFcFont.html#pango-fc-font-unlock-face" title="pango_fc_font_unlock_face ()"><code class="function">pango_fc_font_unlock_face()</code></a>.</p>
 <div class="refsect3">
 <a name="pango-ft2-font-get-face.parameters"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -860,9 +863,9 @@ face from <a class="link" href="PangoFcFont.html#pango-fc-font-lock-face" title=
 <div class="refsect3">
 <a name="pango-ft2-font-get-face.returns"></a><h4>Returns</h4>
 <p> a pointer to a <span class="type">FT_Face</span>
-structure, with the size set correctly, or <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if
+structure, with the size set correctly, or <a href="../glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if
 <em class="parameter"><code>font</code></em>
-is <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p>
+is <a href="../glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p>
 <p><span class="annotation">[<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></p>
 </div>
 </div>
@@ -877,7 +880,7 @@ pango_ft2_font_get_coverage (<em class="parameter"><code><a class="link" href="p
 <a class="link" href="pango-Fonts.html#pango-font-get-coverage" title="pango_font_get_coverage ()"><code class="function">pango_font_get_coverage()</code></a> instead.</p>
 <div class="refsect3">
 <a name="pango-ft2-font-get-coverage.parameters"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -916,7 +919,8 @@ instead.</p>
 <p><span class="annotation">[<acronym title="Exposed in C code, not necessarily available in other languages."><span class="acronym">skip</span></acronym>]</span></p>
 <div class="refsect3">
 <a name="pango-ft2-font-map-for-display.returns"></a><h4>Returns</h4>
-<p> a <a class="link" href="pango-FreeType-Fonts-and-Rendering.html#PangoFT2FontMap"><span class="type">PangoFT2FontMap</span></a>.</p>
+<p> a <a class="link" href="pango-FreeType-Fonts-and-Rendering.html#PangoFT2FontMap"><span class="type">PangoFT2FontMap</span></a>. </p>
+<p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></p>
 </div>
 </div>
 <hr>

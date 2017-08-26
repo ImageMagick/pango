@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>PangoFcFont: Pango Reference Manual</title>
-<meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
+<meta name="generator" content="DocBook XSL Stylesheets Vsnapshot">
 <link rel="home" href="index.html" title="Pango Reference Manual">
 <link rel="up" href="lowlevel.html" title="Low Level Functionality">
 <link rel="prev" href="PangoFcFontMap.html" title="PangoFcFontMap">
@@ -35,7 +35,7 @@
 </tr></table></div>
 <div class="refsect1">
 <a name="PangoFcFont.functions"></a><h2>Functions</h2>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="functions_return">
 <col class="functions_name">
@@ -59,7 +59,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 </td>
 <td class="function_name">
 <a class="link" href="PangoFcFont.html#pango-fc-font-has-char" title="pango_fc_font_has_char ()">pango_fc_font_has_char</a> <span class="c_punctuation">()</span>
@@ -67,7 +67,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>
+<a href="../glib/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>
 </td>
 <td class="function_name">
 <a class="link" href="PangoFcFont.html#pango-fc-font-get-glyph" title="pango_fc_font_get_glyph ()">pango_fc_font_get_glyph</a> <span class="c_punctuation">()</span>
@@ -94,7 +94,7 @@
 </div>
 <div class="refsect1">
 <a name="PangoFcFont.properties"></a><h2>Properties</h2>
-<div class="informaltable"><table border="0">
+<div class="informaltable"><table class="informaltable" border="0">
 <colgroup>
 <col width="150px" class="properties_type">
 <col width="300px" class="properties_name">
@@ -108,7 +108,7 @@
 <td class="property_flags">Read / Write</td>
 </tr>
 <tr>
-<td class="property_type"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a></td>
+<td class="property_type"><a href="../glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a></td>
 <td class="property_name"><a class="link" href="PangoFcFont.html#PangoFcFont--pattern" title="The “pattern” property">pattern</a></td>
 <td class="property_flags">Read / Write / Construct Only</td>
 </tr>
@@ -117,7 +117,7 @@
 </div>
 <div class="refsect1">
 <a name="PangoFcFont.other"></a><h2>Types and Values</h2>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="name">
 <col class="description">
@@ -140,7 +140,7 @@
 </div>
 <div class="refsect1">
 <a name="PangoFcFont.object-hierarchy"></a><h2>Object Hierarchy</h2>
-<pre class="screen">    <a href="https://developer.gnome.org/gobject/unstable/gobject-The-Base-Object-Type.html#GObject-struct">GObject</a>
+<pre class="screen">    <a href="../gobject/gobject-The-Base-Object-Type.html#GObject-struct">GObject</a>
     <span class="lineart">╰──</span> <a class="link" href="pango-Fonts.html#PangoFont">PangoFont</a>
         <span class="lineart">╰──</span> PangoFcFont
             <span class="lineart">╰──</span> <a class="link" href="pango-Xft-Fonts-and-Rendering.html#PangoXftFont">PangoXftFont</a>
@@ -167,7 +167,7 @@ This face will be kept around until you call
 <a class="link" href="PangoFcFont.html#pango-fc-font-unlock-face" title="pango_fc_font_unlock_face ()"><code class="function">pango_fc_font_unlock_face()</code></a>.</p>
 <div class="refsect3">
 <a name="pango-fc-font-lock-face.parameters"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -196,7 +196,7 @@ pango_fc_font_unlock_face (<em class="parameter"><code><a class="link" href="Pan
 <a class="link" href="PangoFcFont.html#pango-fc-font-lock-face" title="pango_fc_font_lock_face ()"><code class="function">pango_fc_font_lock_face()</code></a>.</p>
 <div class="refsect3">
 <a name="pango-fc-font-unlock-face.parameters"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -214,15 +214,15 @@ pango_fc_font_unlock_face (<em class="parameter"><code><a class="link" href="Pan
 <hr>
 <div class="refsect2">
 <a name="pango-fc-font-has-char"></a><h3>pango_fc_font_has_char ()</h3>
-<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
 pango_fc_font_has_char (<em class="parameter"><code><a class="link" href="PangoFcFont.html" title="PangoFcFont"><span class="type">PangoFcFont</span></a> *font</code></em>,
-                        <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Unicode-Manipulation.html#gunichar"><span class="type">gunichar</span></a> wc</code></em>);</pre>
+                        <em class="parameter"><code><a href="../glib/glib-Unicode-Manipulation.html#gunichar"><span class="type">gunichar</span></a> wc</code></em>);</pre>
 <p>Determines whether <em class="parameter"><code>font</code></em>
  has a glyph for the codepoint <em class="parameter"><code>wc</code></em>
 .</p>
 <div class="refsect3">
 <a name="pango-fc-font-has-char.parameters"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -244,7 +244,7 @@ pango_fc_font_has_char (<em class="parameter"><code><a class="link" href="PangoF
 </div>
 <div class="refsect3">
 <a name="pango-fc-font-has-char.returns"></a><h4>Returns</h4>
-<p> <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if <em class="parameter"><code>font</code></em>
+<p> <a href="../glib/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if <em class="parameter"><code>font</code></em>
 has the requested codepoint.</p>
 </div>
 <p class="since">Since: <a class="link" href="api-index-1-4.html#api-index-1.4">1.4</a></p>
@@ -252,16 +252,16 @@ has the requested codepoint.</p>
 <hr>
 <div class="refsect2">
 <a name="pango-fc-font-get-glyph"></a><h3>pango_fc_font_get_glyph ()</h3>
-<pre class="programlisting"><a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>
+<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>
 pango_fc_font_get_glyph (<em class="parameter"><code><a class="link" href="PangoFcFont.html" title="PangoFcFont"><span class="type">PangoFcFont</span></a> *font</code></em>,
-                         <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Unicode-Manipulation.html#gunichar"><span class="type">gunichar</span></a> wc</code></em>);</pre>
+                         <em class="parameter"><code><a href="../glib/glib-Unicode-Manipulation.html#gunichar"><span class="type">gunichar</span></a> wc</code></em>);</pre>
 <p>Gets the glyph index for a given Unicode character
 for <em class="parameter"><code>font</code></em>
 . If you only want to determine
 whether the font has the glyph, use <a class="link" href="PangoFcFont.html#pango-fc-font-has-char" title="pango_fc_font_has_char ()"><code class="function">pango_fc_font_has_char()</code></a>.</p>
 <div class="refsect3">
 <a name="pango-fc-font-get-glyph.parameters"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -293,7 +293,7 @@ character doesn't exist in the font.</p>
 <a name="pango-fc-font-get-unknown-glyph"></a><h3>pango_fc_font_get_unknown_glyph ()</h3>
 <pre class="programlisting"><a class="link" href="pango-Glyph-Storage.html#PangoGlyph" title="PangoGlyph"><span class="returnvalue">PangoGlyph</span></a>
 pango_fc_font_get_unknown_glyph (<em class="parameter"><code><a class="link" href="PangoFcFont.html" title="PangoFcFont"><span class="type">PangoFcFont</span></a> *font</code></em>,
-                                 <em class="parameter"><code><a href="https://developer.gnome.org/glib/unstable/glib-Unicode-Manipulation.html#gunichar"><span class="type">gunichar</span></a> wc</code></em>);</pre>
+                                 <em class="parameter"><code><a href="../glib/glib-Unicode-Manipulation.html#gunichar"><span class="type">gunichar</span></a> wc</code></em>);</pre>
 <div class="warning"><p><code class="literal">pango_fc_font_get_unknown_glyph</code> is deprecated and should not be used in newly-written code.</p></div>
 <p>Returns the index of a glyph suitable for drawing <em class="parameter"><code>wc</code></em>
  as an
@@ -301,7 +301,7 @@ unknown character.</p>
 <p>Use <a class="link" href="pango-Glyph-Storage.html#PANGO-GET-UNKNOWN-GLYPH:CAPS" title="PANGO_GET_UNKNOWN_GLYPH()"><code class="function">PANGO_GET_UNKNOWN_GLYPH()</code></a> instead.</p>
 <div class="refsect3">
 <a name="pango-fc-font-get-unknown-glyph.parameters"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -341,7 +341,7 @@ kerning information in <em class="parameter"><code>font</code></em>
 .</p>
 <div class="refsect3">
 <a name="pango-fc-font-kern-glyphs.parameters"></a><h4>Parameters</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="150px" class="parameters_name">
 <col class="parameters_description">
@@ -394,7 +394,7 @@ virtual function from <a class="link" href="pango-Fonts.html#PangoFont"><span cl
 <p>Class structure for <a class="link" href="PangoFcFont.html" title="PangoFcFont"><span class="type">PangoFcFont</span></a>.</p>
 <div class="refsect3">
 <a name="PangoFcFontClass.members"></a><h4>Members</h4>
-<div class="informaltable"><table width="100%" border="0">
+<div class="informaltable"><table class="informaltable" width="100%" border="0">
 <colgroup>
 <col width="300px" class="struct_members_name">
 <col class="struct_members_description">
@@ -417,7 +417,7 @@ FT_Face.</p></td>
 </tr>
 <tr>
 <td class="struct_member_name"><p><em class="structfield"><code><a name="PangoFcFontClass.has-char"></a>has_char</code></em> ()</p></td>
-<td class="struct_member_description"><p>Return <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the the font contains a glyph
+<td class="struct_member_description"><p>Return <a href="../glib/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if the the font contains a glyph
 corresponding to the specified character.</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
@@ -431,14 +431,14 @@ Unicode character.</p></td>
 <td class="struct_member_name"><p><em class="structfield"><code><a name="PangoFcFontClass.get-unknown-glyph"></a>get_unknown_glyph</code></em> ()</p></td>
 <td class="struct_member_description"><p> Gets the glyph that
 should be used to display an unknown-glyph indication
-for the specified Unicode character.  May be <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
+for the specified Unicode character.  May be <a href="../glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
 <td class="struct_member_annotations"><span class="annotation">[<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></td>
 </tr>
 <tr>
 <td class="struct_member_name"><p><em class="structfield"><code><a name="PangoFcFontClass.shutdown"></a>shutdown</code></em> ()</p></td>
 <td class="struct_member_description"><p> Performs any font-specific
 shutdown code that needs to be done when
-pango_fc_font_map_shutdown is called.  May be <a href="https://developer.gnome.org/glib/unstable/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
+pango_fc_font_map_shutdown is called.  May be <a href="../glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
 <td class="struct_member_annotations"><span class="annotation">[<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></td>
 </tr>
 </tbody>
@@ -467,7 +467,7 @@ of <a class="link" href="pango-Engines.html#PangoEngineInfo" title="struct Pango
 <hr>
 <div class="refsect2">
 <a name="PangoFcFont--pattern"></a><h3>The <code class="literal">“pattern”</code> property</h3>
-<pre class="programlisting">  “pattern”                  <a href="https://developer.gnome.org/glib/unstable/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a></pre>
+<pre class="programlisting">  “pattern”                  <a href="../glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a></pre>
 <p>The fontconfig pattern for this font.</p>
 <p>Flags: Read / Write / Construct Only</p>
 </div>
