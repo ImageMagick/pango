@@ -25,7 +25,15 @@
 #include <glib.h>
 
 #ifndef _PANGO_EXTERN
-#define _PANGO_EXTERN extern
+#  if defined(_LIB)
+#    define _PANGO_EXTERN extern
+#  else
+#    ifdef PANGO_COMPILATION
+#      define _PANGO_EXTERN __declspec(dllexport)
+#    else
+#      define _PANGO_EXTERN extern __declspec(dllimport)
+#    endif
+#  endif
 #endif
 
 #define PANGO_AVAILABLE_IN_ALL                   _PANGO_EXTERN
