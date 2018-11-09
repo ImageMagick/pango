@@ -147,7 +147,11 @@
 
 /* defines how to decorate public symbols while building */
 #ifdef _MSC_VER
-#define _PANGO_EXTERN __declspec(dllexport) extern
+  #if defined(_LIB)
+    #define _PANGO_EXTERN extern
+  #else
+    #define _PANGO_EXTERN __declspec(dllexport) extern
+  #endif
 #else
 #define _PANGO_EXTERN __attribute__((visibility("default"))) __declspec(dllexport) extern
 #endif
