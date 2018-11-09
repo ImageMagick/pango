@@ -8,7 +8,7 @@
 <link rel="up" href="lowlevel.html" title="Low Level Functionality">
 <link rel="prev" href="lowlevel.html" title="Low Level Functionality">
 <link rel="next" href="PangoFcFontMap.html" title="PangoFcFontMap">
-<meta name="generator" content="GTK-Doc V1.25.1 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.28 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -154,7 +154,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="../glib/glib-Basic-Types.html#guint16"><span class="returnvalue">guint16</span></a>
+<span class="returnvalue">guint16</span>
 </td>
 <td class="function_name">
 <a class="link" href="PangoRenderer.html#pango-renderer-get-alpha" title="pango_renderer_get_alpha ()">pango_renderer_get_alpha</a> <span class="c_punctuation">()</span>
@@ -223,9 +223,9 @@
 </div>
 <div class="refsect1">
 <a name="PangoRenderer.object-hierarchy"></a><h2>Object Hierarchy</h2>
-<pre class="screen">    <a href="/home/mclasen/gnome/share/gtk-doc/html/gobject/gobject-Enumeration-and-Flag-Types.html">GEnum</a>
+<pre class="screen">    <a href="/usr/share/gtk-doc/html/gobject/gobject-Enumeration-and-Flag-Types.html">GEnum</a>
     <span class="lineart">╰──</span> PangoRenderPart
-    <a href="../gobject/gobject-The-Base-Object-Type.html#GObject-struct">GObject</a>
+    GObject
     <span class="lineart">╰──</span> PangoRenderer
         <span class="lineart">╰──</span> <a class="link" href="pango-Xft-Fonts-and-Rendering.html#PangoXftRenderer">PangoXftRenderer</a>
 </pre>
@@ -403,7 +403,7 @@ output format supports it (PDF for example).</p>
 indexed by <code class="literal"><em class="parameter"><code>glyph_item-&gt;item-&gt;offset</code></em>
 </code>.</p>
 <p>If <em class="parameter"><code>text</code></em>
- is <a href="../glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>, this simply calls <a class="link" href="PangoRenderer.html#pango-renderer-draw-glyphs" title="pango_renderer_draw_glyphs ()"><code class="function">pango_renderer_draw_glyphs()</code></a>.</p>
+ is <code class="literal">NULL</code>, this simply calls <a class="link" href="PangoRenderer.html#pango-renderer-draw-glyphs" title="pango_renderer_draw_glyphs ()"><code class="function">pango_renderer_draw_glyphs()</code></a>.</p>
 <p>The default implementation of this method simply falls back to
 <a class="link" href="PangoRenderer.html#pango-renderer-draw-glyphs" title="pango_renderer_draw_glyphs ()"><code class="function">pango_renderer_draw_glyphs()</code></a>.</p>
 <div class="refsect3">
@@ -422,8 +422,8 @@ indexed by <code class="literal"><em class="parameter"><code>glyph_item-&gt;item
 </tr>
 <tr>
 <td class="parameter_name"><p>text</p></td>
-<td class="parameter_description"><p> the UTF-8 text that <em class="parameter"><code>glyph_item</code></em>
-refers to, or <a href="../glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
+<td class="parameter_description"><p>the UTF-8 text that <em class="parameter"><code>glyph_item</code></em>
+refers to, or <code class="literal">NULL</code>. </p></td>
 <td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 <tr>
@@ -752,7 +752,7 @@ option for drawing underlines, it needs to call</p>
     <tbody>
       <tr>
         <td class="listing_lines" align="right"><pre>1</pre></td>
-        <td class="listing_code"><pre class="programlisting"><span class="function"><a href="PangoRenderer.html#pango-renderer-part-changed">pango_renderer_part_changed</a></span> <span class="gtkdoc opt">(</span>render<span class="gtkdoc opt">,</span> PANGO_RENDER_PART_UNDERLINE<span class="gtkdoc opt">);</span></pre></td>
+        <td class="listing_code"><pre class="programlisting"><span class="function"><a href="PangoRenderer.html#pango-renderer-part-changed">pango_renderer_part_changed</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">render</span><span class="symbol">,</span><span class="normal"> <a href="PangoRenderer.html#PANGO-RENDER-PART-UNDERLINE:CAPS">PANGO_RENDER_PART_UNDERLINE</a></span><span class="symbol">);</span></pre></td>
       </tr>
     </tbody>
   </table>
@@ -815,7 +815,7 @@ Also see <a class="link" href="PangoRenderer.html#pango-renderer-set-alpha" titl
 </tr>
 <tr>
 <td class="parameter_name"><p>color</p></td>
-<td class="parameter_description"><p> the new color or <a href="../glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> to unset the current color. </p></td>
+<td class="parameter_description"><p>the new color or <code class="literal">NULL</code> to unset the current color. </p></td>
 <td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
 </tbody>
@@ -854,8 +854,8 @@ pango_renderer_get_color (<em class="parameter"><code><a class="link" href="Pang
 </div>
 <div class="refsect3">
 <a name="pango-renderer-get-color.returns"></a><h4>Returns</h4>
-<p> the color for the
-specified part, or <a href="../glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if it hasn't been set and should be
+<p>the color for the
+specified part, or <code class="literal">NULL</code> if it hasn't been set and should be
 inherited from the environment. </p>
 <p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>][<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></p>
 </div>
@@ -867,7 +867,7 @@ inherited from the environment. </p>
 <pre class="programlisting"><span class="returnvalue">void</span>
 pango_renderer_set_alpha (<em class="parameter"><code><a class="link" href="PangoRenderer.html" title="PangoRenderer"><span class="type">PangoRenderer</span></a> *renderer</code></em>,
                           <em class="parameter"><code><a class="link" href="PangoRenderer.html#PangoRenderPart" title="enum PangoRenderPart"><span class="type">PangoRenderPart</span></a> part</code></em>,
-                          <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#guint16"><span class="type">guint16</span></a> alpha</code></em>);</pre>
+                          <em class="parameter"><code><span class="type">guint16</span> alpha</code></em>);</pre>
 <p>Sets the alpha for part of the rendering.
 Note that the alpha may only be used if a color is
 specified for <em class="parameter"><code>part</code></em>
@@ -904,7 +904,7 @@ specified for <em class="parameter"><code>part</code></em>
 <hr>
 <div class="refsect2">
 <a name="pango-renderer-get-alpha"></a><h3>pango_renderer_get_alpha ()</h3>
-<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#guint16"><span class="returnvalue">guint16</span></a>
+<pre class="programlisting"><span class="returnvalue">guint16</span>
 pango_renderer_get_alpha (<em class="parameter"><code><a class="link" href="PangoRenderer.html" title="PangoRenderer"><span class="type">PangoRenderer</span></a> *renderer</code></em>,
                           <em class="parameter"><code><a class="link" href="PangoRenderer.html#PangoRenderPart" title="enum PangoRenderPart"><span class="type">PangoRenderPart</span></a> part</code></em>);</pre>
 <p>Gets the current alpha for the specified part.</p>
@@ -961,7 +961,7 @@ pango_renderer_set_matrix (<em class="parameter"><code><a class="link" href="Pan
 </tr>
 <tr>
 <td class="parameter_name"><p>matrix</p></td>
-<td class="parameter_description"><p> a <a class="link" href="pango-Glyph-Storage.html#PangoMatrix"><span class="type">PangoMatrix</span></a>, or <a href="../glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> to unset any existing matrix.
+<td class="parameter_description"><p>a <a class="link" href="pango-Glyph-Storage.html#PangoMatrix"><span class="type">PangoMatrix</span></a>, or <code class="literal">NULL</code> to unset any existing matrix.
 (No matrix set is the same as setting the identity matrix.). </p></td>
 <td class="parameter_annotations"><span class="annotation">[<acronym title="NULL is OK, both for passing and for returning."><span class="acronym">allow-none</span></acronym>]</span></td>
 </tr>
@@ -994,7 +994,7 @@ rendering. See <a class="link" href="PangoRenderer.html#pango-renderer-set-matri
 </div>
 <div class="refsect3">
 <a name="pango-renderer-get-matrix.returns"></a><h4>Returns</h4>
-<p> the matrix, or <a href="../glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if no matrix has
+<p>the matrix, or <code class="literal">NULL</code> if no matrix has
 been set (which is the same as the identity matrix). The returned
 matrix is owned by Pango and must not be modified or freed. </p>
 <p><span class="annotation">[<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></p>
@@ -1029,7 +1029,7 @@ rendered.</p>
 </div>
 <div class="refsect3">
 <a name="pango-renderer-get-layout.returns"></a><h4>Returns</h4>
-<p> the layout, or <a href="../glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if
+<p>the layout, or <code class="literal">NULL</code> if
 no layout is being rendered using <em class="parameter"><code>renderer</code></em>
 at this time. </p>
 <p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>][<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></p>
@@ -1064,7 +1064,7 @@ rendered.</p>
 </div>
 <div class="refsect3">
 <a name="pango-renderer-get-layout-line.returns"></a><h4>Returns</h4>
-<p> the layout line, or <a href="../glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>
+<p>the layout line, or <code class="literal">NULL</code>
 if no layout line is being rendered using <em class="parameter"><code>renderer</code></em>
 at this time. </p>
 <p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>][<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></p>
@@ -1093,8 +1093,8 @@ render Pango objects such as <a class="link" href="pango-Glyph-Storage.html#Pang
 </colgroup>
 <tbody><tr>
 <td class="struct_member_name"><p><a class="link" href="pango-Glyph-Storage.html#PangoMatrix"><span class="type">PangoMatrix</span></a> *<em class="structfield"><code><a name="PangoRenderer-struct.matrix"></a>matrix</code></em>;</p></td>
-<td class="struct_member_description"><p> the current transformation matrix for
-the Renderer; may be <a href="../glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>, which should be treated the
+<td class="struct_member_description"><p>the current transformation matrix for
+the Renderer; may be <code class="literal">NULL</code>, which should be treated the
 same as the identity matrix. </p></td>
 <td class="struct_member_annotations"><span class="annotation">[<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></td>
 </tr></tbody>
@@ -1307,6 +1307,6 @@ attributes change</p></td>
 </div>
 </div>
 <div class="footer">
-<hr>Generated by GTK-Doc V1.25.1</div>
+<hr>Generated by GTK-Doc V1.28</div>
 </body>
 </html>

@@ -1,13 +1,12 @@
 ## Process this file with automake to create Makefile.in.
 
-SUBDIRS= pango pango-view examples docs tools tests win32
+SUBDIRS= pango utils examples docs tools tests win32
 
 meson_dist_files = \
 	pango/pango-features.h.meson \
-	pango-view/meson.build \
+	utils/meson.build \
 	meson.build \
 	meson_options.txt \
-	pango/mini-fribidi/meson.build \
 	pango/meson.build \
 	docs/meson.build \
 	docs/xml/meson.build \

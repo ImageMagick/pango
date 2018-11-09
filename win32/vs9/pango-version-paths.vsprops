@@ -14,11 +14,11 @@
 	/>
 	<UserMacro
 		Name="PangoMinorVersion"
-		Value="40"
+		Value="42"
 	/>
 	<UserMacro
 		Name="PangoMicroVersion"
-		Value="11"
+		Value="4"
 	/>
 	<UserMacro
 		Name="ApiVersion"
@@ -59,11 +59,19 @@
 		Value="$(PangoSeparateVSDllSuffix)"
 	/>
 	<UserMacro
-		Name="PythonPath"
+		Name="PythonDir"
 		Value="c:\python27"
 	/>
 	<UserMacro
-		Name="PythonPathX64"
-		Value="$(PythonPath).x64"
+		Name="PythonDirX64"
+		Value="$(PythonDir).x64"
+	/>
+	<UserMacro
+		Name="IntrospectPythonParam"
+		Value="PYTHON=$(PythonDir)\python.exe"
+	/>
+	<UserMacro
+		Name="IntrospectPythonParamX64"
+		Value="PYTHON=$(PythonDirX64)\python.exe"
 	/>
 </VisualStudioPropertySheet>

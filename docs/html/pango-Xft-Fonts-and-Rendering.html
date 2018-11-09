@@ -8,7 +8,7 @@
 <link rel="up" href="rendering.html" title="Rendering with Pango">
 <link rel="prev" href="pango-FreeType-Fonts-and-Rendering.html" title="FreeType Fonts and Rendering">
 <link rel="next" href="pango-Cairo-Rendering.html" title="Cairo Rendering">
-<meta name="generator" content="GTK-Doc V1.25.1 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.28 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -107,7 +107,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<span class="returnvalue">gboolean</span>
 </td>
 <td class="function_name">
 <a class="link" href="pango-Xft-Fonts-and-Rendering.html#pango-xft-font-has-char" title="pango_xft_font_has_char ()">pango_xft_font_has_char</a> <span class="c_punctuation">()</span>
@@ -131,7 +131,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="../glib/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>
+<span class="returnvalue">guint</span>
 </td>
 <td class="function_name">
 <a class="link" href="pango-Xft-Fonts-and-Rendering.html#pango-xft-font-get-glyph" title="pango_xft_font_get_glyph ()">pango_xft_font_get_glyph</a> <span class="c_punctuation">()</span>
@@ -222,12 +222,12 @@
 </colgroup>
 <tbody>
 <tr>
-<td class="property_type"><a href="../glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a></td>
+<td class="property_type"><span class="type">gpointer</span></td>
 <td class="property_name"><a class="link" href="pango-Xft-Fonts-and-Rendering.html#PangoXftRenderer--display" title="The “display” property">display</a></td>
 <td class="property_flags">Write / Construct Only</td>
 </tr>
 <tr>
-<td class="property_type"><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a></td>
+<td class="property_type"><span class="type">gint</span></td>
 <td class="property_name"><a class="link" href="pango-Xft-Fonts-and-Rendering.html#PangoXftRenderer--screen" title="The “screen” property">screen</a></td>
 <td class="property_flags">Write / Construct Only</td>
 </tr>
@@ -267,7 +267,7 @@
 </div>
 <div class="refsect1">
 <a name="pango-Xft-Fonts-and-Rendering.object-hierarchy"></a><h2>Object Hierarchy</h2>
-<pre class="screen">    <a href="../gobject/gobject-The-Base-Object-Type.html#GObject-struct">GObject</a>
+<pre class="screen">    GObject
     <span class="lineart">├──</span> <a class="link" href="pango-Fonts.html#PangoFont">PangoFont</a>
     <span class="lineart">│</span>   <span class="lineart">╰──</span> <a class="link" href="PangoFcFont.html" title="PangoFcFont">PangoFcFont</a>
     <span class="lineart">│</span>       <span class="lineart">╰──</span> PangoXftFont
@@ -379,7 +379,7 @@ the display is closed.</p>
 </div>
 <div class="refsect3">
 <a name="pango-xft-get-font-map.returns"></a><h4>Returns</h4>
-<p> a <a class="link" href="pango-Fonts.html#PangoFontMap"><span class="type">PangoFontMap</span></a> object, owned by Pango. </p>
+<p>a <a class="link" href="pango-Fonts.html#PangoFontMap"><span class="type">PangoFontMap</span></a> object, owned by Pango. </p>
 <p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></p>
 </div>
 <p class="since">Since: <a class="link" href="api-index-1-2.html#api-index-1.2">1.2</a></p>
@@ -391,8 +391,8 @@ the display is closed.</p>
 pango_xft_set_default_substitute (<em class="parameter"><code><span class="type">Display</span> *display</code></em>,
                                   <em class="parameter"><code><span class="type">int</span> screen</code></em>,
                                   <em class="parameter"><code><a class="link" href="pango-Xft-Fonts-and-Rendering.html#PangoXftSubstituteFunc" title="PangoXftSubstituteFunc ()"><span class="type">PangoXftSubstituteFunc</span></a> func</code></em>,
-                                  <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> data</code></em>,
-                                  <em class="parameter"><code><a href="../glib/glib-Datasets.html#GDestroyNotify"><span class="type">GDestroyNotify</span></a> notify</code></em>);</pre>
+                                  <em class="parameter"><code><span class="type">gpointer</span> data</code></em>,
+                                  <em class="parameter"><code><span class="type">GDestroyNotify</span> notify</code></em>);</pre>
 <p>Sets a function that will be called to do final configuration
 substitution on a <span class="type">FcPattern</span> before it is used to load
 the font. This function can be used to do things like set
@@ -445,7 +445,7 @@ is no longer used.</p></td>
 <a name="PangoXftSubstituteFunc"></a><h3>PangoXftSubstituteFunc ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 <span class="c_punctuation">(</span>*PangoXftSubstituteFunc<span class="c_punctuation">)</span> (<em class="parameter"><code><span class="type">FcPattern</span> *pattern</code></em>,
-                           <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> data</code></em>);</pre>
+                           <em class="parameter"><code><span class="type">gpointer</span> data</code></em>);</pre>
 <p>Function type for doing final config tweaking on prepared FcPatterns.</p>
 <div class="refsect3">
 <a name="PangoXftSubstituteFunc.parameters"></a><h4>Parameters</h4>
@@ -559,17 +559,17 @@ pango_xft_font_get_font (<em class="parameter"><code><a class="link" href="pango
 </colgroup>
 <tbody><tr>
 <td class="parameter_name"><p>font</p></td>
-<td class="parameter_description"><p> a <a class="link" href="pango-Fonts.html#PangoFont"><span class="type">PangoFont</span></a>. </p></td>
+<td class="parameter_description"><p>a <a class="link" href="pango-Fonts.html#PangoFont"><span class="type">PangoFont</span></a>. </p></td>
 <td class="parameter_annotations"><span class="annotation">[<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></td>
 </tr></tbody>
 </table></div>
 </div>
 <div class="refsect3">
 <a name="pango-xft-font-get-font.returns"></a><h4>Returns</h4>
-<p> the XftFont associated to <em class="parameter"><code>font</code></em>
-, or <a href="../glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>
+<p>the XftFont associated to <em class="parameter"><code>font</code></em>
+, or <code class="literal">NULL</code>
 if <em class="parameter"><code>font</code></em>
-is <a href="../glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p>
+is <code class="literal">NULL</code>. </p>
 <p><span class="annotation">[<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></p>
 </div>
 </div>
@@ -603,9 +603,9 @@ pango_xft_font_get_display (<em class="parameter"><code><a class="link" href="pa
 <hr>
 <div class="refsect2">
 <a name="pango-xft-font-has-char"></a><h3>pango_xft_font_has_char ()</h3>
-<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<pre class="programlisting"><span class="returnvalue">gboolean</span>
 pango_xft_font_has_char (<em class="parameter"><code><a class="link" href="pango-Fonts.html#PangoFont"><span class="type">PangoFont</span></a> *font</code></em>,
-                         <em class="parameter"><code><a href="../glib/glib-Unicode-Manipulation.html#gunichar"><span class="type">gunichar</span></a> wc</code></em>);</pre>
+                         <em class="parameter"><code><span class="type">gunichar</span> wc</code></em>);</pre>
 <div class="warning"><p><code class="literal">pango_xft_font_has_char</code> is deprecated and should not be used in newly-written code.</p></div>
 <p>Determines whether <em class="parameter"><code>font</code></em>
  has a glyph for the codepoint <em class="parameter"><code>wc</code></em>
@@ -635,7 +635,7 @@ pango_xft_font_has_char (<em class="parameter"><code><a class="link" href="pango
 </div>
 <div class="refsect3">
 <a name="pango-xft-font-has-char.returns"></a><h4>Returns</h4>
-<p> <a href="../glib/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if <em class="parameter"><code>font</code></em>
+<p> <code class="literal">TRUE</code> if <em class="parameter"><code>font</code></em>
 has the requested codepoint.</p>
 </div>
 <p class="since">Since: <a class="link" href="api-index-1-2.html#api-index-1.2">1.2</a></p>
@@ -701,9 +701,9 @@ pango_xft_font_unlock_face (<em class="parameter"><code><a class="link" href="pa
 <hr>
 <div class="refsect2">
 <a name="pango-xft-font-get-glyph"></a><h3>pango_xft_font_get_glyph ()</h3>
-<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#guint"><span class="returnvalue">guint</span></a>
+<pre class="programlisting"><span class="returnvalue">guint</span>
 pango_xft_font_get_glyph (<em class="parameter"><code><a class="link" href="pango-Fonts.html#PangoFont"><span class="type">PangoFont</span></a> *font</code></em>,
-                          <em class="parameter"><code><a href="../glib/glib-Unicode-Manipulation.html#gunichar"><span class="type">gunichar</span></a> wc</code></em>);</pre>
+                          <em class="parameter"><code><span class="type">gunichar</span> wc</code></em>);</pre>
 <div class="warning"><p><code class="literal">pango_xft_font_get_glyph</code> is deprecated and should not be used in newly-written code.</p></div>
 <p>Gets the glyph index for a given Unicode character
 for <em class="parameter"><code>font</code></em>
@@ -744,7 +744,7 @@ character does not exist in the font.</p>
 <a name="pango-xft-font-get-unknown-glyph"></a><h3>pango_xft_font_get_unknown_glyph ()</h3>
 <pre class="programlisting"><a class="link" href="pango-Glyph-Storage.html#PangoGlyph" title="PangoGlyph"><span class="returnvalue">PangoGlyph</span></a>
 pango_xft_font_get_unknown_glyph (<em class="parameter"><code><a class="link" href="pango-Fonts.html#PangoFont"><span class="type">PangoFont</span></a> *font</code></em>,
-                                  <em class="parameter"><code><a href="../glib/glib-Unicode-Manipulation.html#gunichar"><span class="type">gunichar</span></a> wc</code></em>);</pre>
+                                  <em class="parameter"><code><span class="type">gunichar</span> wc</code></em>);</pre>
 <div class="warning"><p><code class="literal">pango_xft_font_get_unknown_glyph</code> is deprecated and should not be used in newly-written code.</p></div>
 <p>Returns the index of a glyph suitable for drawing <em class="parameter"><code>wc</code></em>
  as an
@@ -813,7 +813,7 @@ to which rendering will be done</p></td>
 <div class="refsect3">
 <a name="pango-xft-renderer-new.returns"></a><h4>Returns</h4>
 <p> the newly created <a class="link" href="pango-Xft-Fonts-and-Rendering.html#PangoXftRenderer"><span class="type">PangoXftRenderer</span></a>, which should
-be freed with <a href="../gobject/gobject-The-Base-Object-Type.html#g-object-unref"><code class="function">g_object_unref()</code></a>.</p>
+be freed with <code class="function">g_object_unref()</code>.</p>
 </div>
 <p class="since">Since: <a class="link" href="api-index-1-8.html#api-index-1.8">1.8</a></p>
 </div>
@@ -888,8 +888,8 @@ pango_xft_render (<em class="parameter"><code><span class="type">XftDraw</span> 
                   <em class="parameter"><code><span class="type">XftColor</span> *color</code></em>,
                   <em class="parameter"><code><a class="link" href="pango-Fonts.html#PangoFont"><span class="type">PangoFont</span></a> *font</code></em>,
                   <em class="parameter"><code><a class="link" href="pango-Glyph-Storage.html#PangoGlyphString"><span class="type">PangoGlyphString</span></a> *glyphs</code></em>,
-                  <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> x</code></em>,
-                  <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> y</code></em>);</pre>
+                  <em class="parameter"><code><span class="type">gint</span> x</code></em>,
+                  <em class="parameter"><code><span class="type">gint</span> y</code></em>);</pre>
 <p>Renders a <a class="link" href="pango-Glyph-Storage.html#PangoGlyphString"><span class="type">PangoGlyphString</span></a> onto an <span class="type">XftDraw</span> object wrapping an X drawable.</p>
 <div class="refsect3">
 <a name="pango-xft-render.parameters"></a><h4>Parameters</h4>
@@ -943,8 +943,8 @@ pango_xft_picture_render (<em class="parameter"><code><span class="type">Display
                           <em class="parameter"><code><span class="type">Picture</span> dest_picture</code></em>,
                           <em class="parameter"><code><a class="link" href="pango-Fonts.html#PangoFont"><span class="type">PangoFont</span></a> *font</code></em>,
                           <em class="parameter"><code><a class="link" href="pango-Glyph-Storage.html#PangoGlyphString"><span class="type">PangoGlyphString</span></a> *glyphs</code></em>,
-                          <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> x</code></em>,
-                          <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> y</code></em>);</pre>
+                          <em class="parameter"><code><span class="type">gint</span> x</code></em>,
+                          <em class="parameter"><code><span class="type">gint</span> y</code></em>);</pre>
 <p>Renders a <a class="link" href="pango-Glyph-Storage.html#PangoGlyphString"><span class="type">PangoGlyphString</span></a> onto an Xrender <span class="type">Picture</span> object.</p>
 <div class="refsect3">
 <a name="pango-xft-picture-render.parameters"></a><h4>Parameters</h4>
@@ -1039,7 +1039,7 @@ transformation matrix to that passed in to this function.</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>matrix</p></td>
-<td class="parameter_description"><p> a <a class="link" href="pango-Glyph-Storage.html#PangoMatrix"><span class="type">PangoMatrix</span></a>, or <a href="../glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> to use an identity
+<td class="parameter_description"><p>a <a class="link" href="pango-Glyph-Storage.html#PangoMatrix"><span class="type">PangoMatrix</span></a>, or <code class="literal">NULL</code> to use an identity
 transformation. </p></td>
 <td class="parameter_annotations"><span class="annotation">[<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></td>
 </tr>
@@ -1249,14 +1249,14 @@ attributes</p></td>
 <a name="pango-Xft-Fonts-and-Rendering.property-details"></a><h2>Property Details</h2>
 <div class="refsect2">
 <a name="PangoXftRenderer--display"></a><h3>The <code class="literal">“display”</code> property</h3>
-<pre class="programlisting">  “display”                  <a href="../glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a></pre>
+<pre class="programlisting">  “display”                  <span class="type">gpointer</span></pre>
 <p>The display being rendered to.</p>
 <p>Flags: Write / Construct Only</p>
 </div>
 <hr>
 <div class="refsect2">
 <a name="PangoXftRenderer--screen"></a><h3>The <code class="literal">“screen”</code> property</h3>
-<pre class="programlisting">  “screen”                   <a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a></pre>
+<pre class="programlisting">  “screen”                   <span class="type">gint</span></pre>
 <p>The screen being rendered to.</p>
 <p>Flags: Write / Construct Only</p>
 <p>Allowed values: &gt;= 0</p>
@@ -1265,6 +1265,6 @@ attributes</p></td>
 </div>
 </div>
 <div class="footer">
-<hr>Generated by GTK-Doc V1.25.1</div>
+<hr>Generated by GTK-Doc V1.28</div>
 </body>
 </html>

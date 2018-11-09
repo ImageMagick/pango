@@ -15,6 +15,24 @@
 @SET_MAKE@
 
 # -*- mode: makefile -*-
+#
+# gtk-doc.make - make rules for gtk-doc
+# Copyright (C) 2003 James Henstridge
+#               2004-2007 Damon Chaplin
+#               2007-2017 Stefan Sauer
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ####################################
 # Everything below here is generic #
@@ -344,7 +362,9 @@ AUTOHEADER = @AUTOHEADER@
 AUTOMAKE = @AUTOMAKE@
 AWK = @AWK@
 CAIRO_CFLAGS = @CAIRO_CFLAGS@
+CAIRO_LIB = @CAIRO_LIB@
 CAIRO_LIBS = @CAIRO_LIBS@
+CAIRO_PC = @CAIRO_PC@
 CAIRO_PREFIX = @CAIRO_PREFIX@
 CC = @CC@
 CCDEPMODE = @CCDEPMODE@
@@ -368,9 +388,15 @@ EGREP = @EGREP@
 EXEEXT = @EXEEXT@
 FGREP = @FGREP@
 FONTCONFIG_CFLAGS = @FONTCONFIG_CFLAGS@
+FONTCONFIG_LIB = @FONTCONFIG_LIB@
 FONTCONFIG_LIBS = @FONTCONFIG_LIBS@
+FONTCONFIG_PC = @FONTCONFIG_PC@
+FREETYPE2_LIB = @FREETYPE2_LIB@
+FREETYPE2_PC = @FREETYPE2_PC@
 FREETYPE_CFLAGS = @FREETYPE_CFLAGS@
 FREETYPE_LIBS = @FREETYPE_LIBS@
+FRIBIDI_CFLAGS = @FRIBIDI_CFLAGS@
+FRIBIDI_LIBS = @FRIBIDI_LIBS@
 GLIB_CFLAGS = @GLIB_CFLAGS@
 GLIB_LIBS = @GLIB_LIBS@
 GLIB_MKENUMS = @GLIB_MKENUMS@
@@ -383,7 +409,9 @@ GTKDOC_DEPS_LIBS = @GTKDOC_DEPS_LIBS@
 GTKDOC_MKPDF = @GTKDOC_MKPDF@
 GTKDOC_REBASE = @GTKDOC_REBASE@
 HARFBUZZ_CFLAGS = @HARFBUZZ_CFLAGS@
+HARFBUZZ_LIB = @HARFBUZZ_LIB@
 HARFBUZZ_LIBS = @HARFBUZZ_LIBS@
+HARFBUZZ_PC = @HARFBUZZ_PC@
 HTML_DIR = @HTML_DIR@
 INSTALL = @INSTALL@
 INSTALL_DATA = @INSTALL_DATA@
@@ -527,10 +555,6 @@ CFILE_GLOB = $(top_srcdir)/pango/*.c
 
 # Headers to ignore
 IGNORE_HFILES = \
-	ftglue.h		\
-	mini-fribidi		\
-	opentype		\
-	modules.h		\
 	pangoatsui-private.h	\
 	pangocairo-private.h	\
 	pangocairo-fc.h		\
@@ -638,34 +662,34 @@ CLEANFILES = $(SCANOBJ_FILES) $(REPORT_FILES) $(DOC_STAMPS) gtkdoc-check.test
 @GTK_DOC_BUILD_PDF_TRUE@PDF_BUILD_STAMP = pdf-build.stamp
 
 #### setup ####
-GTK_DOC_V_SETUP = $(GTK_DOC_V_SETUP_$(V))
-GTK_DOC_V_SETUP_ = $(GTK_DOC_V_SETUP_$(AM_DEFAULT_VERBOSITY))
+GTK_DOC_V_SETUP = $(GTK_DOC_V_SETUP_@AM_V@)
+GTK_DOC_V_SETUP_ = $(GTK_DOC_V_SETUP_@AM_DEFAULT_V@)
 GTK_DOC_V_SETUP_0 = @echo "  DOC   Preparing build";
 
 #### scan ####
-GTK_DOC_V_SCAN = $(GTK_DOC_V_SCAN_$(V))
-GTK_DOC_V_SCAN_ = $(GTK_DOC_V_SCAN_$(AM_DEFAULT_VERBOSITY))
+GTK_DOC_V_SCAN = $(GTK_DOC_V_SCAN_@AM_V@)
+GTK_DOC_V_SCAN_ = $(GTK_DOC_V_SCAN_@AM_DEFAULT_V@)
 GTK_DOC_V_SCAN_0 = @echo "  DOC   Scanning header files";
-GTK_DOC_V_INTROSPECT = $(GTK_DOC_V_INTROSPECT_$(V))
-GTK_DOC_V_INTROSPECT_ = $(GTK_DOC_V_INTROSPECT_$(AM_DEFAULT_VERBOSITY))
+GTK_DOC_V_INTROSPECT = $(GTK_DOC_V_INTROSPECT_@AM_V@)
+GTK_DOC_V_INTROSPECT_ = $(GTK_DOC_V_INTROSPECT_@AM_DEFAULT_V@)
 GTK_DOC_V_INTROSPECT_0 = @echo "  DOC   Introspecting gobjects";
 
 #### xml ####
-GTK_DOC_V_XML = $(GTK_DOC_V_XML_$(V))
-GTK_DOC_V_XML_ = $(GTK_DOC_V_XML_$(AM_DEFAULT_VERBOSITY))
+GTK_DOC_V_XML = $(GTK_DOC_V_XML_@AM_V@)
+GTK_DOC_V_XML_ = $(GTK_DOC_V_XML_@AM_DEFAULT_V@)
 GTK_DOC_V_XML_0 = @echo "  DOC   Building XML";
 
 #### html ####
-GTK_DOC_V_HTML = $(GTK_DOC_V_HTML_$(V))
-GTK_DOC_V_HTML_ = $(GTK_DOC_V_HTML_$(AM_DEFAULT_VERBOSITY))
+GTK_DOC_V_HTML = $(GTK_DOC_V_HTML_@AM_V@)
+GTK_DOC_V_HTML_ = $(GTK_DOC_V_HTML_@AM_DEFAULT_V@)
 GTK_DOC_V_HTML_0 = @echo "  DOC   Building HTML";
-GTK_DOC_V_XREF = $(GTK_DOC_V_XREF_$(V))
-GTK_DOC_V_XREF_ = $(GTK_DOC_V_XREF_$(AM_DEFAULT_VERBOSITY))
+GTK_DOC_V_XREF = $(GTK_DOC_V_XREF_@AM_V@)
+GTK_DOC_V_XREF_ = $(GTK_DOC_V_XREF_@AM_DEFAULT_V@)
 GTK_DOC_V_XREF_0 = @echo "  DOC   Fixing cross-references";
 
 #### pdf ####
-GTK_DOC_V_PDF = $(GTK_DOC_V_PDF_$(V))
-GTK_DOC_V_PDF_ = $(GTK_DOC_V_PDF_$(AM_DEFAULT_VERBOSITY))
+GTK_DOC_V_PDF = $(GTK_DOC_V_PDF_@AM_V@)
+GTK_DOC_V_PDF_ = $(GTK_DOC_V_PDF_@AM_DEFAULT_V@)
 GTK_DOC_V_PDF_0 = @echo "  DOC   Building PDF";
 BUILT_SOURCES = pango.types
 
@@ -1112,6 +1136,9 @@ sgml-build.stamp: setup-build.stamp $(DOC_MODULE)-decl.txt $(SCANOBJ_FILES) $(HF
 	$(AM_V_at)touch sgml-build.stamp
 
 sgml.stamp: sgml-build.stamp
+	@true
+
+$(DOC_MAIN_SGML_FILE): sgml-build.stamp
 	@true
 
 xml/gtkdocentities.ent: Makefile

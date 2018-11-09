@@ -475,7 +475,9 @@ AUTOHEADER = @AUTOHEADER@
 AUTOMAKE = @AUTOMAKE@
 AWK = @AWK@
 CAIRO_CFLAGS = @CAIRO_CFLAGS@
+CAIRO_LIB = @CAIRO_LIB@
 CAIRO_LIBS = @CAIRO_LIBS@
+CAIRO_PC = @CAIRO_PC@
 CAIRO_PREFIX = @CAIRO_PREFIX@
 CC = @CC@
 CCDEPMODE = @CCDEPMODE@
@@ -499,9 +501,15 @@ EGREP = @EGREP@
 EXEEXT = @EXEEXT@
 FGREP = @FGREP@
 FONTCONFIG_CFLAGS = @FONTCONFIG_CFLAGS@
+FONTCONFIG_LIB = @FONTCONFIG_LIB@
 FONTCONFIG_LIBS = @FONTCONFIG_LIBS@
+FONTCONFIG_PC = @FONTCONFIG_PC@
+FREETYPE2_LIB = @FREETYPE2_LIB@
+FREETYPE2_PC = @FREETYPE2_PC@
 FREETYPE_CFLAGS = @FREETYPE_CFLAGS@
 FREETYPE_LIBS = @FREETYPE_LIBS@
+FRIBIDI_CFLAGS = @FRIBIDI_CFLAGS@
+FRIBIDI_LIBS = @FRIBIDI_LIBS@
 GLIB_CFLAGS = @GLIB_CFLAGS@
 GLIB_LIBS = @GLIB_LIBS@
 GLIB_MKENUMS = @GLIB_MKENUMS@
@@ -514,7 +522,9 @@ GTKDOC_DEPS_LIBS = @GTKDOC_DEPS_LIBS@
 GTKDOC_MKPDF = @GTKDOC_MKPDF@
 GTKDOC_REBASE = @GTKDOC_REBASE@
 HARFBUZZ_CFLAGS = @HARFBUZZ_CFLAGS@
+HARFBUZZ_LIB = @HARFBUZZ_LIB@
 HARFBUZZ_LIBS = @HARFBUZZ_LIBS@
+HARFBUZZ_PC = @HARFBUZZ_PC@
 HTML_DIR = @HTML_DIR@
 INSTALL = @INSTALL@
 INSTALL_DATA = @INSTALL_DATA@
@@ -645,7 +655,7 @@ INTROSPECTION_GIRS = Pango-1.0.gir $(am__append_6) $(am__append_11) \
 INTROSPECTION_SCANNER_ARGS = --warn-all --add-include-path=$(srcdir) --add-include-path=.
 INTROSPECTION_COMPILER_ARGS = --includedir=$(srcdir) --includedir=.
 INTROSPECTION_SCANNER_ENV = CC="$(CC)"
-SUBDIRS = mini-fribidi
+SUBDIRS = 
 INCLUDES = \
 	-DG_LOG_DOMAIN=\"Pango\"			\
 	-DPANGO_COMPILATION				\
@@ -662,6 +672,7 @@ INCLUDES = \
 	$(HARFBUZZ_CFLAGS)				\
 	$(FREETYPE_CFLAGS)				\
 	$(FONTCONFIG_CFLAGS)				\
+	$(FRIBIDI_CFLAGS)				\
 	$(LIBTHAI_CFLAGS)					\
 	$(X_CFLAGS)					\
 	$(PANGO_HIDDEN_VISIBILITY_CFLAGS)
@@ -674,10 +685,13 @@ pangoincludedir = $(includedir)/pango-1.0/pango
 lib_LTLIBRARIES = libpango-1.0.la $(am__append_5) $(am__append_10) \
 	$(am__append_15) $(am__append_31)
 libpango_1_0_la_LDFLAGS = $(LIBRARY_LIBTOOL_OPTIONS) $(am__append_1)
-libpango_1_0_la_LIBADD = $(GLIB_LIBS) $(LIBTHAI_LIBS) $(libm) \
-	mini-fribidi/libmini-fribidi.la
-libpango_1_0_la_DEPENDENCIES = mini-fribidi/libmini-fribidi.la \
-	$(am__append_2)
+libpango_1_0_la_LIBADD = \
+	$(GLIB_LIBS)			\
+	$(LIBTHAI_LIBS)			\
+	$(FRIBIDI_LIBS)                 \
+	$(libm)
+
+libpango_1_0_la_DEPENDENCIES = $(am__append_2)
 libpango_1_0_la_SOURCES = \
 	break.c					\
 	ellipsize.c				\
@@ -879,7 +893,7 @@ libpangowin32_1_0_la_LDFLAGS = $(LIBRARY_LIBTOOL_OPTIONS) \
 libpangowin32_1_0_la_LIBADD = \
 	libpango-$(PANGO_API_VERSION).la	\
 	$(GLIB_LIBS)				\
-	-lgdi32 -lusp10
+	-lusp10 -lgdi32
 
 libpangowin32_1_0_la_DEPENDENCIES = libpango-$(PANGO_API_VERSION).la \
 	$(am__append_33)
@@ -932,14 +946,8 @@ DISTCLEANFILES = \
 
 
 # ------------------- MSVC Build Items ----------------
-extra_fribidi_srcs_for_msvc = \
-	mini-fribidi/fribidi.c			\
-	mini-fribidi/fribidi_char_type.c	\
-	mini-fribidi/fribidi_types.c
-
 MSVCPROJS = pango pangowin32 pangoft2 pangocairo
 pango_FILES = \
-	$(extra_fribidi_srcs_for_msvc)	\
 	$(libpango_1_0_la_SOURCES)
 
 pango_EXCLUDES = dummy

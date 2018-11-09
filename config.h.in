@@ -34,8 +34,8 @@
 /* Define to 1 if you have the <dlfcn.h> header file. */
 #undef HAVE_DLFCN_H
 
-/* Define to 1 if you have the `FcWeightFromOpenType' function. */
-#undef HAVE_FCWEIGHTFROMOPENTYPE
+/* Define to 1 if you have the `FcWeightFromOpenTypeDouble' function. */
+#undef HAVE_FCWEIGHTFROMOPENTYPEDOUBLE
 
 /* Define to 1 if you have the `flockfile' function. */
 #undef HAVE_FLOCKFILE
@@ -92,6 +92,9 @@
 
 /* Define to 1 if you have the <sys/types.h> header file. */
 #undef HAVE_SYS_TYPES_H
+
+/* Define to 1 if you have the `th_brk_find_breaks' function. */
+#undef HAVE_TH_BRK_FIND_BREAKS
 
 /* Define to 1 if you have the <unistd.h> header file. */
 #undef HAVE_UNISTD_H

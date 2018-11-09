@@ -216,8 +216,7 @@ make_test_string (gchar *string,
 
 static void
 do_test (const gchar *filename,
-         AttrBits bits,
-	 gboolean fixup_broken_linebreaktest)
+         AttrBits bits)
 {
   GIOChannel *channel;
   GIOStatus status;
@@ -280,12 +279,6 @@ do_test (const gchar *filename,
           PangoLogAttr *attrs = g_new (PangoLogAttr, num_attrs);
           pango_get_log_attrs (string, -1, 0, pango_language_from_string ("C"), attrs, num_attrs);
 
-	  /* LineBreakTest.txt from Unicode 5.1.0 has this bug that it says
-	   * breaking is allowed at the beginning of the strings, while the
-	   * algorithm says it's not.  Fix that up. */
-	  if (fixup_broken_linebreaktest)
-	    memset (expected_attrs, 0, sizeof (expected_attrs[0]));
-
           if (! attrs_equal (attrs, expected_attrs, num_attrs, bits))
             {
               gchar *str = make_test_string (string, attrs, bits);
@@ -339,7 +332,7 @@ test_grapheme_break (void)
 #endif
   bits.bits = 0;
   bits.attr.is_cursor_position = 1;
-  do_test (filename, bits, FALSE);
+  do_test (filename, bits);
 }
 
 static void
@@ -355,7 +348,23 @@ test_emoji_break (void)
 #endif
   bits.bits = 0;
   bits.attr.is_cursor_position = 1;
-  do_test (filename, bits, FALSE);
+  do_test (filename, bits);
+}
+
+static void
+test_char_break (void)
+{
+  const gchar *filename;
+  AttrBits bits;
+
+#if GLIB_CHECK_VERSION(2, 37, 2)
+  filename = g_test_get_filename (G_TEST_DIST, "CharBreakTest.txt", NULL);
+#else
+  filename = SRCDIR "/CharBreakTest.txt";
+#endif
+  bits.bits = 0;
+  bits.attr.is_char_break = 1;
+  do_test (filename, bits);
 }
 
 static void
@@ -371,7 +380,7 @@ test_word_break (void)
 #endif
   bits.bits = 0;
   bits.attr.is_word_boundary = 1;
-  do_test (filename, bits, FALSE);
+  do_test (filename, bits);
 }
 
 static void
@@ -387,7 +396,7 @@ test_sentence_break (void)
 #endif
   bits.bits = 0;
   bits.attr.is_sentence_boundary = 1;
-  do_test (filename, bits, FALSE);
+  do_test (filename, bits);
 }
 
 static void
@@ -404,7 +413,7 @@ test_line_break (void)
   bits.bits = 0;
   bits.attr.is_line_break = 1;
   bits.attr.is_mandatory_break = 1;
-  do_test (filename, bits, TRUE);
+  do_test (filename, bits);
 }
 
 
@@ -421,6 +430,7 @@ main (gint argc,
   g_test_add_func ("/text/break/sentence", test_sentence_break);
   g_test_add_func ("/text/break/line", test_line_break);
   g_test_add_func ("/text/break/emoji", test_emoji_break);
+  g_test_add_func ("/text/break/char", test_char_break);
 
   return g_test_run ();
 }

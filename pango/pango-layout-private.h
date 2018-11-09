@@ -82,9 +82,73 @@ struct _PangoLayout
   guint line_count;		/* Number of lines in @lines. 0 if lines is %NULL */
 };
 
+typedef struct _Extents Extents;
+struct _Extents
+{
+  /* Vertical position of the line's baseline in layout coords */
+  int baseline;
+
+  /* Line extents in layout coords */
+  PangoRectangle ink_rect;
+  PangoRectangle logical_rect;
+};
+
+struct _PangoLayoutIter
+{
+  PangoLayout *layout;
+  GSList *line_list_link;
+  PangoLayoutLine *line;
+
+  /* If run is NULL, it means we're on a "virtual run"
+   * at the end of the line with 0 width
+   */
+  GSList *run_list_link;
+  PangoLayoutRun *run; /* FIXME nuke this, just keep the link */
+  int index;
+
+  /* list of Extents for each line in layout coordinates */
+  Extents *line_extents;
+  int line_index;
+
+  /* X position of the current run */
+  int run_x;
+
+  /* Width of the current run */
+  int run_width;
+
+  /* this run is left-to-right */
+  gboolean ltr;
+
+  /* X position of the left side of the current cluster */
+  int cluster_x;
+
+  /* The width of the current cluster */
+  int cluster_width;
+
+  /* glyph offset to the current cluster start */
+  int cluster_start;
+
+  /* first glyph in the next cluster */
+  int next_cluster_glyph;
+
+  /* number of Unicode chars in current cluster */
+  int cluster_num_chars;
+
+  /* visual position of current character within the cluster */
+  int character_position;
+
+  /* the real width of layout */
+  int layout_width;
+};
+
 gboolean _pango_layout_line_ellipsize (PangoLayoutLine *line,
 				       PangoAttrList   *attrs,
 				       int              goal_width);
+
+void     _pango_layout_get_iter (PangoLayout     *layout,
+                                 PangoLayoutIter *iter);
+
+void     _pango_layout_iter_destroy (PangoLayoutIter *iter);
 
 G_END_DECLS
 

@@ -8,7 +8,7 @@
 <link rel="up" href="lowlevel.html" title="Low Level Functionality">
 <link rel="prev" href="pango-Engines.html" title="Engines">
 <link rel="next" href="PangoEngineShape.html" title="PangoEngineShape">
-<meta name="generator" content="GTK-Doc V1.25.1 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.28 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -89,7 +89,7 @@ mentioned in the release notes for the affected release.
 </div>
 <div class="refsect1">
 <a name="PangoEngineLang.object-hierarchy"></a><h2>Object Hierarchy</h2>
-<pre class="screen">    <a href="../gobject/gobject-The-Base-Object-Type.html#GObject-struct">GObject</a>
+<pre class="screen">    GObject
     <span class="lineart">╰──</span> <a class="link" href="pango-Engines.html#PangoEngine">PangoEngine</a>
         <span class="lineart">╰──</span> PangoEngineLang
 </pre>
@@ -122,7 +122,7 @@ function can create instances of the object as follows:</p>
     <tbody>
       <tr>
         <td class="listing_lines" align="right"><pre>1</pre></td>
-        <td class="listing_code"><pre class="programlisting">PangoEngine <span class="gtkdoc opt">*</span>engine <span class="gtkdoc opt">=</span> <span class="function"><a href="../gobject/gobject-The-Base-Object-Type.html#g-object-new">g_object_new</a></span> <span class="gtkdoc opt">(&lt;</span>em <span class="gtkdoc kwc">class</span><span class="gtkdoc opt">=</span><span class="string">&quot;replaceable&quot;</span><span class="gtkdoc opt">&gt;&lt;</span>code<span class="gtkdoc opt">&gt;</span>prefix<span class="gtkdoc opt">&lt;/</span>code<span class="gtkdoc opt">&gt;&lt;/</span>em<span class="gtkdoc opt">&gt;</span>_type<span class="gtkdoc opt">,</span> NULL<span class="gtkdoc opt">);</span></pre></td>
+        <td class="listing_code"><pre class="programlisting"><span class="usertype">PangoEngine</span><span class="normal"> </span><span class="symbol">*</span><span class="normal">engine </span><span class="symbol">=</span><span class="normal"> </span><span class="function">g_object_new</span><span class="normal"> </span><span class="symbol">(&lt;</span><span class="usertype">em</span><span class="normal"> class</span><span class="symbol">=</span><span class="string">"replaceable"</span><span class="symbol">&gt;&lt;</span><span class="normal">code</span><span class="symbol">&gt;</span><span class="normal">prefix</span><span class="symbol">&lt;/</span><span class="normal">code</span><span class="symbol">&gt;&lt;/</span><span class="normal">em</span><span class="symbol">&gt;</span><span class="normal">_type</span><span class="symbol">,</span><span class="normal"> NULL</span><span class="symbol">);</span></pre></td>
       </tr>
     </tbody>
   </table>
@@ -149,12 +149,12 @@ function can create instances of the object as follows:</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>class_init</p></td>
-<td class="parameter_description"><p> Class initialization function for the new type, or <a href="../glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
+<td class="parameter_description"><p>Class initialization function for the new type, or <code class="literal">NULL</code>. </p></td>
 <td class="parameter_annotations"><span class="annotation">[<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>instance_init</p></td>
-<td class="parameter_description"><p> Instance initialization function for the new type, or <a href="../glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
+<td class="parameter_description"><p>Instance initialization function for the new type, or <code class="literal">NULL</code>. </p></td>
 <td class="parameter_annotations"><span class="annotation">[<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></td>
 </tr>
 </tbody>
@@ -199,9 +199,9 @@ lookups needed for that language.</p>
 </colgroup>
 <tbody><tr>
 <td class="struct_member_name"><p><em class="structfield"><code><a name="PangoEngineLangClass.script-break"></a>script_break</code></em> ()</p></td>
-<td class="struct_member_description"><p> Provides a custom implementation of
-<a class="link" href="pango-Text-Processing.html#pango-break" title="pango_break ()"><code class="function">pango_break()</code></a>.  If <a href="../glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>, <a class="link" href="pango-Text-Processing.html#pango-default-break" title="pango_default_break ()"><code class="function">pango_default_break()</code></a> is used instead. If
-not <a href="../glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>, for Pango versions before 1.16 (module interface version
+<td class="struct_member_description"><p>Provides a custom implementation of
+<a class="link" href="pango-Text-Processing.html#pango-break" title="pango_break ()"><code class="function">pango_break()</code></a>.  If <code class="literal">NULL</code>, <a class="link" href="pango-Text-Processing.html#pango-default-break" title="pango_default_break ()"><code class="function">pango_default_break()</code></a> is used instead. If
+not <code class="literal">NULL</code>, for Pango versions before 1.16 (module interface version
 before 1.6.0), this was called instead of <a class="link" href="pango-Text-Processing.html#pango-default-break" title="pango_default_break ()"><code class="function">pango_default_break()</code></a>,
 but in newer versions, <a class="link" href="pango-Text-Processing.html#pango-default-break" title="pango_default_break ()"><code class="function">pango_default_break()</code></a> is always called and
 this is called after that to allow tailoring the breaking results. </p></td>
@@ -222,6 +222,6 @@ These engines derive from <a class="link" href="PangoEngineLang.html" title="Pan
 </div>
 </div>
 <div class="footer">
-<hr>Generated by GTK-Doc V1.25.1</div>
+<hr>Generated by GTK-Doc V1.28</div>
 </body>
 </html>

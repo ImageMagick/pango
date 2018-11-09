@@ -191,6 +191,9 @@
     <keyword type="function" name="pango_font_description_get_size_is_absolute ()" link="pango-Fonts.html#pango-font-description-get-size-is-absolute" since="1.8"/>
     <keyword type="function" name="pango_font_description_set_gravity ()" link="pango-Fonts.html#pango-font-description-set-gravity" since="1.16"/>
     <keyword type="function" name="pango_font_description_get_gravity ()" link="pango-Fonts.html#pango-font-description-get-gravity" since="1.16"/>
+    <keyword type="function" name="pango_font_description_set_variations ()" link="pango-Fonts.html#pango-font-description-set-variations" since="1.42"/>
+    <keyword type="function" name="pango_font_description_set_variations_static ()" link="pango-Fonts.html#pango-font-description-set-variations-static" since="1.42"/>
+    <keyword type="function" name="pango_font_description_get_variations ()" link="pango-Fonts.html#pango-font-description-get-variations" since="1.42"/>
     <keyword type="function" name="pango_font_description_get_set_fields ()" link="pango-Fonts.html#pango-font-description-get-set-fields"/>
     <keyword type="function" name="pango_font_description_unset_fields ()" link="pango-Fonts.html#pango-font-description-unset-fields"/>
     <keyword type="function" name="pango_font_description_merge ()" link="pango-Fonts.html#pango-font-description-merge"/>
@@ -845,6 +848,7 @@
     <keyword type="constant" name="PANGO_FONT_MASK_STRETCH" link="pango-Fonts.html#PANGO-FONT-MASK-STRETCH:CAPS"/>
     <keyword type="constant" name="PANGO_FONT_MASK_SIZE" link="pango-Fonts.html#PANGO-FONT-MASK-SIZE:CAPS"/>
     <keyword type="constant" name="PANGO_FONT_MASK_GRAVITY" link="pango-Fonts.html#PANGO-FONT-MASK-GRAVITY:CAPS"/>
+    <keyword type="constant" name="PANGO_FONT_MASK_VARIATIONS" link="pango-Fonts.html#PANGO-FONT-MASK-VARIATIONS:CAPS"/>
     <keyword type="constant" name="PANGO_ATTR_INVALID" link="pango-Text-Attributes.html#PANGO-ATTR-INVALID:CAPS"/>
     <keyword type="constant" name="PANGO_ATTR_LANGUAGE" link="pango-Text-Attributes.html#PANGO-ATTR-LANGUAGE:CAPS"/>
     <keyword type="constant" name="PANGO_ATTR_FAMILY" link="pango-Text-Attributes.html#PANGO-ATTR-FAMILY:CAPS"/>

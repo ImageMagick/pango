@@ -8,7 +8,7 @@
 <link rel="up" href="lowlevel.html" title="Low Level Functionality">
 <link rel="prev" href="pango-OpenType-Font-Handling.html" title="OpenType Font Handling">
 <link rel="next" href="pango-Engines.html" title="Engines">
-<meta name="generator" content="GTK-Doc V1.25.1 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.28 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -140,7 +140,7 @@
 </div>
 <div class="refsect1">
 <a name="pango-Coverage-Maps.object-hierarchy"></a><h2>Object Hierarchy</h2>
-<pre class="screen">    <a href="/home/mclasen/gnome/share/gtk-doc/html/gobject/gobject-Enumeration-and-Flag-Types.html">GEnum</a>
+<pre class="screen">    <a href="/usr/share/gtk-doc/html/gobject/gobject-Enumeration-and-Flag-Types.html">GEnum</a>
     <span class="lineart">╰──</span> PangoCoverageLevel
 </pre>
 </div>
@@ -240,7 +240,7 @@ since we refcount the structure. File a bug if you use it.)</p>
 </div>
 <div class="refsect3">
 <a name="pango-coverage-copy.returns"></a><h4>Returns</h4>
-<p> the newly allocated <a class="link" href="pango-Coverage-Maps.html#PangoCoverage" title="PangoCoverage"><span class="type">PangoCoverage</span></a>,
+<p>the newly allocated <a class="link" href="pango-Coverage-Maps.html#PangoCoverage" title="PangoCoverage"><span class="type">PangoCoverage</span></a>,
 with a reference count of one, which should be freed
 with <a class="link" href="pango-Coverage-Maps.html#pango-coverage-unref" title="pango_coverage_unref ()"><code class="function">pango_coverage_unref()</code></a>. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
@@ -360,7 +360,7 @@ pango_coverage_set (<em class="parameter"><code><a class="link" href="pango-Cove
 <a name="pango-coverage-to-bytes"></a><h3>pango_coverage_to_bytes ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 pango_coverage_to_bytes (<em class="parameter"><code><a class="link" href="pango-Coverage-Maps.html#PangoCoverage" title="PangoCoverage"><span class="type">PangoCoverage</span></a> *coverage</code></em>,
-                         <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#guchar"><span class="type">guchar</span></a> **bytes</code></em>,
+                         <em class="parameter"><code><span class="type">guchar</span> **bytes</code></em>,
                          <em class="parameter"><code><span class="type">int</span> *n_bytes</code></em>);</pre>
 <p>Convert a <a class="link" href="pango-Coverage-Maps.html#PangoCoverage" title="PangoCoverage"><span class="type">PangoCoverage</span></a> structure into a flat binary format</p>
 <div class="refsect3">
@@ -379,12 +379,12 @@ pango_coverage_to_bytes (<em class="parameter"><code><a class="link" href="pango
 </tr>
 <tr>
 <td class="parameter_name"><p>bytes</p></td>
-<td class="parameter_description"><p>  location to store result (must be freed with <a href="../glib/glib-Memory-Allocation.html#g-free"><code class="function">g_free()</code></a>). </p></td>
+<td class="parameter_description"><p>location to store result (must be freed with <code class="function">g_free()</code>). </p></td>
 <td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>][<acronym title="Parameter points to an array of items."><span class="acronym">array</span></acronym> length=n_bytes][<acronym title="Generics and defining elements of containers and arrays."><span class="acronym">element-type</span></acronym> guint8]</span></td>
 </tr>
 <tr>
 <td class="parameter_name"><p>n_bytes</p></td>
-<td class="parameter_description"><p> location to store size of result. </p></td>
+<td class="parameter_description"><p>location to store size of result. </p></td>
 <td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter for returning results. Default is transfer full."><span class="acronym">out</span></acronym>]</span></td>
 </tr>
 </tbody>
@@ -395,7 +395,7 @@ pango_coverage_to_bytes (<em class="parameter"><code><a class="link" href="pango
 <div class="refsect2">
 <a name="pango-coverage-from-bytes"></a><h3>pango_coverage_from_bytes ()</h3>
 <pre class="programlisting"><a class="link" href="pango-Coverage-Maps.html#PangoCoverage" title="PangoCoverage"><span class="returnvalue">PangoCoverage</span></a> *
-pango_coverage_from_bytes (<em class="parameter"><code><a href="../glib/glib-Basic-Types.html#guchar"><span class="type">guchar</span></a> *bytes</code></em>,
+pango_coverage_from_bytes (<em class="parameter"><code><span class="type">guchar</span> *bytes</code></em>,
                            <em class="parameter"><code><span class="type">int</span> n_bytes</code></em>);</pre>
 <p>Convert data generated from <a class="link" href="pango-Coverage-Maps.html#pango-coverage-to-bytes" title="pango_coverage_to_bytes ()"><code class="function">pango_coverage_to_bytes()</code></a> back
 to a <a class="link" href="pango-Coverage-Maps.html#PangoCoverage" title="PangoCoverage"><span class="type">PangoCoverage</span></a></p>
@@ -410,7 +410,7 @@ to a <a class="link" href="pango-Coverage-Maps.html#PangoCoverage" title="PangoC
 <tbody>
 <tr>
 <td class="parameter_name"><p>bytes</p></td>
-<td class="parameter_description"><p> binary data
+<td class="parameter_description"><p>binary data
 representing a <a class="link" href="pango-Coverage-Maps.html#PangoCoverage" title="PangoCoverage"><span class="type">PangoCoverage</span></a>. </p></td>
 <td class="parameter_annotations"><span class="annotation">[<acronym title="Parameter points to an array of items."><span class="acronym">array</span></acronym> length=n_bytes][<acronym title="Generics and defining elements of containers and arrays."><span class="acronym">element-type</span></acronym> guint8]</span></td>
 </tr>
@@ -425,8 +425,8 @@ in bytes</p></td>
 </div>
 <div class="refsect3">
 <a name="pango-coverage-from-bytes.returns"></a><h4>Returns</h4>
-<p> a newly allocated
-<a class="link" href="pango-Coverage-Maps.html#PangoCoverage" title="PangoCoverage"><span class="type">PangoCoverage</span></a>, or <a href="../glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if the data was invalid. </p>
+<p>a newly allocated
+<a class="link" href="pango-Coverage-Maps.html#PangoCoverage" title="PangoCoverage"><span class="type">PangoCoverage</span></a>, or <code class="literal">NULL</code> if the data was invalid. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>][<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></p>
 </div>
 </div>
@@ -499,6 +499,6 @@ to <a class="link" href="pango-Coverage-Maps.html#PangoCoverageLevel" title="enu
 </div>
 </div>
 <div class="footer">
-<hr>Generated by GTK-Doc V1.25.1</div>
+<hr>Generated by GTK-Doc V1.28</div>
 </body>
 </html>

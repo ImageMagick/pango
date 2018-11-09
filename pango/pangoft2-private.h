@@ -83,7 +83,6 @@ GType pango_ft2_font_get_type (void) G_GNUC_CONST;
 PangoFT2Font * _pango_ft2_font_new                (PangoFT2FontMap   *ft2fontmap,
 						   FcPattern         *pattern);
 FT_Library     _pango_ft2_font_map_get_library    (PangoFontMap      *fontmap);
-const char    *_pango_ft2_ft_strerror             (FT_Error           error);
 void _pango_ft2_font_map_default_substitute (PangoFcFontMap *fcfontmap,
 					     FcPattern      *pattern);
 
@@ -94,19 +93,6 @@ void  _pango_ft2_font_set_cache_glyph_data    (PangoFont      *font,
 					       void           *cached_glyph);
 void  _pango_ft2_font_set_glyph_cache_destroy (PangoFont      *font,
 					       GDestroyNotify  destroy_notify);
-
-void _pango_ft2_draw_rect            (FT_Bitmap         *bitmap,
-				      const PangoMatrix *matrix,
-				      int                x,
-				      int                y,
-				      int                width,
-				      int                height);
-void _pango_ft2_draw_error_underline (FT_Bitmap         *bitmap,
-				      const PangoMatrix *matrix,
-				      int                x,
-				      int                y,
-				      int                width,
-				      int                height);
 
 #define PANGO_TYPE_FT2_RENDERER            (pango_ft2_renderer_get_type())
 #define PANGO_FT2_RENDERER(object)         (G_TYPE_CHECK_INSTANCE_CAST ((object), PANGO_TYPE_FT2_RENDERER, PangoFT2Renderer))

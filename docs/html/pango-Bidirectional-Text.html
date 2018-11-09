@@ -8,7 +8,7 @@
 <link rel="up" href="pango.html" title="Basic Pango Interfaces">
 <link rel="prev" href="pango-Scripts-and-Languages.html" title="Scripts and Languages">
 <link rel="next" href="pango-Vertical-Text.html" title="Vertical Text">
-<meta name="generator" content="GTK-Doc V1.25.1 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.28 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -58,7 +58,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
+<span class="returnvalue">gboolean</span>
 </td>
 <td class="function_name">
 <a class="link" href="pango-Bidirectional-Text.html#pango-get-mirror-char" title="pango_get_mirror_char ()">pango_get_mirror_char</a> <span class="c_punctuation">()</span>
@@ -96,7 +96,7 @@
 </div>
 <div class="refsect1">
 <a name="pango-Bidirectional-Text.object-hierarchy"></a><h2>Object Hierarchy</h2>
-<pre class="screen">    <a href="/home/mclasen/gnome/share/gtk-doc/html/gobject/gobject-Enumeration-and-Flag-Types.html">GEnum</a>
+<pre class="screen">    <a href="/usr/share/gtk-doc/html/gobject/gobject-Enumeration-and-Flag-Types.html">GEnum</a>
     <span class="lineart">├──</span> PangoBidiType
     <span class="lineart">╰──</span> PangoDirection
 </pre>
@@ -116,7 +116,7 @@ that need more direct control over bidirectional setting of text.</p>
 <div class="refsect2">
 <a name="pango-unichar-direction"></a><h3>pango_unichar_direction ()</h3>
 <pre class="programlisting"><a class="link" href="pango-Bidirectional-Text.html#PangoDirection" title="enum PangoDirection"><span class="returnvalue">PangoDirection</span></a>
-pango_unichar_direction (<em class="parameter"><code><a href="../glib/glib-Unicode-Manipulation.html#gunichar"><span class="type">gunichar</span></a> ch</code></em>);</pre>
+pango_unichar_direction (<em class="parameter"><code><span class="type">gunichar</span> ch</code></em>);</pre>
 <p>Determines the inherent direction of a character; either
 <a class="link" href="pango-Bidirectional-Text.html#PANGO-DIRECTION-LTR:CAPS"><code class="literal">PANGO_DIRECTION_LTR</code></a>, <a class="link" href="pango-Bidirectional-Text.html#PANGO-DIRECTION-RTL:CAPS"><code class="literal">PANGO_DIRECTION_RTL</code></a>, or
 <a class="link" href="pango-Bidirectional-Text.html#PANGO-DIRECTION-NEUTRAL:CAPS"><code class="literal">PANGO_DIRECTION_NEUTRAL</code></a>.</p>
@@ -148,8 +148,8 @@ Unicode bidirectional type of a character is needed,
 <div class="refsect2">
 <a name="pango-find-base-dir"></a><h3>pango_find_base_dir ()</h3>
 <pre class="programlisting"><a class="link" href="pango-Bidirectional-Text.html#PangoDirection" title="enum PangoDirection"><span class="returnvalue">PangoDirection</span></a>
-pango_find_base_dir (<em class="parameter"><code>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *text</code></em>,
-                     <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> length</code></em>);</pre>
+pango_find_base_dir (<em class="parameter"><code>const <span class="type">gchar</span> *text</code></em>,
+                     <em class="parameter"><code><span class="type">gint</span> length</code></em>);</pre>
 <p>Searches a string the first character that has a strong
 direction, according to the Unicode bidirectional algorithm.</p>
 <div class="refsect3">
@@ -186,9 +186,9 @@ If no such character is found, then <a class="link" href="pango-Bidirectional-Te
 <hr>
 <div class="refsect2">
 <a name="pango-get-mirror-char"></a><h3>pango_get_mirror_char ()</h3>
-<pre class="programlisting"><a href="../glib/glib-Basic-Types.html#gboolean"><span class="returnvalue">gboolean</span></a>
-pango_get_mirror_char (<em class="parameter"><code><a href="../glib/glib-Unicode-Manipulation.html#gunichar"><span class="type">gunichar</span></a> ch</code></em>,
-                       <em class="parameter"><code><a href="../glib/glib-Unicode-Manipulation.html#gunichar"><span class="type">gunichar</span></a> *mirrored_ch</code></em>);</pre>
+<pre class="programlisting"><span class="returnvalue">gboolean</span>
+pango_get_mirror_char (<em class="parameter"><code><span class="type">gunichar</span> ch</code></em>,
+                       <em class="parameter"><code><span class="type">gunichar</span> *mirrored_ch</code></em>);</pre>
 <div class="warning"><p><code class="literal">pango_get_mirror_char</code> is deprecated and should not be used in newly-written code.</p></div>
 <p>If <em class="parameter"><code>ch</code></em>
  has the Unicode mirrored property and there is another Unicode
@@ -196,7 +196,7 @@ character that typically has a glyph that is the mirror image of <em class="para
 's
 glyph, puts that character in the address pointed to by <em class="parameter"><code>mirrored_ch</code></em>
 .</p>
-<p>Use <a href="../glib/glib-Unicode-Manipulation.html#g-unichar-get-mirror-char"><code class="function">g_unichar_get_mirror_char()</code></a> instead; the docs for that function
+<p>Use <code class="function">g_unichar_get_mirror_char()</code> instead; the docs for that function
 provide full details.</p>
 <div class="refsect3">
 <a name="pango-get-mirror-char.parameters"></a><h4>Parameters</h4>
@@ -222,17 +222,17 @@ provide full details.</p>
 </div>
 <div class="refsect3">
 <a name="pango-get-mirror-char.returns"></a><h4>Returns</h4>
-<p> <a href="../glib/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> if <em class="parameter"><code>ch</code></em>
+<p> <code class="literal">TRUE</code> if <em class="parameter"><code>ch</code></em>
 has a mirrored character and <em class="parameter"><code>mirrored_ch</code></em>
 is
-filled in, <a href="../glib/glib-Standard-Macros.html#FALSE:CAPS"><code class="literal">FALSE</code></a> otherwise</p>
+filled in, <code class="literal">FALSE</code> otherwise</p>
 </div>
 </div>
 <hr>
 <div class="refsect2">
 <a name="pango-bidi-type-for-unichar"></a><h3>pango_bidi_type_for_unichar ()</h3>
 <pre class="programlisting"><a class="link" href="pango-Bidirectional-Text.html#PangoBidiType" title="enum PangoBidiType"><span class="returnvalue">PangoBidiType</span></a>
-pango_bidi_type_for_unichar (<em class="parameter"><code><a href="../glib/glib-Unicode-Manipulation.html#gunichar"><span class="type">gunichar</span></a> ch</code></em>);</pre>
+pango_bidi_type_for_unichar (<em class="parameter"><code><span class="type">gunichar</span> ch</code></em>);</pre>
 <p>Determines the normative bidirectional character type of a
 character, as specified in the Unicode Character Database.</p>
 <p>A simplified version of this function is available as
@@ -504,6 +504,6 @@ type of a Unicode character as specified by the</p>
 </div>
 </div>
 <div class="footer">
-<hr>Generated by GTK-Doc V1.25.1</div>
+<hr>Generated by GTK-Doc V1.28</div>
 </body>
 </html>

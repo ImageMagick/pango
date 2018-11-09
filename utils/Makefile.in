@@ -88,35 +88,36 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
-bin_PROGRAMS = pango-view$(EXEEXT)
-@HAVE_FREETYPE_TRUE@am__append_1 = \
+bin_PROGRAMS = pango-view$(EXEEXT) $(am__EXEEXT_1)
+@HAVE_CAIRO_TRUE@am__append_1 = pango-list
+@HAVE_FREETYPE_TRUE@am__append_2 = \
 @HAVE_FREETYPE_TRUE@	viewer-pangoft2.c
 
-@HAVE_FREETYPE_TRUE@am__append_2 = \
+@HAVE_FREETYPE_TRUE@am__append_3 = \
 @HAVE_FREETYPE_TRUE@	../pango/libpangoft2-$(PANGO_API_VERSION).la	\
 @HAVE_FREETYPE_TRUE@	$(FREETYPE_LIBS)				\
 @HAVE_FREETYPE_TRUE@	$(FONTCONFIG_LIBS)
 
-@HAVE_XFT_TRUE@am__append_3 = \
+@HAVE_XFT_TRUE@am__append_4 = \
 @HAVE_XFT_TRUE@	viewer-pangoxft.c				\
 @HAVE_XFT_TRUE@	viewer-x.h					\
 @HAVE_XFT_TRUE@	viewer-x.c
 
-@HAVE_XFT_TRUE@am__append_4 = \
+@HAVE_XFT_TRUE@am__append_5 = \
 @HAVE_XFT_TRUE@	../pango/libpangoft2-$(PANGO_API_VERSION).la	\
 @HAVE_XFT_TRUE@	../pango/libpangoxft-$(PANGO_API_VERSION).la	\
 @HAVE_XFT_TRUE@	$(XFT_LIBS)
 
-@HAVE_CAIRO_TRUE@am__append_5 = \
+@HAVE_CAIRO_TRUE@am__append_6 = \
 @HAVE_CAIRO_TRUE@	viewer-cairo.h					\
 @HAVE_CAIRO_TRUE@	viewer-cairo.c					\
 @HAVE_CAIRO_TRUE@	viewer-pangocairo.c
 
-@HAVE_CAIRO_TRUE@am__append_6 = \
+@HAVE_CAIRO_TRUE@am__append_7 = \
 @HAVE_CAIRO_TRUE@	../pango/libpangocairo-$(PANGO_API_VERSION).la	\
 @HAVE_CAIRO_TRUE@	$(CAIRO_LIBS)
 
-subdir = pango-view
+subdir = utils
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/acinclude.m4 \
 	$(top_srcdir)/configure.ac
@@ -127,8 +128,20 @@ mkinstalldirs = $(install_sh) -d
 CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
+@HAVE_CAIRO_TRUE@am__EXEEXT_1 = pango-list$(EXEEXT)
 am__installdirs = "$(DESTDIR)$(bindir)" "$(DESTDIR)$(man1dir)"
 PROGRAMS = $(bin_PROGRAMS)
+am__pango_list_SOURCES_DIST = pango-list.c
+@HAVE_CAIRO_TRUE@am_pango_list_OBJECTS = pango-list.$(OBJEXT)
+pango_list_OBJECTS = $(am_pango_list_OBJECTS)
+am__DEPENDENCIES_1 =
+@HAVE_CAIRO_TRUE@pango_list_DEPENDENCIES = ../pango/libpangocairo-$(PANGO_API_VERSION).la \
+@HAVE_CAIRO_TRUE@	../pango/libpango-$(PANGO_API_VERSION).la \
+@HAVE_CAIRO_TRUE@	$(am__DEPENDENCIES_1)
+AM_V_lt = $(am__v_lt_@AM_V@)
+am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
+am__v_lt_0 = --silent
+am__v_lt_1 = 
 am__pango_view_SOURCES_DIST = viewer-render.h viewer-render.c viewer.h \
 	viewer-main.c pango-view.c viewer-pangoft2.c viewer-pangoxft.c \
 	viewer-x.h viewer-x.c viewer-cairo.h viewer-cairo.c \
@@ -142,7 +155,6 @@ am_pango_view_OBJECTS = viewer-render.$(OBJEXT) viewer-main.$(OBJEXT) \
 	pango-view.$(OBJEXT) $(am__objects_1) $(am__objects_2) \
 	$(am__objects_3)
 pango_view_OBJECTS = $(am_pango_view_OBJECTS)
-am__DEPENDENCIES_1 =
 @HAVE_FREETYPE_TRUE@am__DEPENDENCIES_2 = ../pango/libpangoft2-$(PANGO_API_VERSION).la \
 @HAVE_FREETYPE_TRUE@	$(am__DEPENDENCIES_1) \
 @HAVE_FREETYPE_TRUE@	$(am__DEPENDENCIES_1)
@@ -155,10 +167,6 @@ am__DEPENDENCIES_1 =
 pango_view_DEPENDENCIES = ../pango/libpango-$(PANGO_API_VERSION).la \
 	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_2) \
 	$(am__DEPENDENCIES_3) $(am__DEPENDENCIES_4)
-AM_V_lt = $(am__v_lt_@AM_V@)
-am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
-am__v_lt_0 = --silent
-am__v_lt_1 = 
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
 am__v_P_0 = false
@@ -193,8 +201,9 @@ AM_V_CCLD = $(am__v_CCLD_@AM_V@)
 am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
 am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
-SOURCES = $(pango_view_SOURCES)
-DIST_SOURCES = $(am__pango_view_SOURCES_DIST)
+SOURCES = $(pango_list_SOURCES) $(pango_view_SOURCES)
+DIST_SOURCES = $(am__pango_list_SOURCES_DIST) \
+	$(am__pango_view_SOURCES_DIST)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -261,7 +270,9 @@ AUTOHEADER = @AUTOHEADER@
 AUTOMAKE = @AUTOMAKE@
 AWK = @AWK@
 CAIRO_CFLAGS = @CAIRO_CFLAGS@
+CAIRO_LIB = @CAIRO_LIB@
 CAIRO_LIBS = @CAIRO_LIBS@
+CAIRO_PC = @CAIRO_PC@
 CAIRO_PREFIX = @CAIRO_PREFIX@
 CC = @CC@
 CCDEPMODE = @CCDEPMODE@
@@ -285,9 +296,15 @@ EGREP = @EGREP@
 EXEEXT = @EXEEXT@
 FGREP = @FGREP@
 FONTCONFIG_CFLAGS = @FONTCONFIG_CFLAGS@
+FONTCONFIG_LIB = @FONTCONFIG_LIB@
 FONTCONFIG_LIBS = @FONTCONFIG_LIBS@
+FONTCONFIG_PC = @FONTCONFIG_PC@
+FREETYPE2_LIB = @FREETYPE2_LIB@
+FREETYPE2_PC = @FREETYPE2_PC@
 FREETYPE_CFLAGS = @FREETYPE_CFLAGS@
 FREETYPE_LIBS = @FREETYPE_LIBS@
+FRIBIDI_CFLAGS = @FRIBIDI_CFLAGS@
+FRIBIDI_LIBS = @FRIBIDI_LIBS@
 GLIB_CFLAGS = @GLIB_CFLAGS@
 GLIB_LIBS = @GLIB_LIBS@
 GLIB_MKENUMS = @GLIB_MKENUMS@
@@ -300,7 +317,9 @@ GTKDOC_DEPS_LIBS = @GTKDOC_DEPS_LIBS@
 GTKDOC_MKPDF = @GTKDOC_MKPDF@
 GTKDOC_REBASE = @GTKDOC_REBASE@
 HARFBUZZ_CFLAGS = @HARFBUZZ_CFLAGS@
+HARFBUZZ_LIB = @HARFBUZZ_LIB@
 HARFBUZZ_LIBS = @HARFBUZZ_LIBS@
+HARFBUZZ_PC = @HARFBUZZ_PC@
 HTML_DIR = @HTML_DIR@
 INSTALL = @INSTALL@
 INSTALL_DATA = @INSTALL_DATA@
@@ -457,11 +476,17 @@ INCLUDES = \
 	$(FONTCONFIG_CFLAGS)		\
 	$(X_CFLAGS)
 
+@HAVE_CAIRO_TRUE@pango_list_SOURCES = pango-list.c
+@HAVE_CAIRO_TRUE@pango_list_LDADD = \
+@HAVE_CAIRO_TRUE@	../pango/libpangocairo-$(PANGO_API_VERSION).la	\
+@HAVE_CAIRO_TRUE@	../pango/libpango-$(PANGO_API_VERSION).la	\
+@HAVE_CAIRO_TRUE@	$(GLIB_LIBS)
+
 pango_view_SOURCES = viewer-render.h viewer-render.c viewer.h \
-	viewer-main.c pango-view.c $(am__append_1) $(am__append_3) \
-	$(am__append_5)
+	viewer-main.c pango-view.c $(am__append_2) $(am__append_4) \
+	$(am__append_6)
 pango_view_LDADD = ../pango/libpango-$(PANGO_API_VERSION).la \
-	$(GLIB_LIBS) $(am__append_2) $(am__append_4) $(am__append_6)
+	$(GLIB_LIBS) $(am__append_3) $(am__append_5) $(am__append_7)
 
 #########################################################
 MAINTAINERCLEANFILES = pango-view.1.in
@@ -480,9 +505,9 @@ $(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
 	      exit 1;; \
 	  esac; \
 	done; \
-	echo ' cd $(top_srcdir) && $(AUTOMAKE) --gnits pango-view/Makefile'; \
+	echo ' cd $(top_srcdir) && $(AUTOMAKE) --gnits utils/Makefile'; \
 	$(am__cd) $(top_srcdir) && \
-	  $(AUTOMAKE) --gnits pango-view/Makefile
+	  $(AUTOMAKE) --gnits utils/Makefile
 Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 	@case '$?' in \
 	  *config.status*) \
@@ -566,6 +591,10 @@ installcheck-binPROGRAMS: $(bin_PROGRAMS)
 	  done; \
 	done; rm -f c$${pid}_.???; exit $$bad
 
+pango-list$(EXEEXT): $(pango_list_OBJECTS) $(pango_list_DEPENDENCIES) $(EXTRA_pango_list_DEPENDENCIES) 
+	@rm -f pango-list$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(pango_list_OBJECTS) $(pango_list_LDADD) $(LIBS)
+
 pango-view$(EXEEXT): $(pango_view_OBJECTS) $(pango_view_DEPENDENCIES) $(EXTRA_pango_view_DEPENDENCIES) 
 	@rm -f pango-view$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(pango_view_OBJECTS) $(pango_view_LDADD) $(LIBS)
@@ -576,6 +605,7 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pango-list.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pango-view.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/viewer-cairo.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/viewer-main.Po@am__quote@

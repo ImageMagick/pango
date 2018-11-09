@@ -1,2054 +1,856 @@
-commit 6c4e0c59ace08547b891f102da1ac0364eeda72d
+commit a6a89818246b0b14c0fe3d00d6120929fc0a11d9
 Author: Matthias Clasen <mclasen@redhat.com>
-Date:   Sat Aug 19 09:28:11 2017 -0400
+Date:   Mon Aug 20 10:21:39 2018 -0400
 
-    1.40.11
+    1.42.4
 
- NEWS         | 6 ++++++
+ NEWS         | 5 +++++
+ configure.ac | 2 +-
+ 2 files changed, 6 insertions(+), 1 deletion(-)
+
+commit 71aaeaf020340412b8d012fe23a556c0420eda5f
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Fri Aug 17 22:29:36 2018 -0400
+
+    Prevent an assertion with invalid Unicode sequences
+
+    Invalid Unicode sequences, such as 0x2665 0xfe0e 0xfe0f,
+    can trick the Emoji iter code into returning an empty
+    segment, which then triggers an assertion in the itemizer.
+
+    Prevent this by ensuring that we make progress.
+
+    This issue was reported by Jeffrey M.
+
+ pango/pango-emoji.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+commit ccfd3b466ca43b202681ce951600aac8f97d8dc4
+Merge: 0cbae46c 3d04cc2b
+Author: Khaled Hosny <khaledhosny@eglug.org>
+Date:   Sat Aug 4 20:12:22 2018 +0000
+
+    Merge branch 'c89' into 'master'
+
+    Fix build failure in C89 mode
+
+    See merge request GNOME/pango!10
+
+commit 0cbae46ca1d0a1bbf50ddd69553e047118812be5
+Merge: 67471cbf dce7ba63
+Author: Khaled Hosny <khaledhosny@eglug.org>
+Date:   Sat Aug 4 20:11:11 2018 +0000
+
+    Merge branch 'surrogate' into 'master'
+
+    Fix build failure on Mac OS X 10.5 and earlier
+
+    Closes #263
+
+    See merge request GNOME/pango!11
+
+commit dce7ba63ed8b0567f674ade72da827d4a4c1b603
+Author: Ryan Schmidt <git@ryandesign.com>
+Date:   Sat Aug 4 12:20:02 2018 -0500
+
+    Fix build failure on Mac OS X 10.5 and earlier
+
+    Provides definitions of CFStringIsSurrogateHighCharacter,
+    CFStringIsSurrogateLowCharacter and
+    CFStringGetLongCharacterForSurrogatePair.
+
+    Closes #263
+
+ pango/pangocoretext-shape.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
+
+commit 3d04cc2bbdce0a8b561d0e19255309f8d470816e
+Author: Ryan Schmidt <git@ryandesign.com>
+Date:   Sat Aug 4 11:57:31 2018 -0500
+
+    Fix build failure in C89 mode
+
+    Fixes build error with default compilers on Mac OS X 10.6 and earlier:
+
+    pangocoretext-fontmap.c: In function
+    ‘pango_core_text_fontset_new’:
+    pangocoretext-fontmap.c:1563: error: ‘for’ loop initial
+    declaration used outside C99 mode
+
+ pango/pangocoretext-fontmap.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+commit 67471cbfe24cd4418e9e97837ac85207f0d974de
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Mon Jul 30 13:32:51 2018 -0400
+
+    1.42.3
+
  configure.ac | 2 +-
  meson.build  | 2 +-
- 3 files changed, 8 insertions(+), 2 deletions(-)
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-commit 7c5b158ce47ffef5be88694a3d12f3b38a784318
+commit cab3c9844487526f1996a150adac5bde44f48a70
+Merge: 87e71365 5c467cdb
 Author: Matthias Clasen <mclasen@redhat.com>
-Date:   Thu Aug 17 00:01:41 2017 -0400
+Date:   Sat Jul 28 11:27:25 2018 +0000
 
-    Fix backspacing for more Emoji sequences
+    Merge branch 'wip/chergert/bidi-leak' into 'master'
 
-    Behdad pointed out that I didn't get it right for
-    flags and for sequences ending in a skin tone modifier.
+    bidi: fix leak of bidi bracket types
 
-    Fix that.
+    See merge request GNOME/pango!8
 
- pango/break.c | 5 ++++-
+commit 5c467cdbae02233b04c97ba10a11f124b2d33eba
+Author: Christian Hergert <chergert@redhat.com>
+Date:   Fri Jul 27 20:43:06 2018 -0700
+
+    bidi: fix leak of bidi bracket types
+
+    This fixes a leak when goto is used to jump past the cleanup of the
+    bracket_types.
+
+ pango/pango-bidi-type.c | 5 ++++-
  1 file changed, 4 insertions(+), 1 deletion(-)
 
-commit da4cea5b1d8e0448c478c3fe8e47f84eb9e8b6f7
-Author: Behdad Esfahbod <behdad@behdad.org>
-Date:   Wed Aug 16 18:26:00 2017 -0700
+commit 87e713656de19846bede953fed41bd25b25252d9
+Merge: a03d16a8 633fd804
+Author: Khaled Hosny <khaledhosny@eglug.org>
+Date:   Sat Jul 21 17:09:31 2018 +0000
 
-    [test] Reduce test-pangocairo-thread work by 8x
+    Merge branch 'patch-1' into 'master'
 
-    Fixes https://bugzilla.gnome.org/show_bug.cgi?id=786379
+    fix comma-separated font list on macOS fixes #252
 
- tests/test-pangocairo-threads.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+    Closes #252
 
-commit fe68dd173cc34c160b2f6451aa93682163813eba
+    See merge request GNOME/pango!4
+
+commit a03d16a850253eae321be4bd2d134a9c6a1ed6ce
 Author: Matthias Clasen <mclasen@redhat.com>
-Date:   Tue Aug 15 19:47:57 2017 -0400
+Date:   Wed Jul 18 22:32:54 2018 -0400
 
-    1.40.10
+    1.42.2
 
  NEWS         | 7 +++++++
  configure.ac | 2 +-
  meson.build  | 2 +-
  3 files changed, 9 insertions(+), 2 deletions(-)
 
-commit 0328707ed085cc15b381ad6e8700aa630f20f5a6
+commit 6b2c48571b31f95b68214752ce89e11f46b4b731
 Author: Matthias Clasen <mclasen@redhat.com>
-Date:   Tue Aug 15 19:40:45 2017 -0400
+Date:   Wed Jul 18 22:26:20 2018 -0400
 
-    Fix backspace-deletes-character for Emoji
+    Add pango-list to meson build
 
-    We want to delete the entire cluster if it is an Emoji.
-    To do so, look at prev_GB_type to find Emoji.
+ utils/meson.build | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
-    This fixes backspacing for sequences like
-    "man health worker" or "family: man, woman, boy, girl".
-
- pango/break.c | 14 +++++++++++---
- 1 file changed, 11 insertions(+), 3 deletions(-)
-
-commit 287d6ecd5f1a8683e2163bcde4bf36815082534f
-Author: Matthias Clasen <mclasen@redhat.com>
-Date:   Tue Aug 15 19:11:29 2017 -0400
-
-    break: Stop lumping ZWJ with Extend
-
-    ZWJ is treated as its own class in TR29, and us lumping
-    them together and then manually checking wc == 0x200d in
-    various places was causing us to inadvertedly inserting
-    grapheme breaks in the middle of Emoji ZWJ sequences
-    where they are not suppose to be.
-
-    Add test cases to verify this.
-
- pango/break.c            | 37 ++++++++++++++++++++++++++-----------
- tests/EmojiBreakTest.txt | 11 ++++++++---
- 2 files changed, 34 insertions(+), 14 deletions(-)
-
-commit 8e9d5884c32cebe2c26019ba914d7ce02368d0c4
-Author: Matthias Clasen <mclasen@redhat.com>
-Date:   Tue Aug 15 18:41:10 2017 -0400
-
-    break.c: Fix indentation a bit
-
-    Messed up whitespace makes this unwieldy function
-    even harder to read.
-
- pango/break.c | 193
- +++++++++++++++++++++++++++++-----------------------------
- 1 file changed, 96 insertions(+), 97 deletions(-)
-
-commit 8ab2cc198469b4a46b1536c4f5c5d3396a6444b4
-Author: John Ralls <jralls@ceridwen.us>
-Date:   Tue Aug 15 09:21:26 2017 +0200
-
-    CoreText: Remove absolute size and scaling to screen resolution.
-
-    Cairo's CGFont backend already handles scaling fonts to the display
-    resolution, so scaling to the screen screen resolution in Pango's
-    CoreText backend generates double-sized text on a Retina display.
-
-    The layout test depended on providing a (bogus) resolution of
-    96DPI and
-    scaling the font to it in order to obtain the "expected" layout
-    results. This is replaced by adjusting the font size in test-layout.c
-    if Pango is compiled for CoreText.
-
-    https://bugzilla.gnome.org/show_bug.cgi?id=782393
-
- pango/pangocairo-coretextfont.c    | 22 ++----------
- pango/pangocairo-coretextfontmap.c |  2 +-
- pango/pangocoretext-fontmap.c      | 69
- ++++++++++++++------------------------
- pango/pangocoretext-private.h      |  2 +-
- pango/pangocoretext.c              |  4 +++
- tests/test-layout.c                | 11 +++++-
- 6 files changed, 44 insertions(+), 66 deletions(-)
-
-commit 599ffcf042bbca6f87edff0e241958523145294d
-Author: Philip Withnall <withnall@endlessm.com>
-Date:   Sat Aug 12 10:25:26 2017 +0100
-
-    mini-fribidi: Squash -Werror=undef failures due to use of #if
-
-    The FriBiDi code uses #if rather than #ifdef, which pedantic compilers
-    warn about if the macro is undefined. The new Meson build sets
-    -Werror=undef, promoting these warnings to failures, and making CI
-    systems using certain compiler versions (in this case, Debian Jessie)
-    sad.
-
-    Signed-off-by: Philip Withnall <withnall@endlessm.com>
-
-    https://bugzilla.gnome.org/show_bug.cgi?id=786192
-
- pango/mini-fribidi/fribidi_config.h | 9 +++++++++
- 1 file changed, 9 insertions(+)
-
-commit 5a0cc9f7f2e8e2e971e973caeeeb5aec59d68f59
-Author: Matthias Clasen <mclasen@redhat.com>
-Date:   Sat Aug 12 18:38:51 2017 -0400
-
-    Support variation selectors for shaping
-
-    This is necessary to make some emoji sequences shape
-    and render correctly.
-
- pango/pangofc-shape.c | 23 ++++++++++++++++++++++-
- 1 file changed, 22 insertions(+), 1 deletion(-)
-
-commit 333dc12d1e538bceb059514a6236cadda23a6354
+commit 65f6fee5bfa5929fac1111badff6b497dd10d12a
 Author: Behdad Esfahbod <behdad@behdad.org>
-Date:   Fri Aug 11 18:37:17 2017 -0700
+Date:   Mon Jul 16 10:35:44 2018 +0200
 
-    Bug 784243 - Pango gravity is not applied on markup with multiple
-    spans.
+    [fc] Speed-up font face enumeration
 
-    Patch from Harioum Pratap Singh.
+    Instead of a O(n^2.log(n)), we now do O(n) by avoiding calling
+    FcFontList for each PangoFontFace, and FcFontMatch in
+    pango_fc_face_describe().
 
- pango/pango-context.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+    Makes pango-list over 100 times faster for me.
 
-commit b34be4f4cd77d86fbeaa9992a6bdc2cd4278038f
+ pango/pangofc-fontmap.c | 94
+ ++++++++++++++++++++-----------------------------
+ 1 file changed, 38 insertions(+), 56 deletions(-)
+
+commit b1a5be6c245b6c3e7e0e7c5b88c15f475ea9a9d4
 Author: Behdad Esfahbod <behdad@behdad.org>
-Date:   Fri Aug 11 10:55:31 2017 -0700
+Date:   Mon Jul 16 10:37:04 2018 +0200
 
-    Update emoji data to version 5
+    [pango-list] Don't print sizes
 
- pango/pango-emoji-table.h | 52
- ++++++++++++++++++++++++++++++++++++++---------
- 1 file changed, 42 insertions(+), 10 deletions(-)
+    They are not used in font chooser, so don't call them.  My goal
+    for pango-list was to measure font chooser performance...
 
-commit f0cb1dde12ab12411da2feb54025cf1fab306a68
+ utils/pango-list.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+commit 0414be91fcf24dc995592609c3bc4ce569b7e2b8
 Author: Behdad Esfahbod <behdad@behdad.org>
-Date:   Thu Aug 10 19:50:16 2017 -0700
+Date:   Thu Jul 12 16:20:53 2018 +0200
 
-    Simplify hb_buffer_set_flags()
+    [fc] Remove ancient #ifdef FC_* conditionals
 
-    From a 2014 HarfBuzz commit:
+ pango/pangofc-fontmap.c | 33 +--------------------------------
+ 1 file changed, 1 insertion(+), 32 deletions(-)
 
-    commit 763e5466c0a03a7c27020e1e2598e488612529a7
-    Author: Behdad Esfahbod <behdad@behdad.org>
-    Date:   Sat Aug 2 16:17:44 2014 -0400
+commit 5eb16c3c397e3825e145b3127ddc172e34fce522
+Merge: bd06f7b9 3cf58991
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Mon Jul 16 01:02:03 2018 +0000
 
-        Make it easier to use HB_BUFFER_FLAG_BOT/EOT
+    Merge branch 'wip/nirbheek/meson-declare-dependency' into 'master'
 
-        Previously, we expected users to provide BOT/EOT flags when the
-        text *segment* was at paragraph boundaries.  This meant that for
-        clients that provide full paragraph to HarfBuzz (eg. Pango), they
-        had code like this:
+    meson: Add not-found dependencies for conditional declared deps
 
-          hb_buffer_set_flags (hb_buffer,
-                               (item_offset == 0 ? HB_BUFFER_FLAG_BOT :
-                               0) |
-                               (item_offset + item_length ==
-                               paragraph_length ?
-                                HB_BUFFER_FLAG_EOT : 0));
+    See merge request GNOME/pango!6
 
-          hb_buffer_add_utf8 (hb_buffer,
-                              paragraph_text, paragraph_length,
-                              item_offset, item_length);
+commit bd06f7b94e563f276550cb81c3a0e5612c88c314
+Merge: 58b1930c 5507a16c
+Author: Matthias Clasen <mclasen@redhat.com>
+Date:   Mon Jul 16 00:53:13 2018 +0000
 
-        After this change such clients can simply say:
+    Merge branch 'requires-private-fribidi' into 'master'
 
-          hb_buffer_set_flags (hb_buffer,
-                               HB_BUFFER_FLAG_BOT | HB_BUFFER_FLAG_EOT);
+    pango.pc.in: Add fribidi to Requires.private
 
-          hb_buffer_add_utf8 (hb_buffer,
-                              paragraph_text, paragraph_length,
-                              item_offset, item_length);
+    Closes #301
 
-        Ie, HarfBuzz itself checks whether the segment is at the
-        beginning/end
-        of the paragraph.  Clients that only pass item-at-a-time to
-        HarfBuzz
-        continue not setting any flags whatsoever.
+    See merge request GNOME/pango!5
 
-        Another way to put it is: if there's pre-context text in the
-        buffer,
-        HarfBuzz ignores the BOT flag.  If there's post-context,
-        it ignores
-        EOT flag.
+commit 58b1930c95db12deebb015870352e3e696583571
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Wed Jul 11 16:19:33 2018 +0200
 
- pango/pangofc-shape.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+    Requires.private fribidi
 
-commit 49b9a1bf3ad4e5c8cf2b77fdb6bc4125784a30de
-Author: Emmanuele Bassi <ebassi@gnome.org>
-Date:   Tue Aug 8 23:43:22 2017 +0100
+    Fixes https://gitlab.gnome.org/GNOME/pango/issues/301
+    Fixes https://gitlab.gnome.org/GNOME/pango/issues/305
 
-    Release Pango 1.40.9
+ pango.pc.in | 1 +
+ 1 file changed, 1 insertion(+)
 
-    Changes from 1.40.8:
+commit 293d56ceeaf64b9909ba296965603edd0a656203
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Sun Jul 8 17:47:59 2018 +0200
 
-      - Build and dist fixes
-      - Fix build on Windows with MSVC (#783274)
+    [fc] List all bitmap sizes of FcPattern
 
- NEWS         | 5 +++++
- configure.ac | 2 +-
- meson.build  | 2 +-
- 3 files changed, 7 insertions(+), 2 deletions(-)
+    Apple Color Emoji for example has multiple strikes... We were
+    only listing first.
 
-commit 66dc913ab86a433e0c82a5aa397fa381c52e1a91
-Author: Emmanuele Bassi <ebassi@gnome.org>
-Date:   Wed Aug 9 00:02:15 2017 +0100
+ pango/pangofc-fontmap.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-    docs: Use Markdown instead of Docbook
+commit a1d2da411c2ff78165ad406e0f2befce3a117af1
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Sun Jul 8 17:38:48 2018 +0200
 
-    The example code is not correctly escaped, and gtk-doc has become
-    slightly more strict. This is a good chance to port this bit of
-    the API
-    reference to Markdown, and avoid all issues in a future without
-    inlined
-    XML.
+    [pango-list] Minor fixup
 
- pango/pangocairo-render.c | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
-
-commit 24a9e44b10d64ac82e7c049b3948ab20fe5d5480
-Author: Emmanuele Bassi <ebassi@gnome.org>
-Date:   Tue Aug 8 23:36:09 2017 +0100
-
-    tests: Dist missing layout test files
-
-    We're disting only a subset of files with Autotools, but Meson expects
-    everything we have in Git.
-
- tests/Makefile.am | 4 ++--
+ utils/pango-list.c | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-commit 2c8472f97b615927cf2e87812af6afb272116fb5
-Author: Michael Catanzaro <mcatanzaro@igalia.com>
-Date:   Tue Aug 8 16:07:25 2017 -0500
-
-    Dist pango-features.h.meson
-
- Makefile.am | 1 +
- 1 file changed, 1 insertion(+)
-
-commit bcbe5c9f221f2864c8cd14f16558f3d8fe1d4fd7
-Author: Chun-wei Fan <fanchunwei@src.gnome.org>
-Date:   Fri Aug 4 17:41:33 2017 +0800
-
-    meson: Clean up things a bit on Visual Studio
-
-    We can just force-include msvc_recommended_pragmas.h, which will
-    silence the unwanted noise and point out to us potential problems
-    in the
-    code.
-
-    https://bugzilla.gnome.org/show_bug.cgi?id=783274
-
- meson.build | 21 ++-------------------
- 1 file changed, 2 insertions(+), 19 deletions(-)
-
-commit 9b11f357f9f968849c70044eaac5d43713436c94
-Author: Chun-wei Fan <fanchunwei@src.gnome.org>
-Date:   Wed May 31 17:28:37 2017 +0800
-
-    tests: Don't include unistd.h unconditionally
-
-    Don't include unistd.h on Windows, and include io.h if necessary,
-    as Windows compilers may not ship with it.
-
-    https://bugzilla.gnome.org/show_bug.cgi?id=783274
-
- tests/test-common.c    | 8 +++++++-
- tests/test-layout.c    | 5 ++++-
- tests/testboundaries.c | 5 ++++-
- 3 files changed, 15 insertions(+), 3 deletions(-)
-
-commit 0940ddc24f7301f09d945ec44360699ce30859c6
-Author: Matthias Clasen <mclasen@redhat.com>
-Date:   Mon Aug 7 12:30:48 2017 -0400
-
-    1.40.8
-
- NEWS         | 5 +++++
- configure.ac | 2 +-
- meson.build  | 2 +-
- 3 files changed, 7 insertions(+), 2 deletions(-)
-
-commit 29eef6e5615fedf4248991ae8dd40838dd03a61b
-Author: Matthias Clasen <mclasen@redhat.com>
-Date:   Sun Aug 6 14:48:32 2017 -0400
-
-    Add some Emoji presentation sequences
-
-    I had some issue with these, so add an example here.
-
- pango-view/EMOJI-MODIFIERS.txt | 1 +
- 1 file changed, 1 insertion(+)
-
-commit f20d215c9110fa8681bc983b3262a2ad34b40417
+commit 3c1bda5c747e4039b11c7dc897c826885f6400de
 Author: Behdad Esfahbod <behdad@behdad.org>
-Date:   Tue Aug 1 04:38:37 2017 +0100
+Date:   Sun Jul 8 17:34:35 2018 +0200
 
-    Add more emoji sequences
+    [pango-list] Improve output format
 
- pango-view/EMOJI-MODIFIERS.txt | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+    Also write out description of each face.  This is really broken for
+    free-style style names (as we knew), and very slow, as is
+    O(N^3.log(N))
+    in the number of fonts...
 
-commit d810602845f295469635be8c5987560ea5b78ec1
-Author: Alberts Muktupāvels <alberts.muktupavels@gmail.com>
-Date:   Tue Aug 1 09:55:55 2017 +0300
+ utils/pango-list.c | 42 ++++++++++++++++++++++++++++++------------
+ 1 file changed, 30 insertions(+), 12 deletions(-)
 
-    fix build with meson
-
- pango/meson.build | 1 +
- 1 file changed, 1 insertion(+)
-
-commit fe0669798d617406b52a638fb2525b1f7527a2d6
+commit 0727ba98a52823deb44550c2977bf9bffbff3765
 Author: Behdad Esfahbod <behdad@behdad.org>
-Date:   Mon Jul 31 23:03:30 2017 +0100
+Date:   Sun Jul 8 15:50:34 2018 +0200
 
-    Choose emoji font for color emoji
+    [utils] Add pango-list commandline tool
 
-    Fixes https://bugzilla.gnome.org/show_bug.cgi?id=785566
+    My main interest is performance of font listing API.  Figured I can
+    just make a tool out of it.  Output format to be improved.
 
- pango/pango-context.c | 45 +++++++++++++++++++++++++++++++++++++++++----
- pango/pango-emoji.c   | 16 +++++++++-------
- 2 files changed, 50 insertions(+), 11 deletions(-)
+ utils/Makefile.am  | 11 ++++++++
+ utils/pango-list.c | 80
+ ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 91 insertions(+)
 
-commit f39ad9bab1f327062958b2750bf1f5609a9ee991
+commit 0b785d94d3d8aa7f7fe76ac7851d088fc9541952
 Author: Behdad Esfahbod <behdad@behdad.org>
-Date:   Mon Jul 31 21:45:16 2017 +0100
+Date:   Sun Jul 8 14:52:59 2018 +0200
 
-    Add data files and routines for emoji itemization
+    [pango-view] Remove unused include stdio.h
 
-    Ported from Chromium.
+ utils/viewer.h | 1 -
+ 1 file changed, 1 deletion(-)
 
-    Not hooked yet.
+commit 899841121260d62fc3f1c1728f82f5c02185dd97
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Sun Jul 8 14:45:32 2018 +0200
 
- pango/Makefile.am           |   3 +
- pango/pango-emoji-private.h |  49 ++++++
- pango/pango-emoji-table.h   | 403
- ++++++++++++++++++++++++++++++++++++++++++++
- pango/pango-emoji.c         | 266 +++++++++++++++++++++++++++++
- tools/Makefile.am           |   1 +
- tools/gen-emoji-table.py    |  64 +++++++
- 6 files changed, 786 insertions(+)
+    Rename pango-view/ dir to utils/
 
-commit 284d357e3d6e29c1437ca18bab347c1af8330908
-Author: Peng Wu <alexepico@gmail.com>
-Date:   Wed Jul 5 15:05:16 2017 +0800
+ Makefile.am                                         | 4 ++--
+ configure.ac                                        | 2 +-
+ meson.build                                         | 2 +-
+ {pango-view => utils}/EMOJI-MODIFIERS.txt           | 0
+ {pango-view => utils}/GLASS.txt                     | 0
+ {pango-view => utils}/HELLO.txt                     | 0
+ {pango-view => utils}/Makefile.am                   | 0
+ {pango-view => utils}/meson.build                   | 0
+ {pango-view => utils}/pango-view.c                  | 0
+ {pango-view => utils}/test-arabic.txt               | 0
+ {pango-view => utils}/test-chinese.txt              | 0
+ {pango-view => utils}/test-devanagari.txt           | 0
+ {pango-view => utils}/test-feature-tag.markup       | 0
+ {pango-view => utils}/test-font-variations.markup   | 0
+ {pango-view => utils}/test-gurmukhi.txt             | 0
+ {pango-view => utils}/test-hebrew.txt               | 0
+ {pango-view => utils}/test-ipa.txt                  | 0
+ {pango-view => utils}/test-justify.txt              | 0
+ {pango-view => utils}/test-lao.txt                  | 0
+ {pango-view => utils}/test-latin.txt                | 0
+ {pango-view => utils}/test-long-paragraph.txt       | 0
+ {pango-view => utils}/test-mixed.markup             | 0
+ {pango-view => utils}/test-mixed.txt                | 0
+ {pango-view => utils}/test-mongolian.txt            | 0
+ {pango-view => utils}/test-nko.txt                  | 0
+ {pango-view => utils}/test-opentype-language.markup | 0
+ {pango-view => utils}/test-syriac.txt               | 0
+ {pango-view => utils}/test-tamil.txt                | 0
+ {pango-view => utils}/test-thai.txt                 | 0
+ {pango-view => utils}/test-tibetan.txt              | 0
+ {pango-view => utils}/viewer-cairo.c                | 0
+ {pango-view => utils}/viewer-cairo.h                | 0
+ {pango-view => utils}/viewer-main.c                 | 0
+ {pango-view => utils}/viewer-pangocairo.c           | 0
+ {pango-view => utils}/viewer-pangoft2.c             | 0
+ {pango-view => utils}/viewer-pangoxft.c             | 0
+ {pango-view => utils}/viewer-render.c               | 0
+ {pango-view => utils}/viewer-render.h               | 0
+ {pango-view => utils}/viewer-x.c                    | 0
+ {pango-view => utils}/viewer-x.h                    | 0
+ {pango-view => utils}/viewer.h                      | 0
+ 41 files changed, 4 insertions(+), 4 deletions(-)
 
-    Update pango_default_break function for Sentence Boundary
+commit 5ec478dac9146175de7ba4a1f88ebbab963f4c0f
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Sun Jul 8 14:34:34 2018 +0200
 
-    Re-write the code for Sentence Boundary,
-    and use the code style like Grapheme Boundary and Word Boundary.
+    Minor; use default hb_buffer_t Unicode funcs
 
-    https://bugzilla.gnome.org/show_bug.cgi?id=782813
+ pango/pango-ot-buffer.c | 1 -
+ 1 file changed, 1 deletion(-)
 
- pango/break.c | 748
- ++++++++++++++++++++++++----------------------------------
- 1 file changed, 305 insertions(+), 443 deletions(-)
+commit 0a9f6a0c1f0e4750e2a9864392370a20c511e71e
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Sat Jul 7 17:27:02 2018 +0200
 
-commit 238ac31bd8cc1ef32f18317328381155093ded07
-Author: Peng Wu <alexepico@gmail.com>
-Date:   Thu Jun 15 15:35:35 2017 +0800
+    Make pango_bidi_type_for_unichar() not crash with new FriBidi
 
-    Update pango_default_break function for Word Boundary
+    This function has not been updated for latest FriBidi.
+    Should add new types and / or deprecate this function.
 
-    Improve Word Boundary Rule for Hebrew_Letter, Single_Quote,
-    Double_Quote and Regional Indicator.
-
-    https://bugzilla.gnome.org/show_bug.cgi?id=782813
-
- pango/break.c | 75
- ++++++++++++++++++++++++++++++++++++++++++++++-------------
- 1 file changed, 59 insertions(+), 16 deletions(-)
-
-commit 93474c366309feec2c562637711c8b2f0dd27790
-Author: Peng Wu <alexepico@gmail.com>
-Date:   Fri May 19 09:52:11 2017 +0800
-
-    Update pango_default_break function for Emoji ZWJ sequence
-
-    Support Grapheme Boundaries Rule GB10, GB11, GB12 and GB13.
-
-    https://bugzilla.gnome.org/show_bug.cgi?id=782813
-
- pango/break.c | 117
- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 116 insertions(+), 1 deletion(-)
-
-commit 59ccc00de377aa74ca11f191d9dc9fabfb808507
-Author: Peng Wu <alexepico@gmail.com>
-Date:   Mon May 22 11:18:21 2017 +0800
-
-    Update GraphemeBreakTest.txt to Unicode 9.0.0
-
-    https://bugzilla.gnome.org/show_bug.cgi?id=782813
-
- tests/GraphemeBreakTest.txt | 508
- +++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 498 insertions(+), 10 deletions(-)
-
-commit 872fa3db34e6aacb898b7018276a941f8312811a
-Author: Matthias Clasen <mclasen@redhat.com>
-Date:   Mon Jul 31 18:04:52 2017 +0100
-
-    Add some emoji break test cases
-
-    These are the same testcases from the previous commit.
-
- tests/EmojiBreakTest.txt   |  3 +++
- tests/testboundaries_ucd.c | 17 +++++++++++++++++
- 2 files changed, 20 insertions(+)
-
-commit 5a8c7b22fe7f3eb6b980e9cd9e569694f59edb41
-Author: Matthias Clasen <mclasen@redhat.com>
-Date:   Mon Jul 31 18:03:44 2017 +0100
-
-    Revert "some test cases"
-
-    This reverts commit 77b56b4248816c5331ba344f19c45865c8bf2a32.
-
-    This file is a copy of a file in the ucd, we should not change
-    it. Lets add a new test instead.
-
- tests/GraphemeBreakTest.txt | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
-
-commit 77b56b4248816c5331ba344f19c45865c8bf2a32
-Author: Peng Wu <alexepico@gmail.com>
-Date:   Wed May 3 11:07:10 2017 +0800
-
-    some test cases
-
-    https://bugzilla.gnome.org/show_bug.cgi?id=780669
-
- tests/GraphemeBreakTest.txt | 4 +++-
+ pango/pango-bidi-type.c | 4 +++-
  1 file changed, 3 insertions(+), 1 deletion(-)
 
-commit 734e442a30dc6f2e1c90c278d4bd1bcfcaf72f7c
-Author: Peng Wu <alexepico@gmail.com>
-Date:   Wed Apr 5 15:12:50 2017 +0800
+commit 9f65356b7b473b607bea0510709a4d7330be9c9a
+Author: Behdad Esfahbod <behdad@behdad.org>
+Date:   Sat Jul 7 16:42:03 2018 +0200
 
-    pango: Support emoji sequence in Unicode
+    Short-circuit FriBidi call if paragraph is unidirectional
 
-    Checked several emoji sequences, the sequence pattern is
-    like follows:
-    1. Use zero width joiner to combine two characters with
-    any width
-    2. Ignore the width of variation selector, tag and emoji modifier
-    for the purposes of finding a run or uniform-width characters.
+    This was included in Pango's mini-fribidi but removed when we moved to
+    external FriBidi.
 
-    https://bugzilla.gnome.org/show_bug.cgi?id=780669
+    Most apps create PangoLayout twice to show text, one to measure,
+    one to
+    render.  Each PangoLayout shaping apparently calls FriBidi twice
+    (TODO:
+    figure out why and fix); FriBidi creates two runs per work.  So that's
+    eight malloc calls per word to show text.  That's a lot.  With this
+    optimization that completely disappears for most text.
 
- pango/pango-context.c | 27 +++++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
+    We should make an API in FriBidi out of this.
 
-commit 3d763a2b6455f7ad7cd39a099a6995329b38d4e7
-Author: Matthias Clasen <mclasen@redhat.com>
-Date:   Sat Jul 29 18:17:56 2017 +0100
+    Reported by Christian Hergert.
 
-    Fix a typo in the emoji test file
+ pango/pango-bidi-type.c | 69
+ +++++++++++++++++++++++++++++++++++++++++++++----
+ 1 file changed, 64 insertions(+), 5 deletions(-)
 
- pango-view/EMOJI-MODIFIERS.txt | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+commit 3cf58991d5a3d47203b8b6f6ac02b674aaf5c13b
+Author: Nirbheek Chauhan <nirbheek@centricular.com>
+Date:   Sat Jul 7 00:07:51 2018 +0530
 
-commit 4a34f34dff2493794a71fae4463976f384fb743b
-Author: userwithuid <userwithuid@gmail.com>
-Date:   Sun Jul 23 02:06:00 2017 +0000
+    meson: Add not-found dependencies for conditional declared deps
 
-    Fix typo in meson build support
+    Instead of not defining the variable, or defining it to [], define it
+    to the not-found dependency instead, so that when other projects (such
+    as gtk+) are using pango as a subproject, they get a valid dependency
+    object which tells them that the dependency cannot be found.
 
-    The keyword is called symbol_prefix, not symbols_prefix.
+ pango/meson.build | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-    https://bugzilla.gnome.org/show_bug.cgi?id=785296
+commit 5507a16c726ffdcedcf2ae22d4689f94823bf863
+Author: Simon McVittie <smcv@debian.org>
+Date:   Sun Jul 1 17:21:37 2018 +0100
 
- pango/meson.build | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+    pango.pc.in: Add fribidi to Requires.private
 
-commit ffba476c2137c228c2574958d51c728d8a2d030c
-Author: Ting-Wei Lan <lantw@src.gnome.org>
-Date:   Mon Jun 5 21:32:42 2017 +0800
+    In current versions of pkg-config, the most appropriate place for most
+    library dependencies is Requires.private. When compared with Requires,
+    this avoids "overlinking" when an executable is linked to the pango
+    shared library: in modern OSs, a shared library's library dependencies
+    are
+    automatically loaded by the dynamic linker along with that shared
+    library.
 
-    meson: Specify version when defining _POSIX_C_SOURCE
+    It would not be correct to omit fribidi from the .pc file either,
+    because that would break static linking: when linking statically,
+    it is necessary to list all dependencies explicitly, because static
+    libraries (unlike shared libraries) do not carry their own dependency
+    metadata.
 
-    FreeBSD libc assumes defining _POSIX_C_SOURCE without specifying a
-    version means a pre-C89 environment with the oldest version of POSIX
-    standard, IEEE Std 1003.1-1988, causing several functions used
-    by pango
-    to be undeclared. To resolve this problem, simply provide a version
-    number when defining _POSIX_C_SOURCE.
+    Using Requires.private also has the effect of adding fribidi's
+    CFLAGS to the output of `pkg-config --cflags pango`. That is in fact
+    unnecessary here, because fribidi is only used internally, so
+    https://bugs.freedesktop.org/show_bug.cgi?id=105572 proposes a new
+    dependency type "Requires.internal" which would additionally omit
+    fribidi from `pkg-config --cflags pango`. However, this is not yet
+    supported in pkg-config, so it cannot be used yet.
 
-    https://bugzilla.gnome.org/show_bug.cgi?id=783428
+    For more details on Requires.private please see this article by the
+    current Debian pkg-config maintainer and former upstream
+    pkg-config maintainer:
+    https://err.no/personal/blog/tech/2008-03-25-18-07_pkg-config,_sonames_and_Requires.private/
+    and this description of the various dependency types that can exist:
+    https://bugs.freedesktop.org/show_bug.cgi?id=105572#c1
+
+    Fixes: #301
+    Bug-Debian: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=895235
+    Signed-off-by: Simon McVittie <smcv@debian.org>
+
+ pango.pc.in | 1 +
+ 1 file changed, 1 insertion(+)
+
+commit 633fd80428374b0c675e3dcf563c06ff9e4876b0
+Author: Pravdomil Toman <pravdomil.toman@gmail.com>
+Date:   Wed Jun 27 20:15:19 2018 +0000
+
+    fix comma-separated font list on macOS fixes #252
+
+ pango/pangocoretext-fontmap.c | 58
+ +++++++++++++++++++++++++++----------------
+ 1 file changed, 36 insertions(+), 22 deletions(-)
+
+commit cdb88930da73bdbeb0e6167825121435d7e5e99f
+Merge: 4032ff27 37881737
+Author: Khaled Hosny <khaledhosny@eglug.org>
+Date:   Sat May 26 22:53:51 2018 +0000
+
+    Merge branch 'ci' into 'master'
+
+    Initial CI config
+
+    Closes #310
+
+    See merge request GNOME/pango!2
+
+commit 37881737cda04b2f773a0d807880dd8bd989efcf
+Author: Khaled Hosny <khaledhosny@eglug.org>
+Date:   Sun May 27 00:51:15 2018 +0200
+
+    Initial CI config
+
+    Fixes https://gitlab.gnome.org/GNOME/pango/issues/310
+
+ .gitlab-ci.yml | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
+
+commit 4032ff276cc73f368459b8d341ebcdcadff53640
+Merge: f661cdbf 73e45483
+Author: Khaled Hosny <khaledhosny@eglug.org>
+Date:   Sat May 26 20:58:54 2018 +0000
+
+    Merge branch '304-fix-linker-options-on-darwin' into 'master'
+
+    Resolve "Fix linker options on Darwin"
+
+    Closes #304
+
+    See merge request GNOME/pango!1
+
+commit 73e454832a7ac592dfa600cb6b495dc99660b0ca
+Author: Philip Chimento <philip.chimento@gmail.com>
+Date:   Sat Apr 7 23:50:32 2018 -0700
+
+    build: Correct Darwin linker options
+
+    The Darwin linker doesn't want equal signs here.
+
+    Closes: #304
 
  meson.build | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-commit 2e107ff2323ba2ede1c864d25e5f34ae054852ba
-Author: Ting-Wei Lan <lantw@src.gnome.org>
-Date:   Mon Jun 5 21:30:08 2017 +0800
+commit f661cdbf8cfbdb2ba7241d8dfa4a579c6dfe0a94
+Author: John Ralls <jralls@ceridwen.us>
+Date:   Sun Apr 29 16:03:08 2018 -0700
 
-    Don't check array for NULL
+    Restore scaling of CoreText fonts.
 
-    Arrays can never be NULL, and doing unnecessary checking causes
-    compilers to show warnings.
+    Fixes bug 787867.
 
-    https://bugzilla.gnome.org/show_bug.cgi?id=783428
+ pango/pangocairo-coretextfont.c    | 17 ++++++++++++++++-
+ pango/pangocairo-coretextfontmap.c |  2 +-
+ pango/pangocoretext-fontmap.c      | 15 ++++++++++++---
+ pango/pangocoretext-private.h      |  2 ++
+ pango/pangocoretext.c              |  5 +----
+ tests/test-layout.c                | 11 +----------
+ 6 files changed, 33 insertions(+), 19 deletions(-)
 
- pango/fonts.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+commit edb0dff3454d4d9ce6242a0f30ddaef993ee1e89
+Author: Kalev Lember <klember@redhat.com>
+Date:   Mon May 7 12:34:21 2018 +0200
 
-commit a3325f632fdb7e993397385bd21c3700d5ec066e
-Author: Ting-Wei Lan <lantw@src.gnome.org>
-Date:   Mon Jun 5 21:25:12 2017 +0800
+    build: Bump required harfbuzz version
 
-    Cast enum to int before doing calculation
+    We use hb_variation_t that was added in harfbuzz 1.4.2.
 
-    It seems that it is possible for compilers to use unsigned interger
-    types to store enum values, so we should cast them to signed interger
-    types before doing calculation to avoid getting unexpected results.
-
-    https://bugzilla.gnome.org/show_bug.cgi?id=783428
-
- pango/fonts.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-commit 7a8744e17fdb8ebb975301813665736667900634
-Author: Matthias Clasen <mclasen@redhat.com>
-Date:   Mon Jul 17 22:17:42 2017 -0400
-
-    1.40.7
-
- NEWS         | 7 +++++++
  configure.ac | 2 +-
  meson.build  | 2 +-
- 3 files changed, 9 insertions(+), 2 deletions(-)
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-commit f0684a557faf56c2628bfc521d0128f185b05a96
-Author: Matthias Clasen <mclasen@redhat.com>
-Date:   Fri Jun 30 13:55:27 2017 -0400
+commit d983aa95537d67ef14417dc3663edea36b653e86
+Author: Khaled Hosny <khaledhosny@eglug.org>
+Date:   Wed Apr 25 21:58:03 2018 +0200
 
-    Drop an questionable G_UNLIKELY
+    Revert "Add fribidi dependency to pango.pc"
 
-    Owen and I agreed that this doesn't look right.
+    This reverts commit 68cc13d04ed9d89609727f4448e5d2e08dd6626c.
 
- pango/pango-renderer.c | 2 +-
+ pango.pc.in | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-commit b17fe9b7d77fa2dd073821101fc3d10c8a13b02b
+commit 63e1fc9b23b4f0e8eaacd151ad39403eaa2b48ef
+Author: Khaled Hosny <khaledhosny@eglug.org>
+Date:   Wed Apr 11 13:52:07 2018 +0200
+
+    Use non-deprecated libthai API when available
+
+    I’m assuming the new API is thread-safe as claimed.
+
+ configure.ac       |  4 ++++
+ meson.build        |  4 ++++
+ pango/break-thai.c | 16 +++++++++++-----
+ 3 files changed, 19 insertions(+), 5 deletions(-)
+
+commit 5d46e21df66a11233186ddf27ca8c70149307871
+Author: Christoph Reiter <reiter.christoph@gmail.com>
+Date:   Sat Apr 7 06:44:53 2018 +0200
+
+    pangowin32: fix script cache hash key for 64bit builds
+
+    It joins the HFONT and script key to a gint64 and uses this as a
+    hash key, but HFONT is a pointer type and on 64bit Windows it
+    doesn't fit in 32bit and the value gets truncated.
+
+    This breaks the build with meson where -Werror=pointer-to-int-cast
+    is enabled by default.
+
+    Instead of using the gint64 hash functions add our own key type
+    and implement
+    matching hash and equality functions for it.
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=795045
+
+ pango/pangowin32-shape.c | 30 +++++++++++++++++++++++++-----
+ 1 file changed, 25 insertions(+), 5 deletions(-)
+
+commit 8e86f613160d023257d041ff24f94c88a8e12a46
+Author: Christoph Reiter <reiter.christoph@gmail.com>
+Date:   Sun Apr 8 19:16:49 2018 +0200
+
+    meson: skip pangoxft headers for the Windows gtk-doc build
+
+    The API isn't available on Windows and gtk-doc fails with a
+    linker error otherwise.
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=795045
+
+ docs/meson.build | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+commit 0fc06306063d8f3c8bd1e0d371eeb35ba9a9ea64
+Author: Christoph Reiter <reiter.christoph@gmail.com>
+Date:   Sat Apr 7 06:33:43 2018 +0200
+
+    build: move usp10 before gdi32
+
+    Without this pango on mingw64 tries to lookup up the Script* functions
+    in gdi32 and fails. It already fails at the build stage because the
+    introspection dump crashes with a missing entry point error.
+
+    Moving usp10 before gdi32 makes things work.
+
+    This might be related to the warning in the uniscribe docs:
+    "Important Starting with Windows 8: To maintain the ability to run on
+    Windows 7, a module that uses Uniscribe must specify Usp10.lib
+    before gdi32.lib in its library list."
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=795045
+
+ pango/Makefile.am | 2 +-
+ pango/meson.build | 4 +++-
+ pangowin32.pc.in  | 2 +-
+ 3 files changed, 5 insertions(+), 3 deletions(-)
+
+commit 4b16a0bf5c9795fe57255d5594a27c3cef634202
+Author: Khaled Hosny <khaledhosny@eglug.org>
+Date:   Sun Apr 8 00:56:06 2018 +0200
+
+    Remove stray letters in NEWS
+
+    Introduced in 46f8583c87c45b304ac98d06005c49df67d53b07
+
+ NEWS | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit 46f8583c87c45b304ac98d06005c49df67d53b07
 Author: Matthias Clasen <mclasen@redhat.com>
-Date:   Fri Jun 30 13:44:30 2017 -0400
+Date:   Sat Apr 7 10:08:56 2018 +0000
 
-    Don't throw away text prematurely
+    1.42.1
 
-    When calling into cairo to render glyphs, we want
-    to use show_text_glyphs and pass the text along,
-    if the surface supports that operation. But here,
-    we throw the text away prematurely and end up
-    always end passing no text or clusters down to
-    cairo.
+ NEWS         | 9 +++++++--
+ configure.ac | 2 +-
+ meson.build  | 2 +-
+ 3 files changed, 9 insertions(+), 4 deletions(-)
 
-    https://bugzilla.gnome.org/show_bug.cgi?id=784394
+commit 34a7c7a7cd165997dd6d4ae7b1f90472e0844118
+Author: Christoph Reiter <reiter.christoph@gmail.com>
+Date:   Thu Apr 5 22:04:43 2018 +0200
 
- pango/pango-renderer.c | 2 +-
+    meson: don't use quotes in help2man options to work around a MinGW
+    Python bug
+
+    For some reason MinGW Python (the one running meson) mangles arguments
+    for this case (even adding a space makes it work). Since quotes
+    are not needed here just drop them.
+
+    Python issue filed upstream:
+    https://github.com/Alexpux/MINGW-packages/issues/3548
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=795012
+
+ pango-view/meson.build | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+commit 6fcae8644b9231edba93d795963a39e3a9612a7e
+Author: Christoph Reiter <reiter.christoph@gmail.com>
+Date:   Thu Apr 5 21:31:23 2018 +0200
+
+    win32: remove redundant function declarations
+
+    The meson build uses -Werror=redundant-decls and fails.
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=795012
+
+ pango/pangowin32-shape.c | 2 --
+ pango/pangowin32.c       | 5 -----
+ 2 files changed, 7 deletions(-)
+
+commit b136f150b4e230db7901af0d88d3c91a3a4c9e7c
+Author: Chun-wei Fan <fanchunwei@src.gnome.org>
+Date:   Fri Mar 30 16:31:53 2018 +0800
+
+    pangowin32-fontmap.c: Add an Emoji font family
+
+    Add an Emoji font family that maps to the following fonts in this
+    order
+    (by fallback):
+    Segoe UI Emoji
+    Segoe UI Symbol
+    Segoe UI
+
+    This will enable Emoji to be displayed correctly in GTK+ apps (without
+    the use of FontConfig) on Windows Vista and later, providing that one
+    of the aforementioned fonts are installed.
+
+    Note that this only enables Emoji display (*not* colored ones) as
+    achieving colored Emoji requires PangoWin32 and Cairo to be ported to
+    Direct2D and DirectWrite from Uniscribe and GDI, as Uniscribe and GDI
+    does not support colored Emoji.
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=794705
+
+ pango/pangowin32-fontmap.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+commit 08649ce12fb7ea41928a17f05fa1916cbe44361c
+Author: Chun-wei Fan <fanchunwei@src.gnome.org>
+Date:   Mon Mar 19 20:54:23 2018 +0800
+
+    tests/markup-parse.c: Fix build on Visual Studio
+
+    Visual Studio does not ship with a unistd.h, so include the proper
+    header on Windows when unistd.h is not found on Windows.
+
+ tests/markup-parse.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+commit 18fb749d658e86edad8145a3032c4b6e3be48d72
+Author: Chun-wei Fan <fanchunwei@src.gnome.org>
+Date:   Fri Aug 18 17:56:44 2017 +0800
+
+    build: Add fallbacks for finding non-GNOME deps on MSVC
+
+    Many of Pango's dependencies do not support a build system for Visual
+    Studio that would generate the pkg-config files for them, so we
+    need to
+    try to look for them using cc.has_header() and cc.find_library() for
+    them, namely for Cairo, FreeType, FontConfig and HarfBuzz as
+    fallbacks.
+
+    For Cairo, things are more complicated as there are multiple build
+    options and configurations for it, so we need to check for those
+    that we
+    need after we find the Cairo headers and libraries by:
+
+    -Including the respective headers (for cairo-win32.h, cairo-ps.h,
+     cairo-pdf.h, cairo-quartz.h and cairo-xlib.h, since these features
+     must have been enabled when Cairo is built and installed in order for
+     those headers to be succesfully included)
+    -For pangocairo with FreeType support, we need to check whether the
+     FontConfig support is built into Cairo as well, as FontConfig support
+     is actually required in Cairo for this.
+    -For Cairo/PNG output surface support, check whether Cairo is
+    built with
+     PNG output surface support.
+
+    We also need to update how pangocairo.pc and pangoft2 are generated:
+    -On builds where pkg-config files can be found for cairo, freetype,
+     fontconfig and/or harfbuzz:
+     Generate it with "Requires: pango <depedencies>" as before, otherwise
+     for MSVC builds where we find these libraries manually, we don't put
+     these packages under "Requires:..." or "Requires.private:...", but
+     instead put them under "Libs:", linking to each dep as -l<.lib file
+     name>
+
+    This is so that pangocairo.pc and pangooft2.pc can be correctly
+    used by
+    items that need to make use of it, such as g-ir-scanner.
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=783274
+
+ configure.ac     |  19 +++++++
+ meson.build      | 147
+ ++++++++++++++++++++++++++++++++++++++++++++++++++++---
+ pangocairo.pc.in |   4 +-
+ pangoft2.pc.in   |   6 +--
+ 4 files changed, 164 insertions(+), 12 deletions(-)
+
+commit 55afeeca8031ba74cbcdf569500334ebef6b61e0
+Author: Chun-wei Fan <fanchunwei@src.gnome.org>
+Date:   Wed May 31 17:17:17 2017 +0800
+
+    meson: Check for HarfBuzz and FontConfig for PangoFT2
+
+    It is possible that we can have the following situations, at least on
+    Windows:
+    -FreeType present, FontConfig missing
+    -Cairo-FT present, with no FontConfig support.
+
+    As gen-script-for-lang requires FontConfig, and PangoFT2 depends on
+    HarfBuzz, FontConfig and Freetype, we need to check for them before we
+    build PangoFT2, and so that we could include PangoFT2 support in
+    PangoCairo.
+
+    The tests and pango-view have an optional dependency on PangoFT2,
+    so we
+    need to also check whether we built PangoFT2 before we try to build
+    things related to PangoFT2.
+
+    For the tools, since gen-script-for-lang.c depends on FontConfig,
+    check
+    for it as well before we build it.
+
+    https://bugzilla.gnome.org/show_bug.cgi?id=783274
+
+ docs/meson.build       |  2 +-
+ meson.build            | 19 +++++++++++++++----
+ pango-view/meson.build |  4 ++--
+ pango/meson.build      |  2 +-
+ tests/meson.build      |  2 +-
+ tools/meson.build      | 12 +++++++-----
+ 6 files changed, 27 insertions(+), 14 deletions(-)
+
+commit ec8251d9728d0691365249eec4c681218e379819
+Author: Khaled Hosny <khaledhosny@eglug.org>
+Date:   Tue Mar 27 18:04:51 2018 +0200
+
+    Update version number in meson.build as well
+
+    Follow up of commit d4f3370336a40907f528a41e75a55fe4f50c1a11.
+    Maintaining two build systems is tricky!
+
+ meson.build | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-commit b225c305e8a75e2ffff44fefa05bd67d0aea1e7e
-Author: Matthias Clasen <mclasen@redhat.com>
-Date:   Fri Jun 30 06:02:51 2017 -0400
+commit 68cc13d04ed9d89609727f4448e5d2e08dd6626c
+Author: Khaled Hosny <khaledhosny@eglug.org>
+Date:   Mon Mar 26 12:00:32 2018 +0200
 
-    trivial: fix a typo
+    Add fribidi dependency to pango.pc
 
-    s/bytess/bytes/ in a warning.
+    Fixes https://bugzilla.gnome.org/show_bug.cgi?id=794570
 
- pango/pangocairo-render.c | 2 +-
+ pango.pc.in | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-commit 148a5af3f66b504d3d36df3c6c45f218250a8a0a
-Author: Emmanuele Bassi <ebassi@gnome.org>
-Date:   Wed May 31 12:20:27 2017 +0100
+commit 3dfe2b9a5c8ac5ae37c210ba050f3720189cebb7
+Author: Patrick Griffis <tingping@tingping.se>
+Date:   Fri Mar 9 15:03:28 2018 +0000
 
-    Ignore undefined macros when importing freetype / 2
+    Fix view-cairo on Windows
 
-    Missing inclusions of freetype via Cairo.
+ pango-view/viewer-cairo.c | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
 
- pango/pangocairo-fcfont.c    | 4 ++++
- pango/pangocairo-fcfontmap.c | 5 +++++
- 2 files changed, 9 insertions(+)
+commit dd4f26d4e01cde141feed16ddad1f9d522812514
+Author: Khaled Hosny <khaledhosny@eglug.org>
+Date:   Wed Mar 14 00:41:07 2018 +0200
 
-commit 0b86506c7c19e3ef0c6581dfbc04aec769af57c3
-Author: Emmanuele Bassi <ebassi@gnome.org>
-Date:   Wed May 31 11:54:43 2017 +0100
+    Drop mention of long gone files
 
-    Ignore undefined macros when importing freetype
-
-    Recently, freetype added checks for various options and forgot
-    to check
-    all combinations. This breaks building projects including freetype.h
-    and using -Werror=undef.
-
- pango/Makefile.am    |  1 +
- pango/meson.build    |  1 +
- pango/pangofc-font.h | 11 +++++++++++
- 3 files changed, 13 insertions(+)
-
-commit c6d6cfff40ba2e80c2fda7d33d2942a0b4a2d14a
-Author: Behdad Esfahbod <behdad@behdad.org>
-Date:   Tue May 23 22:14:36 2017 -0700
-
-    [break-thai] Fix two bugs in libthai glue layer
-
-    First bug is, we were passing as count to th_brk, the UTF-8
-    length instead of TIS length.  Ouch!  I'm not sure how this
-    was never caught...
-
-    The other one was, break-thai was possibly marking a position
-    is_line_break when break.c has already set it to is_char_break=FALSE.
-    This broke the invariant that if a position is line-break, then it
-    must be char-break as well.  This, in turn was hitting assertions
-    in certain conditions.  Hit it with this for example:
-
-    $ ./pango-view --text 'ส์" (S' --width 43 --font 156px
-
-    Note that in a correct world the Latin part of that string should
-    not reach break-thai.c at all, but that's not how pango-layout.c
-    breaks right now.  See comment before pango_break() call in
-    pango-layout.c.
-
- pango/break-thai.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
-
-commit 92cc73c898e4665fd739704417d487d137dd271b
-Author: Emmanuele Bassi <ebassi@gnome.org>
-Date:   Tue May 23 10:27:33 2017 +0100
-
-    Unmark private symbols as exported
-
-    Commit ce097c062ea079bf7888d2b2f1f7b17d34f976b6 was a bit too eager to
-    mark symbols as public, and marked some internal functions as
-    exported.
-
-    If a symbol has an underscore prefix it generally means it's not meant
-    to be public.
-
- pango/pangocairo-fc.h         | 2 --
- pango/pangocoretext-private.h | 1 -
+ docs/Makefile.am | 2 --
+ docs/meson.build | 1 -
  2 files changed, 3 deletions(-)
 
-commit 3ae68c497e8f9cab6a36b8546e16b111a20289ad
-Author: Emmanuele Bassi <ebassi@gnome.org>
-Date:   Tue May 23 10:22:37 2017 +0100
+commit 248669f3ba716a990fb164e32d69ef81185a8ac3
+Author: Khaled Hosny <khaledhosny@eglug.org>
+Date:   Wed Mar 14 00:15:38 2018 +0200
 
-    meson: Remove the pango enums type from the sub-libraries
+    Modules are long gone
 
-    Sub-libraries need to be built after pango-enum-types.h has been
-    generated; we already have a transitive dependency on the header
-    through libpango_dep, so we do not need to add the header to the
-    list of sources.
+ HACKING          | 4 ----
+ README           | 3 ---
+ docs/Makefile.am | 1 -
+ docs/meson.build | 1 -
+ 4 files changed, 9 deletions(-)
 
-    This avoids symbols leaking in the sub-libraries.
-
- pango/meson.build | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
-
-commit 5b4c0ee757f8da3de3abcfc92cb9684a60cad16a
-Author: Behdad Esfahbod <behdad@behdad.org>
-Date:   Mon May 22 21:00:40 2017 -0700
-
-    Don't change fonts for variation selectors
-
-    Fixes https://bugzilla.gnome.org/show_bug.cgi?id=781123
-    Patch from Takao Fujiwara.
-
- pango/pango-context.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
-
-commit 6f59d0f387dd62f12a7107e898064c7e42159945
-Author: Jan Alexander Steffens (heftig) <jan.steffens@gmail.com>
-Date:   Mon May 22 21:53:30 2017 +0200
-
-    meson: Generate correct sonames
-
-    "soversion:" is for the version placed in the soname. The full library
-    revision goes into "version:". This affects the symlinks, too.
-
- meson.build       | 3 ++-
- pango/meson.build | 5 +++++
- 2 files changed, 7 insertions(+), 1 deletion(-)
-
-commit 58442456e6736fbe0d46d55bf32acba881aad853
-Author: Jan Alexander Steffens (heftig) <jan.steffens@gmail.com>
-Date:   Mon May 22 21:52:26 2017 +0200
-
-    meson: Use only spaces for indent
-
-    This was an inconsistent mix of tabs and spaces.
-
- pango/meson.build | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
-
-commit 6b6d6f0afa7d1b3bdca2e72c2b77b01c00f0e543
-Author: Emmanuele Bassi <ebassi@gnome.org>
-Date:   Mon May 22 20:40:17 2017 +0100
-
-    meson: Ensure we generate the appropriate pkg-config files
-
-    The Pango pkg-config files are generated depending on the platform we
-    are building for, and backends we are using. Only the `pango.pc`
-    file is
-    generated unconditionally.
-
- meson.build | 25 +++++++++++++++++++------
- 1 file changed, 19 insertions(+), 6 deletions(-)
-
-commit 1af14211d06f5799384126326243c90f3624e1bf
-Author: Emmanuele Bassi <ebassi@gnome.org>
-Date:   Mon May 22 20:31:45 2017 +0100
-
-    Use the appropriate symbols for the version string
-
-    We need to use the `@...@` pattern so that Meson can replace the
-    symbols.
-
- pango/pango-features.h.meson | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-commit fc65558b47bbdd6719b1ddbbf404eb12116882e3
-Author: Emmanuele Bassi <ebassi@gnome.org>
-Date:   Mon May 22 20:25:37 2017 +0100
-
-    build: Drop the 'lib' prefix from shared libraries
-
-    Meson adds it by itself, where appropriate.
-
- pango/meson.build | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-commit dd0ead6058701473785d0e7a2da11abf8df45ff3
-Author: Emmanuele Bassi <ebassi@gnome.org>
-Date:   Mon May 22 14:27:24 2017 +0100
-
-    build: Add Meson files to the Autotools dist
-
-    This way, we can use Meson to build a release tarball generated by
-    Autotools.
-
- Makefile.am | 19 ++++++++++++++++++-
- 1 file changed, 18 insertions(+), 1 deletion(-)
-
-commit a39e6470e8fb80c713d515ef51729ebdc382f7fd
+commit d4f3370336a40907f528a41e75a55fe4f50c1a11
 Author: Matthias Clasen <mclasen@redhat.com>
-Date:   Mon May 22 14:28:31 2017 -0400
+Date:   Mon Mar 12 16:02:24 2018 +0000
 
-    1.40.6
+    1.42.0
 
- NEWS         | 8 ++++++++
- configure.ac | 2 +-
- meson.build  | 2 +-
- 3 files changed, 10 insertions(+), 2 deletions(-)
+ NEWS         | 4 ++++
+ configure.ac | 4 ++--
+ 2 files changed, 6 insertions(+), 2 deletions(-)
 
-commit 018e60904c2fcf7f76f5c3908ed21007dbd9fd32
-Author: Emmanuele Bassi <ebassi@gnome.org>
-Date:   Fri May 19 14:45:39 2017 +0100
+commit 505eeb7b89cce51ec1226de399c4e772433d3cb6
+Author: Khaled Hosny <khaledhosny@eglug.org>
+Date:   Sat Feb 17 12:12:04 2018 +0200
 
-    meson: Add pango-view's man page generation
+    Update README a bit
 
- pango-view/meson.build | 34 ++++++++++++++++++++++++++--------
- 1 file changed, 26 insertions(+), 8 deletions(-)
+    Fix FontConfig casing, remove a dead link and outdated sections.
 
-commit 386939f9d576e8ac956f88fd85f87d1fba76e9ed
-Author: Emmanuele Bassi <ebassi@gnome.org>
-Date:   Fri May 19 14:15:35 2017 +0100
-
-    meson: Install tests and additional data
-
- meson.build                 |  1 +
- tests/gen-all-unicode.py    | 34 +++++++++++++++++++++
- tests/gen-installed-test.py | 23 ++++++++++++++
- tests/meson.build           | 74
- ++++++++++++++++++++++++++++++++++++++++++++-
- 4 files changed, 131 insertions(+), 1 deletion(-)
-
-commit 09623d50ac8afd9b246e571372972142af5daaa3
-Author: Nirbheek Chauhan <nirbheek@centricular.com>
-Date:   Fri May 19 11:58:44 2017 +0100
-
-    meson: Add a few missing things, minor fixes, TODO
-
- docs/meson.build               |  4 +--
- examples/meson.build           |  6 ++++
- meson.build                    | 71
- +++++++++++++++++++++++++++---------------
- meson_options.txt              |  4 +--
- pango/meson.build              |  6 ++--
- pango/mini-fribidi/meson.build |  4 +--
- tests/meson.build              | 12 +++----
- 7 files changed, 66 insertions(+), 41 deletions(-)
-
-commit 5d3af9bf597cf42bd39bf2e4275c7f0746a947b5
-Author: Emmanuele Bassi <ebassi@gnome.org>
-Date:   Tue May 16 12:08:25 2017 +0100
-
-    build: Add Meson build system
-
-    Meson is a meta build system that is:
-
-      - fast
-      - simpler to understand and use
-      - portable to multiple platforms through different backends
-      - well integrated with the GNOME platform
-      - well maintained
-
-    Using Meson allows us to build Pango much more quickly, and on all the
-    platforms we currently target, without any loss of functionality,
-    compared to Autotools.
-
-    Some timing comparisons with hot ccache for both build systems:
-
-      * autogen.sh:                         * meson
-        real        0m11.149s                 real          0m2.525s
-        user        0m8.153s                  user          0m1.609s
-        sys         0m2.363s                  sys           0m1.206s
-      * make -j$(($(nproc) + 2))            * ninja
-        real        0m9.186s                  real          0m3.387s
-        user        0m16.295s                 user          0m6.887s
-        sys         0m5.337s                  sys           0m1.318s
-      --------------------------------------------------------------
-      * autotools                           * meson + ninja
-        real        0m27.669s                 real          0m5.772s
-        user        0m45.622s                 user          0m8.465s
-        sys         0m10.698s                 sys           0m2.357s
-
-    System: Intel Core i7-7500U, SSD, 16GB of RAM
-
- docs/meson.build               | 108 ++++++++++++
- docs/xml/gtkdocentities.ent.in |   8 +
- docs/xml/meson.build           |  10 ++
- examples/meson.build           |  22 +++
- meson.build                    | 348
- +++++++++++++++++++++++++++++++++++++++
- meson_options.txt              |   4 +
- pango-view/meson.build         |  40 +++++
- pango/meson.build              | 363
- +++++++++++++++++++++++++++++++++++++++++
- pango/mini-fribidi/meson.build |  19 +++
- pango/pango-features.h.meson   |  10 ++
- tests/meson.build              |  57 +++++++
- tools/meson.build              |   5 +
- 12 files changed, 994 insertions(+)
-
-commit 4819027c6e072c2e9e45228f8afd5d0767545026
-Author: Emmanuele Bassi <ebassi@gnome.org>
-Date:   Fri May 19 11:53:24 2017 +0100
-
-    tests: Use the appropriate extension for the C++ test
-
-    While `.C` is a valid GCC extension for C++ files, it only works for
-    case sensitive file systems. Let's use `.cpp`, like the rest of the
-    planet does.
-
- tests/Makefile.am                  | 2 +-
- tests/{cxx-test.C => cxx-test.cpp} | 0
- 2 files changed, 1 insertion(+), 1 deletion(-)
-
-commit 89fddbe462d7d7d75c005b48dd9990e6fe1be61b
-Author: Emmanuele Bassi <ebassi@gnome.org>
-Date:   Wed May 17 17:25:38 2017 +0100
-
-    Remove uninstalled pkg-config files
-
-    No other library in the stack ships them any more, and they are of
-    dubious use.
-
- Makefile.am                  | 19 +------------------
- configure.ac                 |  5 -----
- pango-uninstalled.pc.in      |  7 -------
- pangocairo-uninstalled.pc.in |  7 -------
- pangoft2-uninstalled.pc.in   |  8 --------
- pangowin32-uninstalled.pc.in |  7 -------
- pangoxft-uninstalled.pc.in   |  6 ------
- 7 files changed, 1 insertion(+), 58 deletions(-)
-
-commit 7c9c0940ca3dca97cfb525909ba80570e3955fee
-Author: Emmanuele Bassi <ebassi@gnome.org>
-Date:   Wed May 17 17:23:06 2017 +0100
-
-    Remove old ChangeLog files
-
-    The log of each change is in Git, as it should be. For dist
-    tarballs we
-    only care about the changes since the beginning of the last cycle.
-
- ChangeLog.pre-1-0  | 5211
- ----------------------------------------------------
- ChangeLog.pre-1-10 | 1274 -------------
- ChangeLog.pre-1-12 | 1748 ------------------
- ChangeLog.pre-1-14 |  928 ----------
- ChangeLog.pre-1-16 | 1827 ------------------
- ChangeLog.pre-1-18 | 1504 ---------------
- ChangeLog.pre-1-2  | 1570 ----------------
- ChangeLog.pre-1-20 | 1109 -----------
- ChangeLog.pre-1-23 | 1858 -------------------
- ChangeLog.pre-1-4  | 1762 ------------------
- ChangeLog.pre-1-6  |  799 --------
- ChangeLog.pre-1-8  |  488 -----
- 12 files changed, 20078 deletions(-)
-
-commit c5a6c44e9eaf0d6e2f9d2cbf8c549af479685a08
-Author: Emmanuele Bassi <ebassi@gnome.org>
-Date:   Wed May 17 14:57:41 2017 +0100
-
-    examples: Initialize variables
-
-    Avoid a compiler warning for potentially uninitialized variables.
-
- examples/cairotwisted.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-commit 8f8347587c423feda02c34b27cab919476ddbde5
-Author: Emmanuele Bassi <ebassi@gnome.org>
-Date:   Wed May 17 12:10:52 2017 +0100
-
-    ft2: Silence a compiler warning
-
- pango/pangoft2.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-commit 779619ad6712fe9e5c4dabfef61e092e7a8f09f0
-Author: Emmanuele Bassi <ebassi@gnome.org>
-Date:   Wed May 17 12:09:14 2017 +0100
-
-    Add prototype for _pango_color_parse_with_alpha()
-
-    It's used in pango-markup.c and pango-color.c, so it should have an
-    internally-available prototype, instead of an `extern` declaration at
-    the point of use.
-
-    This also avoids a compiler warning for a missing prototype.
-
- pango/pango-color.c          |  1 +
- pango/pango-markup.c         |  5 -----
- pango/pango-utils-internal.h | 20 ++++++++++++--------
- 3 files changed, 13 insertions(+), 13 deletions(-)
-
-commit 6eda0ad66039cc99525ac04acf63a3fb1cba252c
-Author: Emmanuele Bassi <ebassi@gnome.org>
-Date:   Wed May 17 11:59:08 2017 +0100
-
-    Correctly implement version macros for Pango
-
-    First of all, we need to define `PANGO_UNAVAILABLE`, as it's missing a
-    definition, and the only reason why nobody caught this is because
-    we're
-    building without -Wundef, and clearly nobody attempted using
-    min-required/max-allowed with Pango.
-
-    Additionally, we really need a way to disable deprecation warnings
-    from
-    the compiler.
-
-    The complete implementation of the version macros for GLib-based
-    libraries includes both items above.
-
- pango/pango-version-macros.h | 263
- ++++++++++++++++++++++---------------------
- 1 file changed, 135 insertions(+), 128 deletions(-)
-
-commit e422e84d0ed41bb581037dadd679caa28490d5bb
-Author: Chun-wei Fan <fanchunwei@src.gnome.org>
-Date:   Tue May 9 18:17:29 2017 -0700
-
-    win32/replace.py: Fix replacing items in files with UTF-8 content
-
-    Some files that this script will process might have UTF-8 items in
-    there, which can cause problems on Python 3.x as it is more strict and
-    careful on unicode issues.  Fix this by:
-
-    -Doing what we did before on Python 2.x
-    -Opening the file with encoding='utf-8' on Python 3.x
-
- win32/replace.py | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
-
-commit 906509e22bf617d97a71f41d335d7a0dec344187
-Author: Behdad Esfahbod <behdad@behdad.org>
-Date:   Mon Apr 17 13:26:52 2017 -0700
-
-    Don't use deprecated hb_font_funcs_set_glyph_func()
-
- configure.ac          |  2 +-
- pango/pangofc-shape.c | 11 ++++++-----
- 2 files changed, 7 insertions(+), 6 deletions(-)
-
-commit 6c5d1d35061a91c3c0792f7720da3f8308ebff65
-Author: Matthias Clasen <mclasen@redhat.com>
-Date:   Sat Apr 8 13:48:25 2017 -0400
-
-    1.40.5
-
- NEWS         | 7 +++++++
- configure.ac | 2 +-
- 2 files changed, 8 insertions(+), 1 deletion(-)
-
-commit 5188156587cc388b86962fb43815a303448aeb64
-Author: Matthias Clasen <mclasen@redhat.com>
-Date:   Sat Apr 8 00:58:58 2017 -0400
-
-    Avoid a compiler warning
-
-    The compiler complains that rightmost_space may be used
-    uninitialized. And it may be right.
-
- pango/pango-layout.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-commit 7fc77e1c5a9b04da172d032f8d1a2bd04a1c92a1
-Author: Philip Withnall <withnall@endlessm.com>
-Date:   Wed Feb 15 11:06:36 2017 +0000
-
-    docs: Fix some introspection annotation syntax
-
-    Signed-off-by: Philip Withnall <withnall@endlessm.com>
-
-    https://bugzilla.gnome.org/show_bug.cgi?id=778663
-
- pango/pango-engine.h    | 4 ++--
- pango/pango-layout.h    | 2 +-
- pango/pangofc-fontmap.c | 2 +-
- 3 files changed, 4 insertions(+), 4 deletions(-)
-
-commit 6df7fcde9cde8c808344cd7242b0492e92ec10f1
-Author: Philip Withnall <withnall@endlessm.com>
-Date:   Wed Feb 15 11:06:03 2017 +0000
-
-    docs: Add (skip) annotation to some non-introspectable deprecated
-    funcs
-
-    To make it a bit more explicit that there’s no need to worry about
-    introspecting them.
-
-    Signed-off-by: Philip Withnall <withnall@endlessm.com>
-
-    https://bugzilla.gnome.org/show_bug.cgi?id=778663
-
- pango/modules.c      | 4 ++--
- pango/pango-engine.h | 8 ++++----
- 2 files changed, 6 insertions(+), 6 deletions(-)
-
-commit 9ab6ddd41723e0f0f8f0d57ca6bb37763c910d3c
-Author: Philip Withnall <withnall@endlessm.com>
-Date:   Wed Feb 15 11:05:27 2017 +0000
-
-    docs: Add a few missing (transfer) annotations
-
-    This should fix a few scanner warnings, but this is not an attempt to
-    fix them all.
-
-    Signed-off-by: Philip Withnall <withnall@endlessm.com>
-
-    https://bugzilla.gnome.org/show_bug.cgi?id=778663
-
- pango/fonts.c            | 2 +-
- pango/pangoft2-fontmap.c | 7 ++++---
- 2 files changed, 5 insertions(+), 4 deletions(-)
-
-commit 6f0648043fe2a084db15a6cdded8402625676aef
-Author: Philip Withnall <withnall@endlessm.com>
-Date:   Fri Feb 17 09:27:36 2017 +0000
-
-    pango-utils: Fix non-escaped \r\n line endings in pango_read_line()
-
-    The handling for \r or \r\n line endings in pango_read_line() was
-    broken. It should have discarded the \r or \r\n, but was only
-    doing this
-    for \n or \n\r. The condition (c == EOF) could never have been
-    reached.
-
-    Coverity ID: 1391696
-
-    Signed-off-by: Philip Withnall <withnall@endlessm.com>
-
-    https://bugzilla.gnome.org/show_bug.cgi?id=778816
-
- pango/pango-utils.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-commit 97fc6fbffe65d9ca4e92fc8979808faebed0ee35
-Author: Matthias Clasen <mclasen@redhat.com>
-Date:   Fri Apr 7 22:49:00 2017 -0400
-
-    attributes: Make alpha work without color
-
-    Improve the behavior of the cairo renderer to take
-    alpha into account even if no color specified.
-
-    https://bugzilla.gnome.org/show_bug.cgi?id=773767
-
- pango/pangocairo-render.c | 37 +++++++++++++++++++++++++++++--------
- 1 file changed, 29 insertions(+), 8 deletions(-)
-
-commit bab5cf24b746527020f51548e020c410dee63f71
-Author: Nicolas Hake <nh@nosebud.de>
-Date:   Mon Jul 11 14:27:08 2016 +0200
-
-    Win32: Remove "uncolored" from docs
-
-    Since win32_render_layout and win32_render_layout_line now support
-    rendering in color, that word no longer applies.
-
-    https://bugzilla.gnome.org/show_bug.cgi?id=768679
-
- pango/pangowin32.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-commit 8de443dd9f426c325673d029786618da9476f6a0
-Author: Nicolas Hake <nh@nosebud.de>
-Date:   Mon Jul 11 13:27:31 2016 +0200
-
-    Win32: Fix background rect bounds
-
-    Rectangle() uses x1, y1, x2, y2 coordinates instead of x, y, w, h. Fix
-    the coordinates passed to the function so it draws the background
-    in the
-    correct location.
-
-    https://bugzilla.gnome.org/show_bug.cgi?id=768679
-
- pango/pangowin32.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-commit 3166cbf809d5b005b587319ee2ef3e73e00d466e
-Author: Nicolas Hake <nh@nosebud.de>
-Date:   Mon Jul 11 13:26:44 2016 +0200
-
-    Win32: Draw background box in correct color
-
-    Adding 128 to the component value would overflow in colors with full
-    brightness and set the component to 0.
-
-    https://bugzilla.gnome.org/show_bug.cgi?id=768679
-
- pango/pangowin32.c | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
-
-commit 72e16506d6bd43efe4db24ebc3f69537f7208b1a
-Author: Nicolas Hake <nh@nosebud.de>
-Date:   Mon Jul 11 13:22:05 2016 +0200
-
-    Win32: Reset BkMode so ETO doesn't draw its own
-
-    If the DC's background mode is set to OPAQUE, ExtTextOut will draw its
-    own background boxes around glyph items. Since we don't place any
-    requirements on the DC, set the background mode to TRANSPARENT before
-    rendering any glyphs (and reset it to its original value afterwards).
-
-    https://bugzilla.gnome.org/show_bug.cgi?id=768679
-
- pango/pangowin32.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-commit f7927ff53afb8bbfdf7cc8f7b621c811f53ac6c5
-Author: Nicolas Hake <nh@nosebud.de>
-Date:   Mon Jul 11 13:20:41 2016 +0200
-
-    Win32: Enable colored underline drawing
-
-    Underline drawing was using the pen selected into DC before
-    pango_win32_render_layout_line was called. Since layout allow the
-    user to
-    select underline colors, we have to create a temporary pen in
-    the correct
-    color before drawing it.
-
-    https://bugzilla.gnome.org/show_bug.cgi?id=768679
-
- pango/pangowin32.c | 35 ++++++++++++++++++++++++++++++++---
- 1 file changed, 32 insertions(+), 3 deletions(-)
-
-commit bb774bce7f99e839851834c1688c12d898f9c5ab
-Author: Nicolas Hake <nh@nosebud.de>
-Date:   Mon Jul 11 13:03:32 2016 +0200
-
-    Win32: Enable rendering colored text
-
-    Increasing the component values by 128 may overflow and result in that
-    component being treated as 0. Additionally, using a brush to
-    color text
-    is wrong; ExtTextOut instead uses the color set by SetTextColor
-    to draw
-    glyphs.
-
-    https://bugzilla.gnome.org/show_bug.cgi?id=768679
-
- pango/pangowin32.c | 18 ++++++++----------
- 1 file changed, 8 insertions(+), 10 deletions(-)
-
-commit 43b9668ba688b01553abb7b453aeb206d7fd56fa
-Author: Matthias Clasen <mclasen@redhat.com>
-Date:   Mon Feb 27 15:03:59 2017 -0500
-
-    1.40.4
-
- NEWS         | 5 +++++
- configure.ac | 2 +-
- 2 files changed, 6 insertions(+), 1 deletion(-)
-
-commit 31a5ec79fe3ab3059268b04bd06defcf71005680
-Author: Behdad Esfahbod <behdad@behdad.org>
-Date:   Sat Feb 25 13:41:51 2017 -0800
-
-    Bug 779232 - Wrong introspection annotation for pango_layout_get_size
-
- pango/pango-layout.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-commit f54e128fc61558f8e1f19aa901e9740023afb063
-Author: Chun-wei Fan <fanchunwei@src.gnome.org>
-Date:   Fri Feb 17 18:25:32 2017 +0800
-
-    win32/Makefile.msvc-introspection: Sync with G-I
-
-    This enables the new feature recently added in G-I where we can
-    generate
-    the full NMake Makefile module to build the .gir files by passing
-    in a list
-    of C includes, instead of needing to specify them fully one-by-one
-    with
-    --c-include=...
-
- win32/Makefile.msvc-introspection | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
-
-commit 359a3e21e65728b75b4c4e77d170f0de8d46ec1c
-Author: Chun-wei Fan <fanchunwei@src.gnome.org>
-Date:   Fri Feb 17 18:24:03 2017 +0800
-
-    win32/detectenv-msvc.mak: Sync with GLib
-
-    This enables one to build the introspection files using Visual Studio
-    2017.
-
- win32/detectenv-msvc.mak | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-commit bfe9cdc64ebb1ce0da532c47147634bd15c29b7d
-Author: Philip Withnall <withnall@endlessm.com>
-Date:   Wed Feb 15 09:56:49 2017 +0000
-
-    pango-layout: Add a clarifying assertion
-
-    In pango_layout_index_to_pos(), it looks like layout_line could be
-    dereferenced while still NULL in the first loop iteration. This is not
-    the case, as other bits of PangoLayout ensure its start_index
-    is always
-    0, so this branch is never taken. Add an assertion to clarify that and
-    guide static analysis.
-
-    Coverity ID: 1391700
-
-    Signed-off-by: Philip Withnall <withnall@endlessm.com>
-
-    https://bugzilla.gnome.org/show_bug.cgi?id=778656
-
- pango/pango-layout.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-commit 4cd190eb567173c6d10419f379f2facb1a59d7eb
-Author: Philip Withnall <withnall@endlessm.com>
-Date:   Wed Feb 15 09:41:14 2017 +0000
-
-    pango: Remove some unnecessary NULL checks
-
-    These checks are preceded by other checks or code which demonstrates
-    that the values are definitely always non-NULL.
-
-    In the case of pango_attr_list_insert_internal(), the final branch of
-    the function never needs to update list->attributes_tail, as the
-    middle
-    branch handles the case of appending to the list. The final case
-    is just
-    for insertions in the middle of the list.
-
-    Coverity IDs: 1391710, 1391711
-
-    Signed-off-by: Philip Withnall <withnall@endlessm.com>
-
-    https://bugzilla.gnome.org/show_bug.cgi?id=778654
-
- pango/pango-attributes.c | 3 ---
- pango/pangofc-fontmap.c  | 2 +-
- 2 files changed, 1 insertion(+), 4 deletions(-)
-
-commit af53ff59328aa175920e23c5c1b1fbcca0059921
-Author: Chun-wei Fan <fanchunwei@src.gnome.org>
-Date:   Wed Feb 15 14:04:05 2017 +0800
-
-    Remove win32/vs15/pango-install.props before re-generation
-
-    This will ensure that it will be up-to-date when
-    win32/vs10/pango-install.props is re-generated.
-
- win32/vs10/Makefile.am | 1 +
- 1 file changed, 1 insertion(+)
-
-commit a0239aec27aa04a234ab6683994b304d197d7035
-Author: Chun-wei Fan <fanchunwei@src.gnome.org>
-Date:   Wed Feb 15 13:25:59 2017 +0800
-
-    Visual Studio builds: Support Visual Studio 2017
-
-    This updates the autotools scripts to support Visual Studio 2017
-    builds, by copying
-    the Visual Studio 2010 projects and updating items in there as
-    necessary.
-
-    Note the format of the toolset version changed, so we allow one to
-    specify a
-    custom toolset version string and hence use it if it is specified,
-    otherwise
-    the toolset version string is generated as it was before.
-
-    Since Visual Studio 2017 aims to be compatible on the CRT level as
-    Visual Studio
-    2015, the 2017-compiled binaries should be usable without problems
-    with 2015-compiled
-    binaries.
-
- configure.ac            |  5 +++++
- win32/Makefile-newvs.am | 25 +++++++++++++++++--------
- win32/Makefile.am       |  3 ++-
- win32/vs11/Makefile.am  |  1 -
- win32/vs12/Makefile.am  |  1 -
- win32/vs14/Makefile.am  |  1 -
- win32/vs15/Makefile.am  | 29 +++++++++++++++++++++++++++++
- 7 files changed, 53 insertions(+), 12 deletions(-)
-
-commit e4ea2d2e5118b44bf1c3e5fa998356696e073aa8
-Author: Philip Withnall <withnall@endlessm.com>
-Date:   Tue Feb 14 11:12:51 2017 +0000
-
-    Add assertions to guard against division by zero on sample text paths
-
-    There are a few code paths where pango_utf8_strwidth() is called on
-    language-specific sample text. The sample text should have been chosen
-    to never have a zero width, but we should add some assertions
-    to ensure
-    that’s the case. This guides static analysers into the right
-    analysis.
-
-    Coverity IDs: 1391697, 1391698, 1391699
-
-    Signed-off-by: Philip Withnall <withnall@endlessm.com>
-
-    https://bugzilla.gnome.org/show_bug.cgi?id=778602
-
- pango/pango-context.c   | 8 +++++++-
- pango/pangocairo-font.c | 5 ++++-
- pango/pangofc-font.c    | 5 ++++-
- 3 files changed, 15 insertions(+), 3 deletions(-)
-
-commit 318fd546a0ab8ad68f65f5f81b0a6fb845141a9f
-Author: Philip Withnall <withnall@endlessm.com>
-Date:   Tue Feb 14 10:32:26 2017 +0000
-
-    pangofc-shape: Fix potential array overrun
-
-    If this loop adds the final feature to the features array, the
-    start and
-    end assignment for the next feature will drop off the end of the
-    array.
-    I don’t think the assignments are necessary, since num_features
-    stores
-    the number of elements in the array (so it doesn’t need to be
-    terminated), and the start and end elements are assigned each time a
-    feature is parsed.
-
-    Coverity ID: 1391709
-
-    Signed-off-by: Philip Withnall <withnall@endlessm.com>
-
-    https://bugzilla.gnome.org/show_bug.cgi?id=778601
-
- pango/pangofc-shape.c | 4 ----
- 1 file changed, 4 deletions(-)
-
-commit f4cbd27f4e5bf8490ea411190d41813e14f12165
-Author: Chun-wei Fan <fanchunwei@src.gnome.org>
-Date:   Fri Jan 20 18:10:14 2017 +0800
-
-    Visual Studio builds: Fix project file move to win32/
-
-    Some more paths in auxillary scripts and NMake Makefiles need to be
-    updated as well...
-
- win32/Makefile.msvc-introspection | 6 +++---
- win32/introspection-msvc.mak      | 2 +-
- win32/pc_base.py                  | 2 +-
- 3 files changed, 5 insertions(+), 5 deletions(-)
-
-commit ec025d2b1646505549a3c806101a364c011e365b
-Author: Chun-wei Fan <fanchunwei@src.gnome.org>
-Date:   Fri Jan 20 15:56:31 2017 +0800
-
-    Visual Studio builds: Move projects to win32/
-
-    This allows one to go down one less level in the directory tree to
-    get to the
-    Visual Studio project files, and so make things more in line with
-    the rest of
-    the GTK+ stack.  This also cleans up the Visual Studio 201x projects
-    as there
-    are some items that can be actually combined.
-
- Makefile.am                                        |   2 +-
- build/Makefile-newvs.am                            |  45 ------
- build/Makefile.am                                  |   3 -
- build/Makefile.msvcproj                            | 114 ---------------
- configure.ac                                       |  17 ++-
- pango/Makefile.am                                  |  24 ++--
- win32/Makefile-newvs.am                            |  46 +++++++
- {build/win32 => win32}/Makefile.am                 |   2 +-
- {build => win32}/Makefile.msvc-introspection       |  64 ++++-----
- win32/Makefile.msvcproj                            | 153
- +++++++++++++++++++++
- {build/win32 => win32}/detectenv-msvc.mak          |   0
- {build/win32 => win32}/introspection-msvc.mak      |   0
- .../win32 => win32}/pango-introspection-msvc.mak   |   0
- {build/win32 => win32}/pangopc.py                  |   0
- {build/win32 => win32}/pc_base.py                  |   0
- {build/win32 => win32}/replace.py                  |   0
- {build/win32 => win32}/unistd.h                    |   0
- {build/win32 => win32}/vs10/Makefile.am            |  10 +-
- {build/win32 => win32}/vs10/README.txt             |   4 +-
- .../win32 => win32}/vs10/pango-build-defines.props |   2 +-
- {build/win32 => win32}/vs10/pango-ignore-fc.props  |   0
- .../win32 => win32}/vs10/pango-install-bin.props   |   0
- {build/win32 => win32}/vs10/pango-install.propsin  |  10 +-
- {build/win32 => win32}/vs10/pango-install.vcxproj  |  74 ++++------
- .../vs10/pango-install.vcxproj.filters             |   2 +-
- {build/win32 => win32}/vs10/pango-prebuild.props   |   2 +-
- .../vs10/pango-version-paths.props.in              |   4 +-
- {build/win32 => win32}/vs10/pango.sln              |   0
- .../win32 => win32}/vs10/pango.vcxproj.filtersin   |   8 +-
- {build/win32 => win32}/vs10/pango.vcxprojin        |  32 ++---
- .../vs10/pangocairo.vcxproj.filtersin              |  10 +-
- {build/win32 => win32}/vs10/pangocairo.vcxprojin   |  34 ++---
- .../vs10/pangoft2.vcxproj.filtersin                |   2 +-
- {build/win32 => win32}/vs10/pangoft2.vcxprojin     |   2 +-
- .../vs10/pangowin32.vcxproj.filtersin              |   2 +-
- {build/win32 => win32}/vs10/pangowin32.vcxprojin   |   2 +-
- {build/win32 => win32}/vs11/Makefile.am            |   4 +-
- {build/win32 => win32}/vs12/Makefile.am            |   4 +-
- {build/win32 => win32}/vs14/Makefile.am            |   4 +-
- {build/win32 => win32}/vs9/Makefile.am             |   4 +-
- {build/win32 => win32}/vs9/README.txt              |   4 +-
- .../vs9/pango-build-defines.vsprops                |   2 +-
- {build/win32 => win32}/vs9/pango-ignore-fc.vsprops |   0
- .../win32 => win32}/vs9/pango-install-bin.vsprops  |   0
- {build/win32 => win32}/vs9/pango-install.vcproj    |   0
- {build/win32 => win32}/vs9/pango-install.vspropsin |  10 +-
- {build/win32 => win32}/vs9/pango-prebuild.vsprops  |   2 +-
- .../vs9/pango-version-paths.vsprops.in             |   4 +-
- {build/win32 => win32}/vs9/pango.sln               |   0
- {build/win32 => win32}/vs9/pango.vcprojin          |  16 +--
- {build/win32 => win32}/vs9/pangocairo.vcprojin     |  10 +-
- {build/win32 => win32}/vs9/pangoft2.vcprojin       |   2 +-
- {build/win32 => win32}/vs9/pangowin32.vcprojin     |   2 +-
- {build/win32 => win32}/vs9/stdint.h                |   0
- 54 files changed, 370 insertions(+), 368 deletions(-)
-
-commit f47aa5a4690ce686ec70fb7c3c9a84251cdb5706
-Author: Chun-wei Fan <fanchunwei@src.gnome.org>
-Date:   Tue Nov 15 16:23:54 2016 +0800
-
-    Visual Studio 201x build: Fix pangocairo project
-
-    The AdditionalIncludePaths setting missed a semicolon, fix that.
-
- build/win32/vs10/pangocairo.vcxprojin | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-commit 3e173e5e8d596d35a8542db7c8a14cb8f8f2e87c
-Author: Chun-wei Fan <fanchunwei@src.gnome.org>
-Date:   Tue Nov 15 12:39:16 2016 +0800
-
-    Visual Studio builds: Remove -lm from .pc files
-
-    We don't have a separate math library for Visual Studio, so don't
-    try to
-    link to one in the .pc files.
-
- build/win32/pangopc.py | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-commit fa98b9c23aea244b97b893d5ecc0190fa4b4cdf8
-Author: Chun-wei Fan <fanchunwei@src.gnome.org>
-Date:   Wed Oct 19 15:33:56 2016 +0800
-
-    build/win32/vs10/Makefile.am: Remove pango-install.props's on
-    re-generation
-
-    This is to ensure that any changes that was made to the generated
-    build/win32/vs10/pango-install.props will also be applied to
-    build/win32/vs[11|12|14] as well.
-
- build/win32/vs10/Makefile.am | 3 +++
- 1 file changed, 3 insertions(+)
-
-commit 841d0d2bcd53d371846abc5329b4d917fcf0c626
-Author: Chun-wei Fan <fanchunwei@src.gnome.org>
-Date:   Wed Oct 19 14:48:08 2016 +0800
-
-    build/: Force MSVC project file generation on Makefile.am changes
-
-    Make the Makefile.am targets for generating the Visual Studio projects
-    re-generate the
-    project files and the header listings whenever the Makefile.am's
-    that include
-    build/Makefile.msvcproj changes, so that whenever a source/header
-    is added, they will
-    be reflected in the projects and in the property sheets that are
-    used to copy the
-    headers.
-
-    Also ensure that these are applied to the vs11, vs12 and vs14 projects
-    when this
-    happens, as they are copied and processed from the Visual Studio
-    2010 projects.
-
- build/Makefile-newvs.am |  2 +-
- build/Makefile.msvcproj | 11 +++++++++--
- 2 files changed, 10 insertions(+), 3 deletions(-)
-
-commit e9471764d19f740f756cf7e6d11aba0cbba3d2ae
-Author: Matthias Clasen <mclasen@redhat.com>
-Date:   Mon Sep 12 23:50:22 2016 -0400
-
-    1.40.3
-
- NEWS         | 6 ++++++
- configure.ac | 2 +-
- 2 files changed, 7 insertions(+), 1 deletion(-)
-
-commit 9cb49a3e224bbd5a3e6630aa053e516ecbc46083
-Author: Matthias Clasen <mclasen@redhat.com>
-Date:   Mon Sep 12 23:36:11 2016 -0400
-
-    Fix build on OS X
-
-    https://bugzilla.gnome.org/show_bug.cgi?id=770729
-
- pango/pangocoretext-fontmap.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-commit e2ebedbac0d6b04ec298414eec02f4b4692392bc
-Author: Patrick Griffis <tingping@tingping.se>
-Date:   Wed Sep 7 09:10:04 2016 -0400
-
-    Fix exporting pango_cairo_win32_font_map_get_type
-
-    Introduced with commit 1147da131ad13e583e73fed956e5c944e1497bf4
-
-    https://bugzilla.gnome.org/show_bug.cgi?id=771004
-
- pango/pangocairo-win32.h | 1 +
- 1 file changed, 1 insertion(+)
-
-commit 16235af893c35af610af2091e0396e6c12ac09ea
-Author: Matthias Clasen <mclasen@redhat.com>
-Date:   Mon Aug 29 08:13:40 2016 -0400
-
-    1.40.2
-
- NEWS         | 7 +++++++
- configure.ac | 2 +-
- 2 files changed, 8 insertions(+), 1 deletion(-)
-
-commit 6cc857aa6648b17e70b1b2b13a4e8b7a74a4a240
-Author: Matthias Clasen <mclasen@redhat.com>
-Date:   Mon Aug 29 08:50:38 2016 -0400
-
-    Avoid deprecation warnings
-
-    Now that we're using new-style deprecations, we have to fight
-    a little harder to get rid of them inside pango.
-
- pango-view/viewer-render.c   |  2 ++
- pango/Makefile.am            |  1 +
- pango/break.c                |  2 ++
- pango/pango-context.c        |  2 ++
- pango/pango-engine.c         |  8 ++++++--
- pango/pango-markup.c         |  9 +++++----
- pango/pango-utils-internal.h | 45
- ++++++++++++++++++++++++++++++++++++++++++++
- pango/pango-utils.c          | 26 +++++++++++++++++++++++--
- 8 files changed, 87 insertions(+), 8 deletions(-)
-
-commit cce034fea4187ce02577dbc6d92c8b1042aca815
-Author: Chun-wei Fan <fanchunwei@src.gnome.org>
-Date:   Mon Aug 22 01:08:47 2016 +0800
-
-    pango/pango-version-macros.h: Update copyright notice
-
-    Update the copyright notice of this file, to reflect things more
-    accurately and to give more proper acknowledgement.
-
-    Please see: https://bugzilla.gnome.org/show_bug.cgi?id=767587#c16
-
- pango/pango-version-macros.h | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
-
-commit 1147da131ad13e583e73fed956e5c944e1497bf4
-Author: Chun-wei Fan <fanchunwei@src.gnome.org>
-Date:   Mon Jun 6 19:49:25 2016 +0800
-
-    Export symbols with compiler directives if possible
-
-    Add a configure check to see whether compiler directives are available
-    for exporting symbols, and use them if so.  Likewise, update
-    the Visual Studio projects and config.h.win32.in to do likewise for
-    Windows builds.
-
-    We can then drop the .def files that were used to export symbols on
-    Windows builds, which should clean up things a bit.
-
- build/win32/vs10/pango.vcxprojin      |   4 -
- build/win32/vs10/pangocairo.vcxprojin |   8 -
- build/win32/vs10/pangoft2.vcxprojin   |   4 -
- build/win32/vs10/pangowin32.vcxprojin |   4 -
- build/win32/vs9/pango.vcprojin        |   4 -
- build/win32/vs9/pangocairo.vcprojin   |   8 -
- build/win32/vs9/pangoft2.vcprojin     |   4 -
- build/win32/vs9/pangowin32.vcprojin   |   4 -
- config.h.win32.in                     |   7 +
- configure.ac                          |  35 +++
- pango/Makefile.am                     |  33 ++-
- pango/check.defs                      |  34 ---
- pango/pango.def                       | 412
- ----------------------------------
- pango/pangocairo.def                  |  35 ---
- pango/pangoft2.def                    |  88 --------
- pango/pangowin32.def                  |  30 ---
- pango/pangoxft.def                    |  24 --
- 17 files changed, 55 insertions(+), 683 deletions(-)
-
-commit bbb38aa2da449810989d2bdadad900ffc48846d8
-Author: Chun-wei Fan <fanchunwei@src.gnome.org>
-Date:   Tue Jun 7 00:01:15 2016 +0800
-
-    pango/pango-enum-types.c.template: Include config.h first
-
-    This is to ensure that we can override the verion macros to export
-    the symbols
-    later.
-
- pango/pango-enum-types.c.template | 2 ++
- 1 file changed, 2 insertions(+)
-
-commit ce097c062ea079bf7888d2b2f1f7b17d34f976b6
-Author: Chun-wei Fan <fanchunwei@src.gnome.org>
-Date:   Mon Jun 6 23:44:26 2016 +0800
-
-    Decorate the symbols in the headers with version macros
-
-    From the last commit, decorate all the symbols with the version
-    macros.  Also add the version macros in the docs.
-
-    https://bugzilla.gnome.org/show_bug.cgi?id=767587
-
- docs/pango-sections.txt           | 90
- +++++++++++++++++++++++++++++++++++++++
- pango/pango-attributes.h          | 58 +++++++++++++++++++++++++
- pango/pango-bidi-type.h           |  6 ++-
- pango/pango-break.h               |  4 ++
- pango/pango-context.h             | 25 +++++++++++
- pango/pango-coverage.h            | 11 +++++
- pango/pango-engine.h              | 11 +++--
- pango/pango-enum-types.h.template |  3 ++
- pango/pango-font.h                | 62 +++++++++++++++++++++++++++
- pango/pango-fontmap.h             |  8 ++++
- pango/pango-fontset.h             |  8 ++++
- pango/pango-glyph-item.h          | 14 ++++++
- pango/pango-glyph.h               | 14 ++++++
- pango/pango-gravity.h             |  4 ++
- pango/pango-item.h                |  5 +++
- pango/pango-language.h            | 10 +++++
- pango/pango-layout.h              | 87
- +++++++++++++++++++++++++++++++++++++
- pango/pango-matrix.h              | 13 ++++++
- pango/pango-modules.h             |  8 ++--
- pango/pango-ot.h                  | 68 +++++++++++++++--------------
- pango/pango-renderer.h            | 20 +++++++++
- pango/pango-script.h              |  8 ++++
- pango/pango-tabs.h                | 11 +++++
- pango/pango-types.h               |  5 +++
- pango/pango-utils.h               | 36 ++++++++++------
- pango/pango.h                     |  1 +
- pango/pangocairo-coretext.h       |  1 +
- pango/pangocairo-coretextfont.h   |  1 +
- pango/pangocairo-fc.h             |  3 ++
- pango/pangocairo-fcfont.c         |  1 +
- pango/pangocairo-private.h        |  1 +
- pango/pangocairo.h                | 31 +++++++++++++-
- pango/pangocoretext-private.h     |  9 ++++
- pango/pangocoretext.h             |  2 +
- pango/pangofc-decoder.h           |  3 ++
- pango/pangofc-font.h              |  9 +++-
- pango/pangofc-fontmap.h           | 22 +++++++++-
- pango/pangofc-private.h           |  2 +
- pango/pangoft2-private.h          |  2 +
- pango/pangoft2.h                  | 27 ++++++++----
- pango/pangowin32-private.h        |  8 ++++
- pango/pangowin32.h                | 26 ++++++++++-
- pango/pangoxft-render.h           |  9 ++++
- pango/pangoxft.h                  | 19 ++++++---
- 44 files changed, 691 insertions(+), 75 deletions(-)
-
-commit 57964efb280369db2731bfc070f3e73c9a860d18
-Author: Chun-wei Fan <fanchunwei@src.gnome.org>
-Date:   Mon Jun 6 23:35:40 2016 +0800
-
-    Add a header for versioning macros
-
-    This header is used for:
-    -Indicating what stable versions an API is introduced at and after
-    1.30.0.
-    -Indicating what APIs are deprecated, and which stable release series
-     they are deprecated if the deprecation is done after 1.30.0.
-     This replaces
-     the use of G_DEPRECATED* in Pango.
-    -Use in a later commit to be used to export symbols directly via
-    compiler
-     directives instead of doing so over .def files, for compilers that
-     do not
-     support exporting via regex expressions.
-
- pango/Makefile.am            |  49 ++--
- pango/pango-version-macros.h | 627
- +++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 652 insertions(+), 24 deletions(-)
-
-commit b8154ae4ef1a6aacc8409e3e75dd5a7aaa562fad
-Author: Chun-wei Fan <fanchunwei@src.gnome.org>
-Date:   Wed Jun 22 15:16:09 2016 +0800
-
-    Visual Studio builds: Make .pc generation more flexible
-
-    Allow the use of ${exec_prefix} for libdir and includedir when passing
-    them in as arguments to the script.
-
- build/win32/pc_base.py | 44 ++++++++++++++++++++++++++++++--------------
- 1 file changed, 30 insertions(+), 14 deletions(-)
-
-commit d6fff9c1424fc21e6504a93a1004a95d717a3703
-Author: Chun-wei Fan <fanchunwei@src.gnome.org>
-Date:   Wed Jun 22 10:35:33 2016 +0800
-
-    Visual Studio builds: Clean up PangoCairo build files
-
-    Define HAVE_CAIRO_FREETYPE in the property sheets instead of
-    disabling it
-    via conditional compilation, which makes things a bit neater.
-
- build/win32/vs10/pango-build-defines.props  |  6 +++---
- build/win32/vs10/pangocairo.vcxprojin       | 16 ++++++++--------
- build/win32/vs9/pango-build-defines.vsprops |  4 ++--
- build/win32/vs9/pangocairo.vcprojin         | 16 ++++++++--------
- config.h.win32.in                           |  4 +---
- 5 files changed, 22 insertions(+), 24 deletions(-)
-
-commit 51e51fd15c4b8d52b96447658ed7d3636c91add3
-Author: Chun-wei Fan <fanchunwei@src.gnome.org>
-Date:   Wed Jun 22 10:26:20 2016 +0800
-
-    PangoCairo MSVC builds: Look for headers in $(prefix)/include/cairo
-
-    Cairo's headers could be in $(prefix)/include/cairo, so look for the
-    headers from there as well.
-
- build/win32/vs10/pango-build-defines.props  |  4 ++++
- build/win32/vs10/pangocairo.vcxprojin       |  8 ++++++++
- build/win32/vs9/pango-build-defines.vsprops |  4 ++++
- build/win32/vs9/pangocairo.vcprojin         | 12 ++++++++----
- 4 files changed, 24 insertions(+), 4 deletions(-)
-
-commit fcec6f721d5254b9010814023f98f541ca798b02
-Author: Behdad Esfahbod <behdad@behdad.org>
-Date:   Thu May 19 11:12:02 2016 -0700
-
-    Bug 766148 - CT font weights do not map correctly to PangoWeight
-
- pango/pangocoretext-fontmap.c | 76
- ++++++++++++++++++++++++-------------------
- 1 file changed, 43 insertions(+), 33 deletions(-)
-
-commit 5aa230b1421b1a7dff8525125a5a22de48c5b6e9
-Author: Benjamin Otte <otte@redhat.com>
-Date:   Thu May 5 17:36:44 2016 +0200
-
-    colors: Add rebeccapurple
-
-    http://lists.w3.org/Archives/Public/www-style/2014Jun/0312.html
-
-    Thanks Lapo for pointing out this omission!
-
- pango/pango-color-table.h | 222
- +++++++++++++++++++++++-----------------------
- tools/rgb.txt             |   1 +
- 2 files changed, 113 insertions(+), 110 deletions(-)
-
-commit 7e6fe2c381c307619215a1f7661dd5c609b22c39
-Author: Kristian Rietveld <kris@loopnest.org>
-Date:   Sat Sep 5 23:13:18 2015 +0200
-
-    coretext: implement obtaining coverage of supplementary planes
-
- pango/pangocoretext.c | 32 ++++++++++++++++++++++++++++----
- 1 file changed, 28 insertions(+), 4 deletions(-)
-
-commit 550fba61eea3cae292d4b2abbffbe8a7a99a50b4
-Author: Kristian Rietveld <kris@loopnest.org>
-Date:   Sat Sep 5 22:58:28 2015 +0200
-
-    coretext: remove useless calls to pango_coverage_set()
-
-    Since Pango coverage is initialized to PANGO_COVERAGE_NONE, it
-    makes no
-    sense to perform calls to pango_coverage_set for characters that will
-    be set (or rather left) to none.
-
- pango/pangocoretext.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
-
-commit 783544ddfc23225f894a26eb31fcc4bc3990ce22
-Author: Kristian Rietveld <kris@loopnest.org>
-Date:   Sat Sep 5 22:52:48 2015 +0200
-
-    coretext: properly handle UTF32 characters in CFStrings
-
- pango/pangocoretext-shape.c | 72
- +++++++++++++++++++++++++++++++++++++++------
- 1 file changed, 63 insertions(+), 9 deletions(-)
-
-commit 626e3c4a4a5dffecb5b6cb9227843db50701f594
-Author: Chun-wei Fan <fanchunwei@src.gnome.org>
-Date:   Thu Apr 21 18:03:13 2016 +0800
-
-    Visual Studio builds: Generate .pc files
-
-    If python can be found at $(PythonPath)\python.exe (x86 builds) or
-    $(PythonPathX64)\python.exe (x64 builds), generate .pc files for
-    Pango, as
-    appropriate with the build config chosen.  This will make building
-    introspection on Visual Studio easier with packages that depend
-    on Pango.
-
- build/win32/Makefile.am                        |   3 +
- build/win32/pangopc.py                         |  55 +++++++++++++
- build/win32/pc_base.py                         | 108
- ++++++++++++++++++++++++
- build/win32/replace.py                         | 109
- +++++++++++++++++++++++++
- build/win32/vs10/Makefile.am                   |   1 +
- build/win32/vs10/pango-install.propsin         |  29 +++++--
- build/win32/vs10/pango-install.vcxproj         |  50 ++++++++++--
- build/win32/vs10/pango-install.vcxproj.filters |  13 +++
- build/win32/vs11/Makefile.am                   |   1 +
- build/win32/vs12/Makefile.am                   |   1 +
- build/win32/vs14/Makefile.am                   |   1 +
- build/win32/vs9/pango-install.vcproj           |  88 ++++++++++++++++++--
- build/win32/vs9/pango-install.vspropsin        |  14 ++++
- 13 files changed, 449 insertions(+), 24 deletions(-)
-
-commit 9549b7ad68bdbbf22e09940ea43735b9c5396547
-Author: Chun-wei Fan <fanchunwei@src.gnome.org>
-Date:   Thu Apr 21 17:15:37 2016 +0800
-
-    Visual Studio builds: Have package version in the projects
-
-    This is used to generate the .pc files to make generating
-    introspection
-    files easier for packages that depend on Pango.
-
- ...on-paths.props => pango-version-paths.props.in} | 31
- +++++++++++++++++-----
- ...aths.vsprops => pango-version-paths.vsprops.in} | 28
- ++++++++++++++++---
- configure.ac                                       |  2 ++
- 3 files changed, 50 insertions(+), 11 deletions(-)
-
-commit e89c467538b89f1c9a4c29ec6e5d703279ff845c
-Author: Chun-wei Fan <fanchunwei@src.gnome.org>
-Date:   Fri Sep 4 17:38:24 2015 +0800
-
-    MSVC Builds: Use Autotools Module for Introspection
-
-    This uses the newly-added autotools module so that the file list
-    for introspection using Visual Studio is now generated during
-    'make dist', along with the g-ir-scanner command line to generate
-    the .gir files and the compilation of the .typelib files.
-
-    This would help to simplify maintenance of the introspection
-    builds in Visual Studio, which is done using NMake.
-
-    https://bugzilla.gnome.org/show_bug.cgi?id=764984
-
- build/Makefile.am                        |   6 --
- build/gen-file-list-pango.py             | 161
- -------------------------------
- build/introspection-msvc.mak             |  65 -------------
- build/pango-introspection-msvc.mak       |  97 -------------------
- build/win32/Makefile.am                  |  30 +++++-
- build/{ => win32}/detectenv-msvc.mak     |  21 +++-
- build/win32/introspection-msvc.mak       |  94 ++++++++++++++++++
- build/win32/pango-introspection-msvc.mak |  53 ++++++++++
- pango/Makefile.am                        |  47 ++++++++-
- 9 files changed, 238 insertions(+), 336 deletions(-)
-
-commit 96129ef52784da1dc2801d346ae84c888f70df5e
-Author: Chun-wei Fan <fanchunwei@src.gnome.org>
-Date:   Fri Sep 4 17:35:26 2015 +0800
-
-    MSVC Builds: Add Common Autotools Module for Introspection
-
-    This adds a common autotools module that can be included in the
-    Makefile.am's so that we can get a list of sources and headers
-    that are to be introspected, as well as the complete g-ir-scanner
-    command(s) that are needed to generate the needed .gir's and
-    to compile the .typelib's.
-
-    https://bugzilla.gnome.org/show_bug.cgi?id=764984
-
- build/Makefile.msvc-introspection | 125
- ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 125 insertions(+)
-
-commit 3ceec73bf7c71ec151915531ea9e0f2842ece27a
-Author: Matthias Clasen <mclasen@redhat.com>
-Date:   Tue Apr 12 10:45:27 2016 -0400
-
-    Add source information
-
- pango-view/EMOJI-MODIFIERS.txt | 2 ++
- 1 file changed, 2 insertions(+)
-
-commit 0476c65ac98d4d30f88201efef0a282aa246ed64
-Author: Matthias Clasen <mclasen@redhat.com>
-Date:   Tue Apr 12 07:50:17 2016 -0400
-
-    Add an example file with Emoji
-
-    This is a list of all the Emoji modifier bases and their
-    skin tone modifications.
-
- pango-view/EMOJI-MODIFIERS.txt | 64
- ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 64 insertions(+)
-
-commit 8daf1de02f8ac7e05b4788dcd6a209ef06e6e03a
-Author: Matthias Clasen <mclasen@redhat.com>
-Date:   Mon Apr 11 11:20:11 2016 -0400
-
-    1.40.1
-
- NEWS         | 5 +++++
- configure.ac | 2 +-
- 2 files changed, 6 insertions(+), 1 deletion(-)
-
-commit a40771dec851ea338f2113b459bc2c9983ac386d
-Author: Behdad Esfahbod <behdad@behdad.org>
-Date:   Sat Mar 26 09:36:00 2016 -0700
-
-    Bug 764089 - PangoWin32FontMap Memory Leak
-
-    Add finalizers to PangoWin32FontMap
-
-    Patch from Geoffrey Yerem.
-
-    Part of https://bugzilla.gnome.org/show_bug.cgi?id=764089
-
- pango/pangowin32-fontmap.c | 56
- +++++++++++++++++++++++++++++++++++++++++++---
- 1 file changed, 53 insertions(+), 3 deletions(-)
-
-commit dd76b439506c650aa48ae160811c5ec4b8b7447d
-Author: Behdad Esfahbod <behdad@behdad.org>
-Date:   Sat Mar 26 09:23:38 2016 -0700
-
-    Use $PKG_CONFIG instead of pkg-config consistently
-
-    Fixes https://bugzilla.gnome.org/show_bug.cgi?id=764191
-
- configure.ac | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-commit d974f879bacc4f2a09b08997227c90b4348961a2
-Author: Matthias Clasen <mclasen@redhat.com>
-Date:   Tue Mar 22 18:21:54 2016 -0400
-
-    1.40.0
-
- NEWS         | 5 +++++
- configure.ac | 2 +-
- 2 files changed, 6 insertions(+), 1 deletion(-)
-
-commit 70496056909faa41b368dbbe22cd144eaa07d22b
-Author: Behdad Esfahbod <behdad@behdad.org>
-Date:   Fri Mar 11 18:21:15 2016 -0800
-
-    Don't treat U+1680 OGHAM SPACE MARK as whitespace
-
-    Unicode says: "U+1680 ogham space mark is unusual in that it is
-    generally
-    rendered with a visible horizontal line, rather than being blank."
-
- pango/pango-context.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ README | 38 ++++----------------------------------
+ 1 file changed, 4 insertions(+), 34 deletions(-)

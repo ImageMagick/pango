@@ -187,9 +187,6 @@
    >
    <File RelativePath="..\..\pango\break-arabic.c" />
    <File RelativePath="..\..\pango\break-indic.c" />
-   <File RelativePath="..\..\pango\mini-fribidi\fribidi.c" />
-   <File RelativePath="..\..\pango\mini-fribidi\fribidi_char_type.c" />
-   <File RelativePath="..\..\pango\mini-fribidi\fribidi_types.c" />
    <File RelativePath="..\..\pango\break.c" />
    <File RelativePath="..\..\pango\ellipsize.c" />
    <File RelativePath="..\..\pango\fonts.c" />

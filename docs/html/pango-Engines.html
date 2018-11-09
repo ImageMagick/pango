@@ -8,7 +8,7 @@
 <link rel="up" href="lowlevel.html" title="Low Level Functionality">
 <link rel="prev" href="pango-Coverage-Maps.html" title="Coverage Maps">
 <link rel="next" href="PangoEngineLang.html" title="PangoEngineLang">
-<meta name="generator" content="GTK-Doc V1.25.1 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.28 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -108,7 +108,7 @@
 </div>
 <div class="refsect1">
 <a name="pango-Engines.object-hierarchy"></a><h2>Object Hierarchy</h2>
-<pre class="screen">    <a href="../gobject/gobject-The-Base-Object-Type.html#GObject-struct">GObject</a>
+<pre class="screen">    GObject
     <span class="lineart">╰──</span> PangoEngine
         <span class="lineart">├──</span> <a class="link" href="PangoEngineLang.html" title="PangoEngineLang">PangoEngineLang</a>
         <span class="lineart">╰──</span> <a class="link" href="PangoEngineShape.html" title="PangoEngineShape">PangoEngineShape</a>
@@ -167,7 +167,7 @@ script_engine_list (<em class="parameter"><code><a class="link" href="pango-Engi
 <div class="refsect2">
 <a name="script-engine-init"></a><h3>script_engine_init ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
-script_engine_init (<em class="parameter"><code><a href="../gobject/GTypeModule.html#GTypeModule-struct"><span class="type">GTypeModule</span></a> *module</code></em>);</pre>
+script_engine_init (<em class="parameter"><code><span class="type">GTypeModule</span> *module</code></em>);</pre>
 <div class="warning"><p><code class="literal">script_engine_init</code> has been deprecated since version 1.38 and should not be used in newly-written code.</p></div>
 <p>Do not use.</p>
 <p><span class="annotation">[<acronym title="Exposed in C code, not necessarily available in other languages."><span class="acronym">skip</span></acronym>]</span></p>
@@ -181,7 +181,7 @@ script_engine_init (<em class="parameter"><code><a href="../gobject/GTypeModule.
 </colgroup>
 <tbody><tr>
 <td class="parameter_name"><p>module</p></td>
-<td class="parameter_description"><p>a <a href="../gobject/GTypeModule.html#GTypeModule-struct"><span class="type">GTypeModule</span></a> structure used to associate any
+<td class="parameter_description"><p>a <span class="type">GTypeModule</span> structure used to associate any
 GObject types created in this module with the module.</p></td>
 <td class="parameter_annotations"> </td>
 </tr></tbody>
@@ -247,17 +247,17 @@ engine. It contains the following fields:</p>
 </colgroup>
 <tbody>
 <tr>
-<td class="struct_member_name"><p>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="PangoEngineInfo.id"></a>id</code></em>;</p></td>
+<td class="struct_member_name"><p>const <span class="type">gchar</span> *<em class="structfield"><code><a name="PangoEngineInfo.id"></a>id</code></em>;</p></td>
 <td class="struct_member_description"><p>a unique string ID for the engine.</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
 <tr>
-<td class="struct_member_name"><p>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="PangoEngineInfo.engine-type"></a>engine_type</code></em>;</p></td>
+<td class="struct_member_name"><p>const <span class="type">gchar</span> *<em class="structfield"><code><a name="PangoEngineInfo.engine-type"></a>engine_type</code></em>;</p></td>
 <td class="struct_member_description"><p>a string identifying the engine type.</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
 <tr>
-<td class="struct_member_name"><p>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="PangoEngineInfo.render-type"></a>render_type</code></em>;</p></td>
+<td class="struct_member_name"><p>const <span class="type">gchar</span> *<em class="structfield"><code><a name="PangoEngineInfo.render-type"></a>render_type</code></em>;</p></td>
 <td class="struct_member_description"><p>a string identifying the render type.</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
@@ -267,7 +267,7 @@ engine. It contains the following fields:</p>
 <td class="struct_member_annotations"> </td>
 </tr>
 <tr>
-<td class="struct_member_name"><p><a href="../glib/glib-Basic-Types.html#gint"><span class="type">gint</span></a> <em class="structfield"><code><a name="PangoEngineInfo.n-scripts"></a>n_scripts</code></em>;</p></td>
+<td class="struct_member_name"><p><span class="type">gint</span> <em class="structfield"><code><a name="PangoEngineInfo.n-scripts"></a>n_scripts</code></em>;</p></td>
 <td class="struct_member_description"><p>number of items in <em class="parameter"><code>scripts</code></em>
 .</p></td>
 <td class="struct_member_annotations"> </td>
@@ -303,7 +303,7 @@ the special meaning here of "all scripts"</p></td>
 <td class="struct_member_annotations"> </td>
 </tr>
 <tr>
-<td class="struct_member_name"><p>const <a href="../glib/glib-Basic-Types.html#gchar"><span class="type">gchar</span></a> *<em class="structfield"><code><a name="PangoEngineScriptInfo.langs"></a>langs</code></em>;</p></td>
+<td class="struct_member_name"><p>const <span class="type">gchar</span> *<em class="structfield"><code><a name="PangoEngineScriptInfo.langs"></a>langs</code></em>;</p></td>
 <td class="struct_member_description"><p>a semicolon separated list of languages that this
 engine handles for this script. This may be empty,
 in which case the engine is saying that it is a
@@ -348,6 +348,6 @@ for engines that are not rendering-system specific.</p>
 </div>
 </div>
 <div class="footer">
-<hr>Generated by GTK-Doc V1.25.1</div>
+<hr>Generated by GTK-Doc V1.28</div>
 </body>
 </html>

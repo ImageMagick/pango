@@ -154,9 +154,6 @@
   <ItemGroup>
     <ClCompile Include="..\..\pango\break-arabic.c" />
     <ClCompile Include="..\..\pango\break-indic.c" />
-   <ClCompile Include="..\..\pango\mini-fribidi\fribidi.c" />
-   <ClCompile Include="..\..\pango\mini-fribidi\fribidi_char_type.c" />
-   <ClCompile Include="..\..\pango\mini-fribidi\fribidi_types.c" />
    <ClCompile Include="..\..\pango\break.c" />
    <ClCompile Include="..\..\pango\ellipsize.c" />
    <ClCompile Include="..\..\pango\fonts.c" />

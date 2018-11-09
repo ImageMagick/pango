@@ -23,9 +23,6 @@
   <ItemGroup>
     <ClCompile Include="..\..\pango\break-arabic.c"><Filter>Source Files</Filter></ClCompile>
     <ClCompile Include="..\..\pango\break-indic.c"><Filter>Source Files</Filter></ClCompile>
-   <ClCompile Include="..\..\pango\mini-fribidi\fribidi.c"><Filter>Source Files</Filter></ClCompile>
-   <ClCompile Include="..\..\pango\mini-fribidi\fribidi_char_type.c"><Filter>Source Files</Filter></ClCompile>
-   <ClCompile Include="..\..\pango\mini-fribidi\fribidi_types.c"><Filter>Source Files</Filter></ClCompile>
    <ClCompile Include="..\..\pango\break.c"><Filter>Source Files</Filter></ClCompile>
    <ClCompile Include="..\..\pango\ellipsize.c"><Filter>Source Files</Filter></ClCompile>
    <ClCompile Include="..\..\pango\fonts.c"><Filter>Source Files</Filter></ClCompile>

@@ -11,7 +11,7 @@ INTROSPECTION_SCANNER_ARGS = --warn-all --add-include-path=$(srcdir) --add-inclu
 INTROSPECTION_COMPILER_ARGS = --includedir=$(srcdir) --includedir=.
 INTROSPECTION_SCANNER_ENV = CC="$(CC)"
 
-SUBDIRS = mini-fribidi
+SUBDIRS =
 
 INCLUDES =						\
 	-DG_LOG_DOMAIN=\"Pango\"			\
@@ -29,6 +29,7 @@ INCLUDES =						\
 	$(HARFBUZZ_CFLAGS)				\
 	$(FREETYPE_CFLAGS)				\
 	$(FONTCONFIG_CFLAGS)				\
+	$(FRIBIDI_CFLAGS)				\
 	$(LIBTHAI_CFLAGS)					\
 	$(X_CFLAGS)					\
 	$(PANGO_HIDDEN_VISIBILITY_CFLAGS)
@@ -51,10 +52,9 @@ libpango_1_0_la_LDFLAGS = $(LIBRARY_LIBTOOL_OPTIONS)
 libpango_1_0_la_LIBADD =		\
 	$(GLIB_LIBS)			\
 	$(LIBTHAI_LIBS)			\
+	$(FRIBIDI_LIBS)                 \
 	$(libm)
-
-libpango_1_0_la_LIBADD += mini-fribidi/libmini-fribidi.la
-libpango_1_0_la_DEPENDENCIES = mini-fribidi/libmini-fribidi.la
+libpango_1_0_la_DEPENDENCIES =
 
 if PLATFORM_WIN32
 libpango_1_0_la_LDFLAGS += -Wl,pango-win32-res.o
@@ -393,7 +393,7 @@ libpangowin32_1_0_la_LDFLAGS = $(LIBRARY_LIBTOOL_OPTIONS)
 libpangowin32_1_0_la_LIBADD =			\
 	libpango-$(PANGO_API_VERSION).la	\
 	$(GLIB_LIBS)				\
-	-lgdi32 -lusp10
+	-lusp10 -lgdi32
 libpangowin32_1_0_la_DEPENDENCIES =		\
 	libpango-$(PANGO_API_VERSION).la
 libpangowin32_1_0_la_SOURCES =	\
@@ -460,15 +460,9 @@ DISTCLEANFILES = 		\
 
 # ------------------- MSVC Build Items ----------------
 
-extra_fribidi_srcs_for_msvc =	\
-	mini-fribidi/fribidi.c			\
-	mini-fribidi/fribidi_char_type.c	\
-	mini-fribidi/fribidi_types.c
-
 MSVCPROJS = pango pangowin32 pangoft2 pangocairo
 
 pango_FILES =	\
-	$(extra_fribidi_srcs_for_msvc)	\
 	$(libpango_1_0_la_SOURCES)
 pango_EXCLUDES = dummy
 pango_HEADERS_DIR = $(pangoincludedir)

@@ -1,4 +1,22 @@
 # -*- mode: makefile -*-
+#
+# gtk-doc.make - make rules for gtk-doc
+# Copyright (C) 2003 James Henstridge
+#               2004-2007 Damon Chaplin
+#               2007-2017 Stefan Sauer
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ####################################
 # Everything below here is generic #
@@ -81,8 +99,8 @@ $(REPORT_FILES): sgml-build.stamp
 
 #### setup ####
 
-GTK_DOC_V_SETUP=$(GTK_DOC_V_SETUP_$(V))
-GTK_DOC_V_SETUP_=$(GTK_DOC_V_SETUP_$(AM_DEFAULT_VERBOSITY))
+GTK_DOC_V_SETUP=$(GTK_DOC_V_SETUP_@AM_V@)
+GTK_DOC_V_SETUP_=$(GTK_DOC_V_SETUP_@AM_DEFAULT_V@)
 GTK_DOC_V_SETUP_0=@echo "  DOC   Preparing build";
 
 setup-build.stamp:
@@ -101,12 +119,12 @@ setup-build.stamp:
 
 #### scan ####
 
-GTK_DOC_V_SCAN=$(GTK_DOC_V_SCAN_$(V))
-GTK_DOC_V_SCAN_=$(GTK_DOC_V_SCAN_$(AM_DEFAULT_VERBOSITY))
+GTK_DOC_V_SCAN=$(GTK_DOC_V_SCAN_@AM_V@)
+GTK_DOC_V_SCAN_=$(GTK_DOC_V_SCAN_@AM_DEFAULT_V@)
 GTK_DOC_V_SCAN_0=@echo "  DOC   Scanning header files";
 
-GTK_DOC_V_INTROSPECT=$(GTK_DOC_V_INTROSPECT_$(V))
-GTK_DOC_V_INTROSPECT_=$(GTK_DOC_V_INTROSPECT_$(AM_DEFAULT_VERBOSITY))
+GTK_DOC_V_INTROSPECT=$(GTK_DOC_V_INTROSPECT_@AM_V@)
+GTK_DOC_V_INTROSPECT_=$(GTK_DOC_V_INTROSPECT_@AM_DEFAULT_V@)
 GTK_DOC_V_INTROSPECT_0=@echo "  DOC   Introspecting gobjects";
 
 scan-build.stamp: setup-build.stamp $(HFILE_GLOB) $(CFILE_GLOB)
@@ -137,8 +155,8 @@ $(DOC_MODULE)-decl.txt $(SCANOBJ_FILES) $(DOC_MODULE)-sections.txt $(DOC_MODULE)
 
 #### xml ####
 
-GTK_DOC_V_XML=$(GTK_DOC_V_XML_$(V))
-GTK_DOC_V_XML_=$(GTK_DOC_V_XML_$(AM_DEFAULT_VERBOSITY))
+GTK_DOC_V_XML=$(GTK_DOC_V_XML_@AM_V@)
+GTK_DOC_V_XML_=$(GTK_DOC_V_XML_@AM_DEFAULT_V@)
 GTK_DOC_V_XML_0=@echo "  DOC   Building XML";
 
 sgml-build.stamp: setup-build.stamp $(DOC_MODULE)-decl.txt $(SCANOBJ_FILES) $(HFILE_GLOB) $(CFILE_GLOB) $(DOC_MODULE)-sections.txt $(DOC_MODULE)-overrides.txt $(expand_content_files) xml/gtkdocentities.ent
@@ -150,6 +168,9 @@ sgml-build.stamp: setup-build.stamp $(DOC_MODULE)-decl.txt $(SCANOBJ_FILES) $(HF
 	$(AM_V_at)touch sgml-build.stamp
 
 sgml.stamp: sgml-build.stamp
+	@true
+
+$(DOC_MAIN_SGML_FILE): sgml-build.stamp
 	@true
 
 xml/gtkdocentities.ent: Makefile
@@ -165,12 +186,12 @@ xml/gtkdocentities.ent: Makefile
 
 #### html ####
 
-GTK_DOC_V_HTML=$(GTK_DOC_V_HTML_$(V))
-GTK_DOC_V_HTML_=$(GTK_DOC_V_HTML_$(AM_DEFAULT_VERBOSITY))
+GTK_DOC_V_HTML=$(GTK_DOC_V_HTML_@AM_V@)
+GTK_DOC_V_HTML_=$(GTK_DOC_V_HTML_@AM_DEFAULT_V@)
 GTK_DOC_V_HTML_0=@echo "  DOC   Building HTML";
 
-GTK_DOC_V_XREF=$(GTK_DOC_V_XREF_$(V))
-GTK_DOC_V_XREF_=$(GTK_DOC_V_XREF_$(AM_DEFAULT_VERBOSITY))
+GTK_DOC_V_XREF=$(GTK_DOC_V_XREF_@AM_V@)
+GTK_DOC_V_XREF_=$(GTK_DOC_V_XREF_@AM_DEFAULT_V@)
 GTK_DOC_V_XREF_0=@echo "  DOC   Fixing cross-references";
 
 html-build.stamp: sgml.stamp $(DOC_MAIN_SGML_FILE) $(content_files) $(expand_content_files)
@@ -197,8 +218,8 @@ html-build.stamp: sgml.stamp $(DOC_MAIN_SGML_FILE) $(content_files) $(expand_con
 
 #### pdf ####
 
-GTK_DOC_V_PDF=$(GTK_DOC_V_PDF_$(V))
-GTK_DOC_V_PDF_=$(GTK_DOC_V_PDF_$(AM_DEFAULT_VERBOSITY))
+GTK_DOC_V_PDF=$(GTK_DOC_V_PDF_@AM_V@)
+GTK_DOC_V_PDF_=$(GTK_DOC_V_PDF_@AM_DEFAULT_V@)
 GTK_DOC_V_PDF_0=@echo "  DOC   Building PDF";
 
 pdf-build.stamp: sgml.stamp $(DOC_MAIN_SGML_FILE) $(content_files) $(expand_content_files)

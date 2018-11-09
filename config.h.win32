@@ -113,7 +113,7 @@
 #define PACKAGE_NAME "pango"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "pango 1.40.11"
+#define PACKAGE_STRING "pango 1.42.4"
 
 /* Define to the one symbol short name of this package. */
 #define PACKAGE_TARNAME "pango"
@@ -122,28 +122,28 @@
 #define PACKAGE_URL ""
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "1.40.11"
+#define PACKAGE_VERSION "1.42.4"
 
 /* PANGO binary age */
-#define PANGO_BINARY_AGE 4011
+#define PANGO_BINARY_AGE 4204
 
 /* PANGO interface age */
-#define PANGO_INTERFACE_AGE 11
+#define PANGO_INTERFACE_AGE 4
 
 /* PANGO major version */
 #define PANGO_VERSION_MAJOR 1
 
 /* PANGO micro version */
-#define PANGO_VERSION_MICRO 11
+#define PANGO_VERSION_MICRO 4
 
 /* PANGO minor version */
-#define PANGO_VERSION_MINOR 40
+#define PANGO_VERSION_MINOR 42
 
 /* Define to 1 if you have the ANSI C header files. */
 #define STDC_HEADERS 1
 
 /* Version number of package */
-#define VERSION "1.40.11"
+#define VERSION "1.42.4"
 
 /* defines how to decorate public symbols while building */
 #ifdef _MSC_VER

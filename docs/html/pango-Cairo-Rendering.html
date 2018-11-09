@@ -8,7 +8,7 @@
 <link rel="up" href="rendering.html" title="Rendering with Pango">
 <link rel="prev" href="pango-Xft-Fonts-and-Rendering.html" title="Xft Fonts and Rendering">
 <link rel="next" href="pango-CoreText-Fonts.html" title="CoreText Fonts">
-<meta name="generator" content="GTK-Doc V1.25.1 (XML mode)">
+<meta name="generator" content="GTK-Doc V1.28 (XML mode)">
 <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -75,7 +75,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<span class="returnvalue">cairo_font_type_t</span>
+<a href="/usr/share/gtk-doc/html/cairo/cairo-cairo-font-face-t.html#cairo-font-type-t"><span class="returnvalue">cairo_font_type_t</span></a>
 </td>
 <td class="function_name">
 <a class="link" href="pango-Cairo-Rendering.html#pango-cairo-font-map-get-font-type" title="pango_cairo_font_map_get_font_type ()">pango_cairo_font_map_get_font_type</a> <span class="c_punctuation">()</span>
@@ -107,7 +107,7 @@
 </tr>
 <tr>
 <td class="function_type">
-<span class="returnvalue">cairo_scaled_font_t</span> *
+<a href="/usr/share/gtk-doc/html/cairo/cairo-cairo-scaled-font-t.html#cairo-scaled-font-t"><span class="returnvalue">cairo_scaled_font_t</span></a> *
 </td>
 <td class="function_name">
 <a class="link" href="pango-Cairo-Rendering.html#pango-cairo-font-get-scaled-font" title="pango_cairo_font_get_scaled_font ()">pango_cairo_font_get_scaled_font</a> <span class="c_punctuation">()</span>
@@ -138,7 +138,7 @@
 </td>
 </tr>
 <tr>
-<td class="function_type">const <span class="returnvalue">cairo_font_options_t</span> *
+<td class="function_type">const <a href="/usr/share/gtk-doc/html/cairo/cairo-cairo-font-options-t.html#cairo-font-options-t"><span class="returnvalue">cairo_font_options_t</span></a> *
 </td>
 <td class="function_name">
 <a class="link" href="pango-Cairo-Rendering.html#pango-cairo-context-get-font-options" title="pango_cairo_context_get_font_options ()">pango_cairo_context_get_font_options</a> <span class="c_punctuation">()</span>
@@ -296,7 +296,7 @@
 </div>
 <div class="refsect1">
 <a name="pango-Cairo-Rendering.object-hierarchy"></a><h2>Object Hierarchy</h2>
-<pre class="screen">    <a href="/home/mclasen/gnome/share/gtk-doc/html/gobject/GTypeModule.html">GInterface</a>
+<pre class="screen">    <a href="/usr/share/gtk-doc/html/gobject/GTypeModule.html">GInterface</a>
     <span class="lineart">├──</span> PangoCairoFont
     <span class="lineart">╰──</span> PangoCairoFontMap
 </pre>
@@ -433,96 +433,96 @@ to the floating point units used in Cairo divide by <a class="link" href="pango-
 88
 89
 90</pre></td>
-        <td class="listing_code"><pre class="programlisting"><span class="gtkdoc ppc">#include &lt;math.h&gt;</span>
-<span class="gtkdoc ppc">#include &lt;pango/pangocairo.h&gt;</span>
+        <td class="listing_code"><pre class="programlisting"><span class="preproc">#include</span><span class="normal"> </span><span class="string">&lt;math.h&gt;</span>
+<span class="preproc">#include</span><span class="normal"> </span><span class="string">&lt;pango/pangocairo.h&gt;</span>
 
-<span class="gtkdoc kwb">static void</span>
-<span class="function">draw_text</span> <span class="gtkdoc opt">(</span>cairo_t <span class="gtkdoc opt">*</span>cr<span class="gtkdoc opt">)</span>
-<span class="gtkdoc opt">{</span>
-<span class="gtkdoc ppc">#define RADIUS 150</span>
-<span class="gtkdoc ppc">#define N_WORDS 10</span>
-<span class="gtkdoc ppc">#define FONT</span> <span class="gtkdoc pps">&quot;Sans Bold 27&quot;</span><span class="gtkdoc ppc"></span>
+<span class="keyword">static</span><span class="normal"> </span><span class="type">void</span>
+<span class="function">draw_text</span><span class="normal"> </span><span class="symbol">(</span><span class="usertype">cairo_t</span><span class="normal"> </span><span class="symbol">*</span><span class="normal">cr</span><span class="symbol">)</span>
+<span class="cbracket">{</span>
+<span class="preproc">#define</span><span class="normal"> RADIUS </span><span class="number">150</span>
+<span class="preproc">#define</span><span class="normal"> N_WORDS </span><span class="number">10</span>
+<span class="preproc">#define</span><span class="normal"> FONT </span><span class="string">"Sans Bold 27"</span>
 
-  PangoLayout <span class="gtkdoc opt">*</span>layout<span class="gtkdoc opt">;</span>
-  PangoFontDescription <span class="gtkdoc opt">*</span>desc<span class="gtkdoc opt">;</span>
-  <span class="gtkdoc kwb">int</span> i<span class="gtkdoc opt">;</span>
+<span class="normal">  </span><span class="usertype">PangoLayout</span><span class="normal"> </span><span class="symbol">*</span><span class="normal">layout</span><span class="symbol">;</span>
+<span class="normal">  </span><span class="usertype">PangoFontDescription</span><span class="normal"> </span><span class="symbol">*</span><span class="normal">desc</span><span class="symbol">;</span>
+<span class="normal">  </span><span class="type">int</span><span class="normal"> i</span><span class="symbol">;</span>
 
-  <span class="comment">/* Center coordinates on the middle of the region we are drawing</span>
+<span class="normal">  </span><span class="comment">/* Center coordinates on the middle of the region we are drawing</span>
 <span class="comment">   */</span>
-  <span class="function">cairo_translate</span> <span class="gtkdoc opt">(</span>cr<span class="gtkdoc opt">,</span> RADIUS<span class="gtkdoc opt">,</span> RADIUS<span class="gtkdoc opt">);</span>
+<span class="normal">  </span><span class="function"><a href="/usr/share/gtk-doc/html/cairo/cairo-Transformations.html#cairo-translate">cairo_translate</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">cr</span><span class="symbol">,</span><span class="normal"> RADIUS</span><span class="symbol">,</span><span class="normal"> RADIUS</span><span class="symbol">);</span>
 
-  <span class="comment">/* Create a PangoLayout, set the font and text */</span>
-  layout <span class="gtkdoc opt">=</span> <span class="function"><a href="pango-Cairo-Rendering.html#pango-cairo-create-layout">pango_cairo_create_layout</a></span> <span class="gtkdoc opt">(</span>cr<span class="gtkdoc opt">);</span>
+<span class="normal">  </span><span class="comment">/* Create a PangoLayout, set the font and text */</span>
+<span class="normal">  layout </span><span class="symbol">=</span><span class="normal"> </span><span class="function"><a href="pango-Cairo-Rendering.html#pango-cairo-create-layout">pango_cairo_create_layout</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">cr</span><span class="symbol">);</span>
 
-  <span class="function"><a href="pango-Layout-Objects.html#pango-layout-set-text">pango_layout_set_text</a></span> <span class="gtkdoc opt">(</span>layout<span class="gtkdoc opt">,</span> <span class="string">&quot;Text&quot;</span><span class="gtkdoc opt">, -</span><span class="number">1</span><span class="gtkdoc opt">);</span>
-  desc <span class="gtkdoc opt">=</span> <span class="function"><a href="pango-Fonts.html#pango-font-description-from-string">pango_font_description_from_string</a></span> <span class="gtkdoc opt">(</span>FONT<span class="gtkdoc opt">);</span>
-  <span class="function"><a href="pango-Layout-Objects.html#pango-layout-set-font-description">pango_layout_set_font_description</a></span> <span class="gtkdoc opt">(</span>layout<span class="gtkdoc opt">,</span> desc<span class="gtkdoc opt">);</span>
-  <span class="function"><a href="pango-Fonts.html#pango-font-description-free">pango_font_description_free</a></span> <span class="gtkdoc opt">(</span>desc<span class="gtkdoc opt">);</span>
+<span class="normal">  </span><span class="function"><a href="pango-Layout-Objects.html#pango-layout-set-text">pango_layout_set_text</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">layout</span><span class="symbol">,</span><span class="normal"> </span><span class="string">"Text"</span><span class="symbol">,</span><span class="normal"> </span><span class="symbol">-</span><span class="number">1</span><span class="symbol">);</span>
+<span class="normal">  desc </span><span class="symbol">=</span><span class="normal"> </span><span class="function"><a href="pango-Fonts.html#pango-font-description-from-string">pango_font_description_from_string</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">FONT</span><span class="symbol">);</span>
+<span class="normal">  </span><span class="function"><a href="pango-Layout-Objects.html#pango-layout-set-font-description">pango_layout_set_font_description</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">layout</span><span class="symbol">,</span><span class="normal"> desc</span><span class="symbol">);</span>
+<span class="normal">  </span><span class="function"><a href="pango-Fonts.html#pango-font-description-free">pango_font_description_free</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">desc</span><span class="symbol">);</span>
 
-  <span class="comment">/* Draw the layout N_WORDS times in a circle */</span>
-  <span class="keyword">for</span> <span class="gtkdoc opt">(</span>i <span class="gtkdoc opt">=</span> <span class="number">0</span><span class="gtkdoc opt">;</span> i <span class="gtkdoc opt">&lt;</span> N_WORDS<span class="gtkdoc opt">;</span> i<span class="gtkdoc opt">++)</span>
-    <span class="gtkdoc opt">{</span>
-      <span class="gtkdoc kwb">int</span> width<span class="gtkdoc opt">,</span> height<span class="gtkdoc opt">;</span>
-      <span class="gtkdoc kwb">double</span> angle <span class="gtkdoc opt">= (</span><span class="number">360</span><span class="gtkdoc opt">. *</span> i<span class="gtkdoc opt">) /</span> N_WORDS<span class="gtkdoc opt">;</span>
-      <span class="gtkdoc kwb">double</span> red<span class="gtkdoc opt">;</span>
+<span class="normal">  </span><span class="comment">/* Draw the layout N_WORDS times in a circle */</span>
+<span class="normal">  </span><span class="keyword">for</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">i </span><span class="symbol">=</span><span class="normal"> </span><span class="number">0</span><span class="symbol">;</span><span class="normal"> i </span><span class="symbol">&lt;</span><span class="normal"> N_WORDS</span><span class="symbol">;</span><span class="normal"> i</span><span class="symbol">++)</span>
+<span class="normal">    </span><span class="cbracket">{</span>
+<span class="normal">      </span><span class="type">int</span><span class="normal"> width</span><span class="symbol">,</span><span class="normal"> height</span><span class="symbol">;</span>
+<span class="normal">      </span><span class="type">double</span><span class="normal"> angle </span><span class="symbol">=</span><span class="normal"> </span><span class="symbol">(</span><span class="number">360</span><span class="symbol">.</span><span class="normal"> </span><span class="symbol">*</span><span class="normal"> i</span><span class="symbol">)</span><span class="normal"> </span><span class="symbol">/</span><span class="normal"> N_WORDS</span><span class="symbol">;</span>
+<span class="normal">      </span><span class="type">double</span><span class="normal"> red</span><span class="symbol">;</span>
 
-      <span class="function">cairo_save</span> <span class="gtkdoc opt">(</span>cr<span class="gtkdoc opt">);</span>
+<span class="normal">      </span><span class="function"><a href="/usr/share/gtk-doc/html/cairo/cairo-cairo-t.html#cairo-save">cairo_save</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">cr</span><span class="symbol">);</span>
 
-      <span class="comment">/* Gradient from red at angle == 60 to blue at angle == 240 */</span>
-      red   <span class="gtkdoc opt">= (</span><span class="number">1</span> <span class="gtkdoc opt">+</span> <span class="function">cos</span> <span class="gtkdoc opt">((</span>angle <span class="gtkdoc opt">-</span> <span class="number">60</span><span class="gtkdoc opt">) *</span> G_PI <span class="gtkdoc opt">/</span> <span class="number">180</span><span class="gtkdoc opt">.)) /</span> <span class="number">2</span><span class="gtkdoc opt">;</span>
-      <span class="function">cairo_set_source_rgb</span> <span class="gtkdoc opt">(</span>cr<span class="gtkdoc opt">,</span> red<span class="gtkdoc opt">,</span> <span class="number">0</span><span class="gtkdoc opt">,</span> <span class="number">1.0</span> <span class="gtkdoc opt">-</span> red<span class="gtkdoc opt">);</span>
+<span class="normal">      </span><span class="comment">/* Gradient from red at angle == 60 to blue at angle == 240 */</span>
+<span class="normal">      red   </span><span class="symbol">=</span><span class="normal"> </span><span class="symbol">(</span><span class="number">1</span><span class="normal"> </span><span class="symbol">+</span><span class="normal"> </span><span class="function">cos</span><span class="normal"> </span><span class="symbol">((</span><span class="normal">angle </span><span class="symbol">-</span><span class="normal"> </span><span class="number">60</span><span class="symbol">)</span><span class="normal"> </span><span class="symbol">*</span><span class="normal"> G_PI </span><span class="symbol">/</span><span class="normal"> </span><span class="number">180</span><span class="symbol">.))</span><span class="normal"> </span><span class="symbol">/</span><span class="normal"> </span><span class="number">2</span><span class="symbol">;</span>
+<span class="normal">      </span><span class="function"><a href="/usr/share/gtk-doc/html/cairo/cairo-cairo-t.html#cairo-set-source-rgb">cairo_set_source_rgb</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">cr</span><span class="symbol">,</span><span class="normal"> red</span><span class="symbol">,</span><span class="normal"> </span><span class="number">0</span><span class="symbol">,</span><span class="normal"> </span><span class="number">1.0</span><span class="normal"> </span><span class="symbol">-</span><span class="normal"> red</span><span class="symbol">);</span>
 
-      <span class="function">cairo_rotate</span> <span class="gtkdoc opt">(</span>cr<span class="gtkdoc opt">,</span> angle <span class="gtkdoc opt">*</span> G_PI <span class="gtkdoc opt">/</span> <span class="number">180</span><span class="gtkdoc opt">.);</span>
+<span class="normal">      </span><span class="function"><a href="/usr/share/gtk-doc/html/cairo/cairo-Transformations.html#cairo-rotate">cairo_rotate</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">cr</span><span class="symbol">,</span><span class="normal"> angle </span><span class="symbol">*</span><span class="normal"> G_PI </span><span class="symbol">/</span><span class="normal"> </span><span class="number">180</span><span class="symbol">.);</span>
 
-      <span class="comment">/* Inform Pango to re-layout the text with the new transformation */</span>
-      <span class="function"><a href="pango-Cairo-Rendering.html#pango-cairo-update-layout">pango_cairo_update_layout</a></span> <span class="gtkdoc opt">(</span>cr<span class="gtkdoc opt">,</span> layout<span class="gtkdoc opt">);</span>
+<span class="normal">      </span><span class="comment">/* Inform Pango to re-layout the text with the new transformation */</span>
+<span class="normal">      </span><span class="function"><a href="pango-Cairo-Rendering.html#pango-cairo-update-layout">pango_cairo_update_layout</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">cr</span><span class="symbol">,</span><span class="normal"> layout</span><span class="symbol">);</span>
 
-      <span class="function"><a href="pango-Layout-Objects.html#pango-layout-get-size">pango_layout_get_size</a></span> <span class="gtkdoc opt">(</span>layout<span class="gtkdoc opt">, &amp;</span>width<span class="gtkdoc opt">, &amp;</span>height<span class="gtkdoc opt">);</span>
-      <span class="function">cairo_move_to</span> <span class="gtkdoc opt">(</span>cr<span class="gtkdoc opt">, - ((</span><span class="gtkdoc kwb">double</span><span class="gtkdoc opt">)</span>width <span class="gtkdoc opt">/</span> PANGO_SCALE<span class="gtkdoc opt">) /</span> <span class="number">2</span><span class="gtkdoc opt">, -</span> RADIUS<span class="gtkdoc opt">);</span>
-      <span class="function"><a href="pango-Cairo-Rendering.html#pango-cairo-show-layout">pango_cairo_show_layout</a></span> <span class="gtkdoc opt">(</span>cr<span class="gtkdoc opt">,</span> layout<span class="gtkdoc opt">);</span>
+<span class="normal">      </span><span class="function"><a href="pango-Layout-Objects.html#pango-layout-get-size">pango_layout_get_size</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">layout</span><span class="symbol">,</span><span class="normal"> </span><span class="symbol">&amp;</span><span class="normal">width</span><span class="symbol">,</span><span class="normal"> </span><span class="symbol">&amp;</span><span class="normal">height</span><span class="symbol">);</span>
+<span class="normal">      </span><span class="function"><a href="/usr/share/gtk-doc/html/cairo/cairo-Paths.html#cairo-move-to">cairo_move_to</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">cr</span><span class="symbol">,</span><span class="normal"> </span><span class="symbol">-</span><span class="normal"> </span><span class="symbol">((</span><span class="type">double</span><span class="symbol">)</span><span class="normal">width </span><span class="symbol">/</span><span class="normal"> <a href="pango-Glyph-Storage.html#PANGO-SCALE:CAPS">PANGO_SCALE</a></span><span class="symbol">)</span><span class="normal"> </span><span class="symbol">/</span><span class="normal"> </span><span class="number">2</span><span class="symbol">,</span><span class="normal"> </span><span class="symbol">-</span><span class="normal"> RADIUS</span><span class="symbol">);</span>
+<span class="normal">      </span><span class="function"><a href="pango-Cairo-Rendering.html#pango-cairo-show-layout">pango_cairo_show_layout</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">cr</span><span class="symbol">,</span><span class="normal"> layout</span><span class="symbol">);</span>
 
-      <span class="function">cairo_restore</span> <span class="gtkdoc opt">(</span>cr<span class="gtkdoc opt">);</span>
-    <span class="gtkdoc opt">}</span>
+<span class="normal">      </span><span class="function"><a href="/usr/share/gtk-doc/html/cairo/cairo-cairo-t.html#cairo-restore">cairo_restore</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">cr</span><span class="symbol">);</span>
+<span class="normal">    </span><span class="cbracket">}</span>
 
-  <span class="comment">/* free the layout object */</span>
-  <span class="function"><a href="../gobject/gobject-The-Base-Object-Type.html#g-object-unref">g_object_unref</a></span> <span class="gtkdoc opt">(</span>layout<span class="gtkdoc opt">);</span>
-<span class="gtkdoc opt">}</span>
+<span class="normal">  </span><span class="comment">/* free the layout object */</span>
+<span class="normal">  </span><span class="function">g_object_unref</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">layout</span><span class="symbol">);</span>
+<span class="cbracket">}</span>
 
-<span class="gtkdoc kwb">int</span> <span class="function">main</span> <span class="gtkdoc opt">(</span><span class="gtkdoc kwb">int</span> argc<span class="gtkdoc opt">,</span> <span class="gtkdoc kwb">char</span> <span class="gtkdoc opt">**</span>argv<span class="gtkdoc opt">)</span>
-<span class="gtkdoc opt">{</span>
-  cairo_t <span class="gtkdoc opt">*</span>cr<span class="gtkdoc opt">;</span>
-  <span class="gtkdoc kwb">char</span> <span class="gtkdoc opt">*</span>filename<span class="gtkdoc opt">;</span>
-  cairo_status_t status<span class="gtkdoc opt">;</span>
-  cairo_surface_t <span class="gtkdoc opt">*</span>surface<span class="gtkdoc opt">;</span>
+<span class="type">int</span><span class="normal"> </span><span class="function">main</span><span class="normal"> </span><span class="symbol">(</span><span class="type">int</span><span class="normal"> argc</span><span class="symbol">,</span><span class="normal"> </span><span class="type">char</span><span class="normal"> </span><span class="symbol">**</span><span class="normal">argv</span><span class="symbol">)</span>
+<span class="cbracket">{</span>
+<span class="normal">  </span><span class="usertype">cairo_t</span><span class="normal"> </span><span class="symbol">*</span><span class="normal">cr</span><span class="symbol">;</span>
+<span class="normal">  </span><span class="type">char</span><span class="normal"> </span><span class="symbol">*</span><span class="normal">filename</span><span class="symbol">;</span>
+<span class="normal">  </span><span class="usertype">cairo_status_t</span><span class="normal"> status</span><span class="symbol">;</span>
+<span class="normal">  </span><span class="usertype">cairo_surface_t</span><span class="normal"> </span><span class="symbol">*</span><span class="normal">surface</span><span class="symbol">;</span>
 
-  <span class="keyword">if</span> <span class="gtkdoc opt">(</span>argc <span class="gtkdoc opt">!=</span> <span class="number">2</span><span class="gtkdoc opt">)</span>
-    <span class="gtkdoc opt">{</span>
-      <span class="function"><a href="../glib/glib-Warnings-and-Assertions.html#g-printerr">g_printerr</a></span> <span class="gtkdoc opt">(</span><span class="string">&quot;Usage: cairosimple OUTPUT_FILENAME</span><span class="gtkdoc esc">\n</span><span class="string">&quot;</span><span class="gtkdoc opt">);</span>
-      <span class="keyword">return</span> <span class="number">1</span><span class="gtkdoc opt">;</span>
-    <span class="gtkdoc opt">}</span>
+<span class="normal">  </span><span class="keyword">if</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">argc </span><span class="symbol">!=</span><span class="normal"> </span><span class="number">2</span><span class="symbol">)</span>
+<span class="normal">    </span><span class="cbracket">{</span>
+<span class="normal">      </span><span class="function">g_printerr</span><span class="normal"> </span><span class="symbol">(</span><span class="string">"Usage: cairosimple OUTPUT_FILENAME</span><span class="specialchar">\n</span><span class="string">"</span><span class="symbol">);</span>
+<span class="normal">      </span><span class="keyword">return</span><span class="normal"> </span><span class="number">1</span><span class="symbol">;</span>
+<span class="normal">    </span><span class="cbracket">}</span>
 
-     filename <span class="gtkdoc opt">=</span> argv<span class="gtkdoc opt">[</span><span class="number">1</span><span class="gtkdoc opt">];</span>
+<span class="normal">     filename </span><span class="symbol">=</span><span class="normal"> argv</span><span class="symbol">[</span><span class="number">1</span><span class="symbol">];</span>
 
-  surface <span class="gtkdoc opt">=</span> <span class="function">cairo_image_surface_create</span> <span class="gtkdoc opt">(</span>CAIRO_FORMAT_ARGB32<span class="gtkdoc opt">,</span>
-                                        <span class="number">2</span> <span class="gtkdoc opt">*</span> RADIUS<span class="gtkdoc opt">,</span> <span class="number">2</span> <span class="gtkdoc opt">*</span> RADIUS<span class="gtkdoc opt">);</span>
-  cr <span class="gtkdoc opt">=</span> <span class="function">cairo_create</span> <span class="gtkdoc opt">(</span>surface<span class="gtkdoc opt">);</span>
+<span class="normal">  surface </span><span class="symbol">=</span><span class="normal"> </span><span class="function"><a href="/usr/share/gtk-doc/html/cairo/cairo-Image-Surfaces.html#cairo-image-surface-create">cairo_image_surface_create</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal"><a href="/usr/share/gtk-doc/html/cairo/cairo-Image-Surfaces.html#CAIRO-FORMAT-ARGB32:CAPS">CAIRO_FORMAT_ARGB32</a></span><span class="symbol">,</span>
+<span class="normal">                                        </span><span class="number">2</span><span class="normal"> </span><span class="symbol">*</span><span class="normal"> RADIUS</span><span class="symbol">,</span><span class="normal"> </span><span class="number">2</span><span class="normal"> </span><span class="symbol">*</span><span class="normal"> RADIUS</span><span class="symbol">);</span>
+<span class="normal">  cr </span><span class="symbol">=</span><span class="normal"> </span><span class="function"><a href="/usr/share/gtk-doc/html/cairo/cairo-cairo-t.html#cairo-create">cairo_create</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">surface</span><span class="symbol">);</span>
 
-  <span class="function">cairo_set_source_rgb</span> <span class="gtkdoc opt">(</span>cr<span class="gtkdoc opt">,</span> <span class="number">1.0</span><span class="gtkdoc opt">,</span> <span class="number">1.0</span><span class="gtkdoc opt">,</span> <span class="number">1.0</span><span class="gtkdoc opt">);</span>
-  <span class="function">cairo_paint</span> <span class="gtkdoc opt">(</span>cr<span class="gtkdoc opt">);</span>
-  <span class="function">draw_text</span> <span class="gtkdoc opt">(</span>cr<span class="gtkdoc opt">);</span>
-  <span class="function">cairo_destroy</span> <span class="gtkdoc opt">(</span>cr<span class="gtkdoc opt">);</span>
+<span class="normal">  </span><span class="function"><a href="/usr/share/gtk-doc/html/cairo/cairo-cairo-t.html#cairo-set-source-rgb">cairo_set_source_rgb</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">cr</span><span class="symbol">,</span><span class="normal"> </span><span class="number">1.0</span><span class="symbol">,</span><span class="normal"> </span><span class="number">1.0</span><span class="symbol">,</span><span class="normal"> </span><span class="number">1.0</span><span class="symbol">);</span>
+<span class="normal">  </span><span class="function"><a href="/usr/share/gtk-doc/html/cairo/cairo-cairo-t.html#cairo-paint">cairo_paint</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">cr</span><span class="symbol">);</span>
+<span class="normal">  </span><span class="function">draw_text</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">cr</span><span class="symbol">);</span>
+<span class="normal">  </span><span class="function"><a href="/usr/share/gtk-doc/html/cairo/cairo-cairo-t.html#cairo-destroy">cairo_destroy</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">cr</span><span class="symbol">);</span>
 
-  status <span class="gtkdoc opt">=</span> <span class="function">cairo_surface_write_to_png</span> <span class="gtkdoc opt">(</span>surface<span class="gtkdoc opt">,</span> filename<span class="gtkdoc opt">);</span>
-  <span class="function">cairo_surface_destroy</span> <span class="gtkdoc opt">(</span>surface<span class="gtkdoc opt">);</span>
+<span class="normal">  status </span><span class="symbol">=</span><span class="normal"> </span><span class="function"><a href="/usr/share/gtk-doc/html/cairo/cairo-PNG-Support.html#cairo-surface-write-to-png">cairo_surface_write_to_png</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">surface</span><span class="symbol">,</span><span class="normal"> filename</span><span class="symbol">);</span>
+<span class="normal">  </span><span class="function"><a href="/usr/share/gtk-doc/html/cairo/cairo-cairo-surface-t.html#cairo-surface-destroy">cairo_surface_destroy</a></span><span class="normal"> </span><span class="symbol">(</span><span class="normal">surface</span><span class="symbol">);</span>
 
-  <span class="keyword">if</span> <span class="gtkdoc opt">(</span>status <span class="gtkdoc opt">!=</span> CAIRO_STATUS_SUCCESS<span class="gtkdoc opt">)</span>
-    <span class="gtkdoc opt">{</span>
-      <span class="function"><a href="../glib/glib-Warnings-and-Assertions.html#g-printerr">g_printerr</a></span> <span class="gtkdoc opt">(</span><span class="string">&quot;Could not save png to &apos;%s&apos;</span><span class="gtkdoc esc">\n</span><span class="string">&quot;</span><span class="gtkdoc opt">,</span> filename<span class="gtkdoc opt">);</span>
-      <span class="keyword">return</span> <span class="number">1</span><span class="gtkdoc opt">;</span>
-    <span class="gtkdoc opt">}</span>
+<span class="normal">  </span><span class="keyword">if</span><span class="normal"> </span><span class="symbol">(</span><span class="normal">status </span><span class="symbol">!=</span><span class="normal"> <a href="/usr/share/gtk-doc/html/cairo/cairo-Error-handling.html#CAIRO-STATUS-SUCCESS:CAPS">CAIRO_STATUS_SUCCESS</a></span><span class="symbol">)</span>
+<span class="normal">    </span><span class="cbracket">{</span>
+<span class="normal">      </span><span class="function">g_printerr</span><span class="normal"> </span><span class="symbol">(</span><span class="string">"Could not save png to '%s'</span><span class="specialchar">\n</span><span class="string">"</span><span class="symbol">,</span><span class="normal"> filename</span><span class="symbol">);</span>
+<span class="normal">      </span><span class="keyword">return</span><span class="normal"> </span><span class="number">1</span><span class="symbol">;</span>
+<span class="normal">    </span><span class="cbracket">}</span>
 
-  <span class="keyword">return</span> <span class="number">0</span><span class="gtkdoc opt">;</span>
-<span class="gtkdoc opt">}</span></pre></td>
+<span class="normal">  </span><span class="keyword">return</span><span class="normal"> </span><span class="number">0</span><span class="symbol">;</span>
+<span class="cbracket">}</span></pre></td>
       </tr>
     </tbody>
   </table>
@@ -554,7 +554,7 @@ Each thread gets its own default fontmap.  In this way,
 PangoCairo can be used safely from multiple threads.</p>
 <div class="refsect3">
 <a name="pango-cairo-font-map-get-default.returns"></a><h4>Returns</h4>
-<p> the default PangoCairo fontmap
+<p>the default PangoCairo fontmap
 for the current thread. This object is owned by Pango and must not be freed. </p>
 <p><span class="annotation">[<acronym title="Don't free data after the code is done."><span class="acronym">transfer none</span></acronym>]</span></p>
 </div>
@@ -574,7 +574,7 @@ This function only changes the default fontmap for
 the current thread.   Default fontmaps of exisiting threads
 are not changed.  Default fontmaps of any new threads will
 still be created using <a class="link" href="pango-Cairo-Rendering.html#pango-cairo-font-map-new" title="pango_cairo_font_map_new ()"><code class="function">pango_cairo_font_map_new()</code></a>.</p>
-<p>A value of <a href="../glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> for <em class="parameter"><code>fontmap</code></em>
+<p>A value of <code class="literal">NULL</code> for <em class="parameter"><code>fontmap</code></em>
  will cause the current default
 font map to be released and a new default font
 map to be created on demand, using <a class="link" href="pango-Cairo-Rendering.html#pango-cairo-font-map-new" title="pango_cairo_font_map_new ()"><code class="function">pango_cairo_font_map_new()</code></a>.</p>
@@ -588,7 +588,7 @@ map to be created on demand, using <a class="link" href="pango-Cairo-Rendering.h
 </colgroup>
 <tbody><tr>
 <td class="parameter_name"><p>fontmap</p></td>
-<td class="parameter_description"><p> The new default font map, or <a href="../glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p></td>
+<td class="parameter_description"><p>The new default font map, or <code class="literal">NULL</code>. </p></td>
 <td class="parameter_annotations"><span class="annotation">[<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></td>
 </tr></tbody>
 </table></div>
@@ -617,8 +617,8 @@ this is only useful for testing, when at least two backends
 are compiled in.</p>
 <div class="refsect3">
 <a name="pango-cairo-font-map-new.returns"></a><h4>Returns</h4>
-<p> the newly allocated <a class="link" href="pango-Fonts.html#PangoFontMap"><span class="type">PangoFontMap</span></a>,
-which should be freed with <a href="../gobject/gobject-The-Base-Object-Type.html#g-object-unref"><code class="function">g_object_unref()</code></a>. </p>
+<p>the newly allocated <a class="link" href="pango-Fonts.html#PangoFontMap"><span class="type">PangoFontMap</span></a>,
+which should be freed with <code class="function">g_object_unref()</code>. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
 <p class="since">Since: <a class="link" href="api-index-1-10.html#api-index-1.10">1.10</a></p>
@@ -628,7 +628,7 @@ which should be freed with <a href="../gobject/gobject-The-Base-Object-Type.html
 <a name="pango-cairo-font-map-new-for-font-type"></a><h3>pango_cairo_font_map_new_for_font_type ()</h3>
 <pre class="programlisting"><a class="link" href="pango-Fonts.html#PangoFontMap"><span class="returnvalue">PangoFontMap</span></a> *
 pango_cairo_font_map_new_for_font_type
-                               (<em class="parameter"><code><span class="type">cairo_font_type_t</span> fonttype</code></em>);</pre>
+                               (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/cairo/cairo-cairo-font-face-t.html#cairo-font-type-t"><span class="type">cairo_font_type_t</span></a> fonttype</code></em>);</pre>
 <p>Creates a new <a class="link" href="pango-Cairo-Rendering.html#PangoCairoFontMap"><span class="type">PangoCairoFontMap</span></a> object of the type suitable
 to be used with cairo font backend of type <em class="parameter"><code>fonttype</code></em>
 .</p>
@@ -647,16 +647,16 @@ or in fact in most of those cases, just use
 </colgroup>
 <tbody><tr>
 <td class="parameter_name"><p>fonttype</p></td>
-<td class="parameter_description"><p>desired <span class="type">cairo_font_type_t</span></p></td>
+<td class="parameter_description"><p>desired <a href="/usr/share/gtk-doc/html/cairo/cairo-cairo-font-face-t.html#cairo-font-type-t"><span class="type">cairo_font_type_t</span></a></p></td>
 <td class="parameter_annotations"> </td>
 </tr></tbody>
 </table></div>
 </div>
 <div class="refsect3">
 <a name="pango-cairo-font-map-new-for-font-type.returns"></a><h4>Returns</h4>
-<p> the newly allocated
+<p>the newly allocated
 <a class="link" href="pango-Fonts.html#PangoFontMap"><span class="type">PangoFontMap</span></a> of suitable type which should be freed
-with <a href="../gobject/gobject-The-Base-Object-Type.html#g-object-unref"><code class="function">g_object_unref()</code></a>, or <a href="../glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if the requested
+with <code class="function">g_object_unref()</code>, or <code class="literal">NULL</code> if the requested
 cairo font backend is not supported / compiled in. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>][<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></p>
 </div>
@@ -665,7 +665,7 @@ cairo font backend is not supported / compiled in. </p>
 <hr>
 <div class="refsect2">
 <a name="pango-cairo-font-map-get-font-type"></a><h3>pango_cairo_font_map_get_font_type ()</h3>
-<pre class="programlisting"><span class="returnvalue">cairo_font_type_t</span>
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/cairo/cairo-cairo-font-face-t.html#cairo-font-type-t"><span class="returnvalue">cairo_font_type_t</span></a>
 pango_cairo_font_map_get_font_type (<em class="parameter"><code><a class="link" href="pango-Cairo-Rendering.html#PangoCairoFontMap"><span class="type">PangoCairoFontMap</span></a> *fontmap</code></em>);</pre>
 <p>Gets the type of Cairo font backend that <em class="parameter"><code>fontmap</code></em>
  uses.</p>
@@ -686,7 +686,7 @@ pango_cairo_font_map_get_font_type (<em class="parameter"><code><a class="link" 
 </div>
 <div class="refsect3">
 <a name="pango-cairo-font-map-get-font-type.returns"></a><h4>Returns</h4>
-<p> the <span class="type">cairo_font_type_t</span> cairo font backend type</p>
+<p> the <a href="/usr/share/gtk-doc/html/cairo/cairo-cairo-font-face-t.html#cairo-font-type-t"><span class="type">cairo_font_type_t</span></a> cairo font backend type</p>
 </div>
 <p class="since">Since: <a class="link" href="api-index-1-18.html#api-index-1.18">1.18</a></p>
 </div>
@@ -780,19 +780,19 @@ pango_cairo_font_map_create_context (<em class="parameter"><code><a class="link"
 </div>
 <div class="refsect3">
 <a name="pango-cairo-font-map-create-context.returns"></a><h4>Returns</h4>
-<p> the newly created context; free with <a href="../gobject/gobject-The-Base-Object-Type.html#g-object-unref"><code class="function">g_object_unref()</code></a>.</p>
+<p> the newly created context; free with <code class="function">g_object_unref()</code>.</p>
 </div>
 <p class="since">Since: <a class="link" href="api-index-1-10.html#api-index-1.10">1.10</a></p>
 </div>
 <hr>
 <div class="refsect2">
 <a name="pango-cairo-font-get-scaled-font"></a><h3>pango_cairo_font_get_scaled_font ()</h3>
-<pre class="programlisting"><span class="returnvalue">cairo_scaled_font_t</span> *
+<pre class="programlisting"><a href="/usr/share/gtk-doc/html/cairo/cairo-cairo-scaled-font-t.html#cairo-scaled-font-t"><span class="returnvalue">cairo_scaled_font_t</span></a> *
 pango_cairo_font_get_scaled_font (<em class="parameter"><code><a class="link" href="pango-Cairo-Rendering.html#PangoCairoFont"><span class="type">PangoCairoFont</span></a> *font</code></em>);</pre>
-<p>Gets the <span class="type">cairo_scaled_font_t</span> used by <em class="parameter"><code>font</code></em>
+<p>Gets the <a href="/usr/share/gtk-doc/html/cairo/cairo-cairo-scaled-font-t.html#cairo-scaled-font-t"><span class="type">cairo_scaled_font_t</span></a> used by <em class="parameter"><code>font</code></em>
 .
 The scaled font can be referenced and kept using
-<code class="function">cairo_scaled_font_reference()</code>.</p>
+<a href="/usr/share/gtk-doc/html/cairo/cairo-cairo-scaled-font-t.html#cairo-scaled-font-reference"><code class="function">cairo_scaled_font_reference()</code></a>.</p>
 <div class="refsect3">
 <a name="pango-cairo-font-get-scaled-font.parameters"></a><h4>Parameters</h4>
 <div class="informaltable"><table class="informaltable" width="100%" border="0">
@@ -810,10 +810,10 @@ The scaled font can be referenced and kept using
 </div>
 <div class="refsect3">
 <a name="pango-cairo-font-get-scaled-font.returns"></a><h4>Returns</h4>
-<p> the <span class="type">cairo_scaled_font_t</span> used by <em class="parameter"><code>font</code></em>
+<p>the <a href="/usr/share/gtk-doc/html/cairo/cairo-cairo-scaled-font-t.html#cairo-scaled-font-t"><span class="type">cairo_scaled_font_t</span></a> used by <em class="parameter"><code>font</code></em>
 ,
-or <a href="../glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if <em class="parameter"><code>font</code></em>
-is <a href="../glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>. </p>
+or <code class="literal">NULL</code> if <em class="parameter"><code>font</code></em>
+is <code class="literal">NULL</code>. </p>
 <p><span class="annotation">[<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></p>
 </div>
 <p class="since">Since: <a class="link" href="api-index-1-18.html#api-index-1.18">1.18</a></p>
@@ -887,7 +887,7 @@ be returned if no resolution has previously been set.</p>
 <a name="pango-cairo-context-set-font-options"></a><h3>pango_cairo_context_set_font_options ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
 pango_cairo_context_set_font_options (<em class="parameter"><code><a class="link" href="pango-Text-Processing.html#PangoContext"><span class="type">PangoContext</span></a> *context</code></em>,
-                                      <em class="parameter"><code>const <span class="type">cairo_font_options_t</span> *options</code></em>);</pre>
+                                      <em class="parameter"><code>const <a href="/usr/share/gtk-doc/html/cairo/cairo-cairo-font-options-t.html#cairo-font-options-t"><span class="type">cairo_font_options_t</span></a> *options</code></em>);</pre>
 <p>Sets the font options used when rendering text with this context.
 These options override any options that <a class="link" href="pango-Cairo-Rendering.html#pango-cairo-update-context" title="pango_cairo_update_context ()"><code class="function">pango_cairo_update_context()</code></a>
 derives from the target surface.</p>
@@ -907,7 +907,7 @@ derives from the target surface.</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>options</p></td>
-<td class="parameter_description"><p> a <span class="type">cairo_font_options_t</span>, or <a href="../glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> to unset
+<td class="parameter_description"><p>a <a href="/usr/share/gtk-doc/html/cairo/cairo-cairo-font-options-t.html#cairo-font-options-t"><span class="type">cairo_font_options_t</span></a>, or <code class="literal">NULL</code> to unset
 any previously set options. A copy is made. </p></td>
 <td class="parameter_annotations"><span class="annotation">[<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></td>
 </tr>
@@ -919,7 +919,7 @@ any previously set options. A copy is made. </p></td>
 <hr>
 <div class="refsect2">
 <a name="pango-cairo-context-get-font-options"></a><h3>pango_cairo_context_get_font_options ()</h3>
-<pre class="programlisting">const <span class="returnvalue">cairo_font_options_t</span> *
+<pre class="programlisting">const <a href="/usr/share/gtk-doc/html/cairo/cairo-cairo-font-options-t.html#cairo-font-options-t"><span class="returnvalue">cairo_font_options_t</span></a> *
 pango_cairo_context_get_font_options (<em class="parameter"><code><a class="link" href="pango-Text-Processing.html#PangoContext"><span class="type">PangoContext</span></a> *context</code></em>);</pre>
 <p>Retrieves any font rendering options previously set with
 <a class="link" href="pango-Cairo-Rendering.html#pango-cairo-context-set-font-options" title="pango_cairo_context_set_font_options ()"><code class="function">pango_cairo_context_set_font_options()</code></a>. This function does not report options
@@ -941,8 +941,8 @@ that are derived from the target surface by <a class="link" href="pango-Cairo-Re
 </div>
 <div class="refsect3">
 <a name="pango-cairo-context-get-font-options.returns"></a><h4>Returns</h4>
-<p> the font options previously set on the
-context, or <a href="../glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if no options have been set. This value is
+<p>the font options previously set on the
+context, or <code class="literal">NULL</code> if no options have been set. This value is
 owned by the context and must not be modified or freed. </p>
 <p><span class="annotation">[<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></p>
 </div>
@@ -952,10 +952,10 @@ owned by the context and must not be modified or freed. </p>
 <div class="refsect2">
 <a name="PangoCairoShapeRendererFunc"></a><h3>PangoCairoShapeRendererFunc ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
-<span class="c_punctuation">(</span>*PangoCairoShapeRendererFunc<span class="c_punctuation">)</span> (<em class="parameter"><code><span class="type">cairo_t</span> *cr</code></em>,
+<span class="c_punctuation">(</span>*PangoCairoShapeRendererFunc<span class="c_punctuation">)</span> (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/cairo/cairo-cairo-t.html#cairo-t"><span class="type">cairo_t</span></a> *cr</code></em>,
                                 <em class="parameter"><code><a class="link" href="pango-Text-Attributes.html#PangoAttrShape" title="struct PangoAttrShape"><span class="type">PangoAttrShape</span></a> *attr</code></em>,
-                                <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gboolean"><span class="type">gboolean</span></a> do_path</code></em>,
-                                <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> data</code></em>);</pre>
+                                <em class="parameter"><code><span class="type">gboolean</span> do_path</code></em>,
+                                <em class="parameter"><code><span class="type">gpointer</span> data</code></em>);</pre>
 <p>Function type for rendering attributes of type <a class="link" href="pango-Text-Attributes.html#PANGO-ATTR-SHAPE:CAPS"><code class="literal">PANGO_ATTR_SHAPE</code></a>
 with Pango's Cairo renderer.</p>
 <div class="refsect3">
@@ -983,7 +983,7 @@ be rendered</p></td>
 <td class="parameter_description"><p>whether only the shape path should be appended to current
 path of <em class="parameter"><code>cr</code></em>
 and no filling/stroking done.  This will be set
-to <a href="../glib/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">TRUE</code></a> when called from <a class="link" href="pango-Cairo-Rendering.html#pango-cairo-layout-path" title="pango_cairo_layout_path ()"><code class="function">pango_cairo_layout_path()</code></a> and
+to <code class="literal">TRUE</code> when called from <a class="link" href="pango-Cairo-Rendering.html#pango-cairo-layout-path" title="pango_cairo_layout_path ()"><code class="function">pango_cairo_layout_path()</code></a> and
 <a class="link" href="pango-Cairo-Rendering.html#pango-cairo-layout-line-path" title="pango_cairo_layout_line_path ()"><code class="function">pango_cairo_layout_line_path()</code></a> rendering functions.</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
@@ -1003,8 +1003,8 @@ to <a href="../glib/glib-Standard-Macros.html#TRUE:CAPS"><code class="literal">T
 pango_cairo_context_set_shape_renderer
                                (<em class="parameter"><code><a class="link" href="pango-Text-Processing.html#PangoContext"><span class="type">PangoContext</span></a> *context</code></em>,
                                 <em class="parameter"><code><a class="link" href="pango-Cairo-Rendering.html#PangoCairoShapeRendererFunc" title="PangoCairoShapeRendererFunc ()"><span class="type">PangoCairoShapeRendererFunc</span></a> func</code></em>,
-                                <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> data</code></em>,
-                                <em class="parameter"><code><a href="../glib/glib-Datasets.html#GDestroyNotify"><span class="type">GDestroyNotify</span></a> dnotify</code></em>);</pre>
+                                <em class="parameter"><code><span class="type">gpointer</span> data</code></em>,
+                                <em class="parameter"><code><span class="type">GDestroyNotify</span> dnotify</code></em>);</pre>
 <p>Sets callback function for context to use for rendering attributes
 of type <a class="link" href="pango-Text-Attributes.html#PANGO-ATTR-SHAPE:CAPS"><code class="literal">PANGO_ATTR_SHAPE</code></a>.  See <a class="link" href="pango-Cairo-Rendering.html#PangoCairoShapeRendererFunc" title="PangoCairoShapeRendererFunc ()"><span class="type">PangoCairoShapeRendererFunc</span></a> for
 details.</p>
@@ -1024,8 +1024,8 @@ details.</p>
 </tr>
 <tr>
 <td class="parameter_name"><p>func</p></td>
-<td class="parameter_description"><p> Callback function for rendering attributes of
-type <a class="link" href="pango-Text-Attributes.html#PANGO-ATTR-SHAPE:CAPS"><code class="literal">PANGO_ATTR_SHAPE</code></a>, or <a href="../glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> to disable shape rendering. </p></td>
+<td class="parameter_description"><p>Callback function for rendering attributes of
+type <a class="link" href="pango-Text-Attributes.html#PANGO-ATTR-SHAPE:CAPS"><code class="literal">PANGO_ATTR_SHAPE</code></a>, or <code class="literal">NULL</code> to disable shape rendering. </p></td>
 <td class="parameter_annotations"><span class="annotation">[<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></td>
 </tr>
 <tr>
@@ -1038,7 +1038,7 @@ type <a class="link" href="pango-Text-Attributes.html#PANGO-ATTR-SHAPE:CAPS"><co
 <td class="parameter_name"><p>dnotify</p></td>
 <td class="parameter_description"><p>Callback that will be called when the
 context is freed to release <em class="parameter"><code>data</code></em>
-, or <a href="../glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a>.</p></td>
+, or <code class="literal">NULL</code>.</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 </tbody>
@@ -1052,7 +1052,7 @@ context is freed to release <em class="parameter"><code>data</code></em>
 <pre class="programlisting"><a class="link" href="pango-Cairo-Rendering.html#PangoCairoShapeRendererFunc" title="PangoCairoShapeRendererFunc ()"><span class="returnvalue">PangoCairoShapeRendererFunc</span></a>
 pango_cairo_context_get_shape_renderer
                                (<em class="parameter"><code><a class="link" href="pango-Text-Processing.html#PangoContext"><span class="type">PangoContext</span></a> *context</code></em>,
-                                <em class="parameter"><code><a href="../glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> *data</code></em>);</pre>
+                                <em class="parameter"><code><span class="type">gpointer</span> *data</code></em>);</pre>
 <p>Sets callback function for context to use for rendering attributes
 of type <a class="link" href="pango-Text-Attributes.html#PANGO-ATTR-SHAPE:CAPS"><code class="literal">PANGO_ATTR_SHAPE</code></a>.  See <a class="link" href="pango-Cairo-Rendering.html#PangoCairoShapeRendererFunc" title="PangoCairoShapeRendererFunc ()"><span class="type">PangoCairoShapeRendererFunc</span></a> for
 details.</p>
@@ -1076,7 +1076,7 @@ attributes of type <a class="link" href="pango-Text-Attributes.html#PANGO-ATTR-S
 </tr>
 <tr>
 <td class="parameter_name"><p>data</p></td>
-<td class="parameter_description"><p>Pointer to <a href="../glib/glib-Basic-Types.html#gpointer"><span class="type">gpointer</span></a> to return user data</p></td>
+<td class="parameter_description"><p>Pointer to <span class="type">gpointer</span> to return user data</p></td>
 <td class="parameter_annotations"> </td>
 </tr>
 </tbody>
@@ -1084,8 +1084,8 @@ attributes of type <a class="link" href="pango-Text-Attributes.html#PANGO-ATTR-S
 </div>
 <div class="refsect3">
 <a name="pango-cairo-context-get-shape-renderer.returns"></a><h4>Returns</h4>
-<p> the shape rendering callback previously
-set on the context, or <a href="../glib/glib-Standard-Macros.html#NULL:CAPS"><code class="literal">NULL</code></a> if no shape rendering callback have
+<p>the shape rendering callback previously
+set on the context, or <code class="literal">NULL</code> if no shape rendering callback have
 been set. </p>
 <p><span class="annotation">[<acronym title="NULL may be passed as the value in, out, in-out; or as a return value."><span class="acronym">nullable</span></acronym>]</span></p>
 </div>
@@ -1095,7 +1095,7 @@ been set. </p>
 <div class="refsect2">
 <a name="pango-cairo-create-context"></a><h3>pango_cairo_create_context ()</h3>
 <pre class="programlisting"><a class="link" href="pango-Text-Processing.html#PangoContext"><span class="returnvalue">PangoContext</span></a> *
-pango_cairo_create_context (<em class="parameter"><code><span class="type">cairo_t</span> *cr</code></em>);</pre>
+pango_cairo_create_context (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/cairo/cairo-cairo-t.html#cairo-t"><span class="type">cairo_t</span></a> *cr</code></em>);</pre>
 <p>Creates a context object set up to match the current transformation
 and target surface of the Cairo context.  This context can then be
 used to create a layout using <a class="link" href="pango-Layout-Objects.html#pango-layout-new" title="pango_layout_new ()"><code class="function">pango_layout_new()</code></a>.</p>
@@ -1122,8 +1122,8 @@ directly, you can use <a class="link" href="pango-Cairo-Rendering.html#pango-cai
 </div>
 <div class="refsect3">
 <a name="pango-cairo-create-context.returns"></a><h4>Returns</h4>
-<p> the newly created <a class="link" href="pango-Text-Processing.html#PangoContext"><span class="type">PangoContext</span></a>. Free with
-<a href="../gobject/gobject-The-Base-Object-Type.html#g-object-unref"><code class="function">g_object_unref()</code></a>. </p>
+<p>the newly created <a class="link" href="pango-Text-Processing.html#PangoContext"><span class="type">PangoContext</span></a>. Free with
+<code class="function">g_object_unref()</code>. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
 <p class="since">Since: <a class="link" href="api-index-1-22.html#api-index-1.22">1.22</a></p>
@@ -1132,7 +1132,7 @@ directly, you can use <a class="link" href="pango-Cairo-Rendering.html#pango-cai
 <div class="refsect2">
 <a name="pango-cairo-update-context"></a><h3>pango_cairo_update_context ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
-pango_cairo_update_context (<em class="parameter"><code><span class="type">cairo_t</span> *cr</code></em>,
+pango_cairo_update_context (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/cairo/cairo-cairo-t.html#cairo-t"><span class="type">cairo_t</span></a> *cr</code></em>,
                             <em class="parameter"><code><a class="link" href="pango-Text-Processing.html#PangoContext"><span class="type">PangoContext</span></a> *context</code></em>);</pre>
 <p>Updates a <a class="link" href="pango-Text-Processing.html#PangoContext"><span class="type">PangoContext</span></a> previously created for use with Cairo to
 match the current transformation and target surface of a Cairo
@@ -1167,7 +1167,7 @@ layouts.</p>
 <div class="refsect2">
 <a name="pango-cairo-create-layout"></a><h3>pango_cairo_create_layout ()</h3>
 <pre class="programlisting"><a class="link" href="pango-Layout-Objects.html#PangoLayout"><span class="returnvalue">PangoLayout</span></a> *
-pango_cairo_create_layout (<em class="parameter"><code><span class="type">cairo_t</span> *cr</code></em>);</pre>
+pango_cairo_create_layout (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/cairo/cairo-cairo-t.html#cairo-t"><span class="type">cairo_t</span></a> *cr</code></em>);</pre>
 <p>Creates a layout object set up to match the current transformation
 and target surface of the Cairo context.  This layout can then be
 used for text measurement with functions like
@@ -1196,8 +1196,8 @@ application that was laying out large amounts of text.</p>
 </div>
 <div class="refsect3">
 <a name="pango-cairo-create-layout.returns"></a><h4>Returns</h4>
-<p> the newly created <a class="link" href="pango-Layout-Objects.html#PangoLayout"><span class="type">PangoLayout</span></a>. Free with
-<a href="../gobject/gobject-The-Base-Object-Type.html#g-object-unref"><code class="function">g_object_unref()</code></a>. </p>
+<p>the newly created <a class="link" href="pango-Layout-Objects.html#PangoLayout"><span class="type">PangoLayout</span></a>. Free with
+<code class="function">g_object_unref()</code>. </p>
 <p><span class="annotation">[<acronym title="Free data after the code is done."><span class="acronym">transfer full</span></acronym>]</span></p>
 </div>
 <p class="since">Since: <a class="link" href="api-index-1-10.html#api-index-1.10">1.10</a></p>
@@ -1206,7 +1206,7 @@ application that was laying out large amounts of text.</p>
 <div class="refsect2">
 <a name="pango-cairo-update-layout"></a><h3>pango_cairo_update_layout ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
-pango_cairo_update_layout (<em class="parameter"><code><span class="type">cairo_t</span> *cr</code></em>,
+pango_cairo_update_layout (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/cairo/cairo-cairo-t.html#cairo-t"><span class="type">cairo_t</span></a> *cr</code></em>,
                            <em class="parameter"><code><a class="link" href="pango-Layout-Objects.html#PangoLayout"><span class="type">PangoLayout</span></a> *layout</code></em>);</pre>
 <p>Updates the private <a class="link" href="pango-Text-Processing.html#PangoContext"><span class="type">PangoContext</span></a> of a <a class="link" href="pango-Layout-Objects.html#PangoLayout"><span class="type">PangoLayout</span></a> created with
 <a class="link" href="pango-Cairo-Rendering.html#pango-cairo-create-layout" title="pango_cairo_create_layout ()"><code class="function">pango_cairo_create_layout()</code></a> to match the current transformation
@@ -1239,7 +1239,7 @@ and target surface of a Cairo context.</p>
 <div class="refsect2">
 <a name="pango-cairo-show-glyph-string"></a><h3>pango_cairo_show_glyph_string ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
-pango_cairo_show_glyph_string (<em class="parameter"><code><span class="type">cairo_t</span> *cr</code></em>,
+pango_cairo_show_glyph_string (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/cairo/cairo-cairo-t.html#cairo-t"><span class="type">cairo_t</span></a> *cr</code></em>,
                                <em class="parameter"><code><a class="link" href="pango-Fonts.html#PangoFont"><span class="type">PangoFont</span></a> *font</code></em>,
                                <em class="parameter"><code><a class="link" href="pango-Glyph-Storage.html#PangoGlyphString"><span class="type">PangoGlyphString</span></a> *glyphs</code></em>);</pre>
 <p>Draws the glyphs in <em class="parameter"><code>glyphs</code></em>
@@ -1279,7 +1279,7 @@ be drawn at the current point of the cairo context.</p>
 <div class="refsect2">
 <a name="pango-cairo-show-glyph-item"></a><h3>pango_cairo_show_glyph_item ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
-pango_cairo_show_glyph_item (<em class="parameter"><code><span class="type">cairo_t</span> *cr</code></em>,
+pango_cairo_show_glyph_item (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/cairo/cairo-cairo-t.html#cairo-t"><span class="type">cairo_t</span></a> *cr</code></em>,
                              <em class="parameter"><code>const <span class="type">char</span> *text</code></em>,
                              <em class="parameter"><code><a class="link" href="pango-Glyph-Storage.html#PangoGlyphItem"><span class="type">PangoGlyphItem</span></a> *glyph_item</code></em>);</pre>
 <p>Draws the glyphs in <em class="parameter"><code>glyph_item</code></em>
@@ -1327,7 +1327,7 @@ refers to</p></td>
 <div class="refsect2">
 <a name="pango-cairo-show-layout-line"></a><h3>pango_cairo_show_layout_line ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
-pango_cairo_show_layout_line (<em class="parameter"><code><span class="type">cairo_t</span> *cr</code></em>,
+pango_cairo_show_layout_line (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/cairo/cairo-cairo-t.html#cairo-t"><span class="type">cairo_t</span></a> *cr</code></em>,
                               <em class="parameter"><code><a class="link" href="pango-Layout-Objects.html#PangoLayoutLine"><span class="type">PangoLayoutLine</span></a> *line</code></em>);</pre>
 <p>Draws a <a class="link" href="pango-Layout-Objects.html#PangoLayoutLine"><span class="type">PangoLayoutLine</span></a> in the specified cairo context.
 The origin of the glyphs (the left edge of the line) will
@@ -1360,7 +1360,7 @@ be drawn at the current point of the cairo context.</p>
 <div class="refsect2">
 <a name="pango-cairo-show-layout"></a><h3>pango_cairo_show_layout ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
-pango_cairo_show_layout (<em class="parameter"><code><span class="type">cairo_t</span> *cr</code></em>,
+pango_cairo_show_layout (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/cairo/cairo-cairo-t.html#cairo-t"><span class="type">cairo_t</span></a> *cr</code></em>,
                          <em class="parameter"><code><a class="link" href="pango-Layout-Objects.html#PangoLayout"><span class="type">PangoLayout</span></a> *layout</code></em>);</pre>
 <p>Draws a <a class="link" href="pango-Layout-Objects.html#PangoLayout"><span class="type">PangoLayout</span></a> in the specified cairo context.
 The top-left corner of the <a class="link" href="pango-Layout-Objects.html#PangoLayout"><span class="type">PangoLayout</span></a> will be drawn
@@ -1393,7 +1393,7 @@ at the current point of the cairo context.</p>
 <div class="refsect2">
 <a name="pango-cairo-show-error-underline"></a><h3>pango_cairo_show_error_underline ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
-pango_cairo_show_error_underline (<em class="parameter"><code><span class="type">cairo_t</span> *cr</code></em>,
+pango_cairo_show_error_underline (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/cairo/cairo-cairo-t.html#cairo-t"><span class="type">cairo_t</span></a> *cr</code></em>,
                                   <em class="parameter"><code><span class="type">double</span> x</code></em>,
                                   <em class="parameter"><code><span class="type">double</span> y</code></em>,
                                   <em class="parameter"><code><span class="type">double</span> width</code></em>,
@@ -1446,7 +1446,7 @@ original rectangle)</p>
 <div class="refsect2">
 <a name="pango-cairo-glyph-string-path"></a><h3>pango_cairo_glyph_string_path ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
-pango_cairo_glyph_string_path (<em class="parameter"><code><span class="type">cairo_t</span> *cr</code></em>,
+pango_cairo_glyph_string_path (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/cairo/cairo-cairo-t.html#cairo-t"><span class="type">cairo_t</span></a> *cr</code></em>,
                                <em class="parameter"><code><a class="link" href="pango-Fonts.html#PangoFont"><span class="type">PangoFont</span></a> *font</code></em>,
                                <em class="parameter"><code><a class="link" href="pango-Glyph-Storage.html#PangoGlyphString"><span class="type">PangoGlyphString</span></a> *glyphs</code></em>);</pre>
 <p>Adds the glyphs in <em class="parameter"><code>glyphs</code></em>
@@ -1486,7 +1486,7 @@ will be at the current point of the cairo context.</p>
 <div class="refsect2">
 <a name="pango-cairo-layout-line-path"></a><h3>pango_cairo_layout_line_path ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
-pango_cairo_layout_line_path (<em class="parameter"><code><span class="type">cairo_t</span> *cr</code></em>,
+pango_cairo_layout_line_path (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/cairo/cairo-cairo-t.html#cairo-t"><span class="type">cairo_t</span></a> *cr</code></em>,
                               <em class="parameter"><code><a class="link" href="pango-Layout-Objects.html#PangoLayoutLine"><span class="type">PangoLayoutLine</span></a> *line</code></em>);</pre>
 <p>Adds the text in <a class="link" href="pango-Layout-Objects.html#PangoLayoutLine"><span class="type">PangoLayoutLine</span></a> to the current path in the
 specified cairo context.  The origin of the glyphs (the left edge
@@ -1519,7 +1519,7 @@ of the line) will be at the current point of the cairo context.</p>
 <div class="refsect2">
 <a name="pango-cairo-layout-path"></a><h3>pango_cairo_layout_path ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
-pango_cairo_layout_path (<em class="parameter"><code><span class="type">cairo_t</span> *cr</code></em>,
+pango_cairo_layout_path (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/cairo/cairo-cairo-t.html#cairo-t"><span class="type">cairo_t</span></a> *cr</code></em>,
                          <em class="parameter"><code><a class="link" href="pango-Layout-Objects.html#PangoLayout"><span class="type">PangoLayout</span></a> *layout</code></em>);</pre>
 <p>Adds the text in a <a class="link" href="pango-Layout-Objects.html#PangoLayout"><span class="type">PangoLayout</span></a> to the current path in the
 specified cairo context.  The top-left corner of the <a class="link" href="pango-Layout-Objects.html#PangoLayout"><span class="type">PangoLayout</span></a>
@@ -1552,7 +1552,7 @@ will be at the current point of the cairo context.</p>
 <div class="refsect2">
 <a name="pango-cairo-error-underline-path"></a><h3>pango_cairo_error_underline_path ()</h3>
 <pre class="programlisting"><span class="returnvalue">void</span>
-pango_cairo_error_underline_path (<em class="parameter"><code><span class="type">cairo_t</span> *cr</code></em>,
+pango_cairo_error_underline_path (<em class="parameter"><code><a href="/usr/share/gtk-doc/html/cairo/cairo-cairo-t.html#cairo-t"><span class="type">cairo_t</span></a> *cr</code></em>,
                                   <em class="parameter"><code><span class="type">double</span> x</code></em>,
                                   <em class="parameter"><code><span class="type">double</span> y</code></em>,
                                   <em class="parameter"><code><span class="type">double</span> width</code></em>,
@@ -1624,6 +1624,6 @@ on the particular font technology Cairo was compiled to use.</p>
 </div>
 </div>
 <div class="footer">
-<hr>Generated by GTK-Doc V1.25.1</div>
+<hr>Generated by GTK-Doc V1.28</div>
 </body>
 </html>

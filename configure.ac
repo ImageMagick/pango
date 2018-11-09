@@ -21,8 +21,8 @@ dnl
 
 dnl The triplet
 m4_define([pango_version_major], [1])
-m4_define([pango_version_minor], [40])
-m4_define([pango_version_micro], [11])
+m4_define([pango_version_minor], [42])
+m4_define([pango_version_micro], [4])
 
 m4_define([pango_version],
           [pango_version_major.pango_version_minor.pango_version_micro])
@@ -208,7 +208,7 @@ AM_CONDITIONAL(CROSS_COMPILING, [test $cross_compiling = yes])
 # Checks for HarfBuzz
 #
 have_harfbuzz=false
-PKG_CHECK_MODULES(HARFBUZZ, harfbuzz >= 1.2.3, have_harfbuzz=true, :)
+PKG_CHECK_MODULES(HARFBUZZ, harfbuzz >= 1.4.2, have_harfbuzz=true, :)
 AM_CONDITIONAL(HAVE_HARFBUZZ, $have_harfbuzz)
 
 #
@@ -216,12 +216,12 @@ AM_CONDITIONAL(HAVE_HARFBUZZ, $have_harfbuzz)
 #
 have_fontconfig=false
 if $have_harfbuzz ; then
-  PKG_CHECK_MODULES(FONTCONFIG, fontconfig >= 2.10.91, have_fontconfig=true, :)
+  PKG_CHECK_MODULES(FONTCONFIG, fontconfig >= 2.11.91, have_fontconfig=true, :)
 fi
 if $have_fontconfig ; then
   pango_save_libs=$LIBS
   LIBS="$LIBS $FONTCONFIG_LIBS"
-  AC_CHECK_FUNCS(FcWeightFromOpenType)
+  AC_CHECK_FUNCS(FcWeightFromOpenTypeDouble)
   LIBS=$pango_save_libs
 fi
 
@@ -423,6 +423,25 @@ if $have_cairo ; then
   AC_SUBST(PKGCONFIG_CAIRO_REQUIRES)
 fi
 
+# To compensate for Meson builds on MSVC where pkg-config files may well not be
+# available for cairo, harfbuzz, freetype2 and fontconfig
+CAIRO_PC="cairo"
+FREETYPE2_PC="freetype2"
+FONTCONFIG_PC="fontconfig"
+HARFBUZZ_PC="harfbuzz"
+AC_SUBST(CAIRO_PC)
+AC_SUBST(FREETYPE2_PC)
+AC_SUBST(FONTCONFIG_PC)
+AC_SUBST(HARFBUZZ_PC)
+CAIRO_LIB=
+FREETYPE2_LIB=
+FONTCONFIG_LIB=
+HARFBUZZ_LIB=
+AC_SUBST(CAIRO_LIB)
+AC_SUBST(FREETYPE2_LIB)
+AC_SUBST(FONTCONFIG_LIB)
+AC_SUBST(HARFBUZZ_LIB)
+
 AM_CONDITIONAL(HAVE_CAIRO, $have_cairo)
 AM_CONDITIONAL(HAVE_CAIRO_PNG, $have_cairo_png)
 AM_CONDITIONAL(HAVE_CAIRO_PS, $have_cairo_ps)
@@ -456,6 +475,10 @@ PKG_CHECK_MODULES(GLIB, $GLIB_MODULES, :,
 GLIB_MKENUMS=`$PKG_CONFIG --variable=glib_mkenums glib-2.0`
 AC_SUBST(GLIB_MKENUMS)
 
+# Checks for FriBiDi
+FRIBIDI_REQUIRED_VERSION=0.19.7
+PKG_CHECK_MODULES(FRIBIDI, fribidi >= $FRIBIDI_REQUIRED_VERSION)
+
 #
 # Checks for LibThai
 #
@@ -464,6 +487,10 @@ have_libthai=false
 PKG_CHECK_MODULES(LIBTHAI, libthai >= $LIBTHAI_REQUIRED_VERSION, have_libthai=true, :)
 if $have_libthai; then
 	AC_DEFINE(HAVE_LIBTHAI, 1, [Whether libthai is available])
+	pango_save_libs=$LIBS
+	LIBS="$LIBS $LIBTHAI_LIBS"
+	AC_CHECK_FUNCS(th_brk_find_breaks)
+	LIBS=$pango_save_libs
 fi
 
 #
@@ -637,13 +664,12 @@ _EOF
 AC_CONFIG_FILES([
 Makefile
 pango/Makefile
-pango/mini-fribidi/Makefile
 pango/pango.rc
 pango/pangoft2.rc
 pango/pangowin32.rc
 pango/pangocairo.rc
 pango/pangoxft.rc
-pango-view/Makefile
+utils/Makefile
 examples/Makefile
 docs/Makefile
 docs/version.xml
