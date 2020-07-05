@@ -96,30 +96,6 @@ pango_cairo_core_text_font_create_font_face (PangoCairoFont *font)
   return cairo_face;
 }
 
-static int
-max_glyph_width (PangoLayout *layout)
-{
-  int max_width = 0;
-  GSList *l, *r;
-
-  for (l = pango_layout_get_lines_readonly (layout); l; l = l->next)
-    {
-      PangoLayoutLine *line = l->data;
-
-      for (r = line->runs; r; r = r->next)
-	{
-	  PangoGlyphString *glyphs = ((PangoGlyphItem *)r->data)->glyphs;
-	  int i;
-
-	  for (i = 0; i < glyphs->num_glyphs; i++)
-	    if (glyphs->glyphs[i].geometry.width > max_width)
-	      max_width = glyphs->glyphs[i].geometry.width;
-	}
-    }
-
-  return max_width;
-}
-
 static PangoFontMetrics *
 pango_cairo_core_text_font_create_base_metrics_for_context (PangoCairoFont *font,
                                                             PangoContext   *context)
@@ -139,26 +115,13 @@ pango_cairo_core_text_font_create_base_metrics_for_context (PangoCairoFont *font
 
   metrics->ascent = CTFontGetAscent (ctfont) * PANGO_SCALE;
   metrics->descent = CTFontGetDescent (ctfont) * PANGO_SCALE;
+  metrics->height = (CTFontGetAscent (ctfont) + CTFontGetDescent (ctfont) + CTFontGetLeading (ctfont)) * PANGO_SCALE;
 
   metrics->underline_position = CTFontGetUnderlinePosition (ctfont) * PANGO_SCALE;
   metrics->underline_thickness = CTFontGetUnderlineThickness (ctfont) * PANGO_SCALE;
 
   metrics->strikethrough_position = metrics->ascent / 3;
   metrics->strikethrough_thickness = CTFontGetUnderlineThickness (ctfont) * PANGO_SCALE;
-
-  layout = pango_layout_new (context);
-  font_desc = pango_font_describe_with_absolute_size ((PangoFont *) font);
-  pango_layout_set_font_description (layout, font_desc);
-  pango_layout_set_text (layout, sample_str, -1);
-  pango_layout_get_extents (layout, NULL, &extents);
-
-  metrics->approximate_char_width = extents.width / pango_utf8_strwidth (sample_str);
-
-  pango_layout_set_text (layout, "0123456789", -1);
-  metrics->approximate_digit_width = max_glyph_width (layout);
-
-  pango_font_description_free (font_desc);
-  g_object_unref (layout);
 
   return metrics;
 }

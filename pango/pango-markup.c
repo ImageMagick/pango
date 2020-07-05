@@ -30,6 +30,197 @@
 #include "pango-impl-utils.h"
 #include "pango-utils-internal.h"
 
+/**
+ * SECTION:markup
+ * @title:Markup
+ * @short_description:Simple markup language for text with attributes
+ *
+ * Frequently, you want to display some text to the user with attributes
+ * applied to part of the text (for example, you might want bold or
+ * italicized words). With the base Pango interfaces, you could create a
+ * #PangoAttrList and apply it to the text; the problem is that you'd
+ * need to apply attributes to some numeric range of characters, for
+ * example "characters 12-17." This is broken from an internationalization
+ * standpoint; once the text is translated, the word you wanted to
+ * italicize could be in a different position.
+ *
+ * The solution is to include the text attributes in the string to be
+ * translated. Pango provides this feature with a small markup language.
+ * You can parse a marked-up string into the string text plus a
+ * #PangoAttrList using either of pango_parse_markup() or
+ * pango_markup_parser_new().
+ *
+ * A simple example of a marked-up string might be:
+ * |[
+ * <span foreground="blue" size="x-large">Blue text</span> is <i>cool</i>!
+ * ]|
+ *
+ * Pango uses #GMarkup to parse this language, which means that XML
+ * features such as numeric character entities such as `&#169;` for
+ * © can be used too.
+ *
+ * The root tag of a marked-up document is `<markup>`, but
+ * pango_parse_markup() allows you to omit this tag, so you will most
+ * likely never need to use it. The most general markup tag is `<span>`,
+ * then there are some convenience tags.
+ *
+ * ## Span attributes
+ *
+ * `<span>` has the following attributes:
+ *
+ * * `font_desc`:
+ *   A font description string, such as "Sans Italic 12".
+ *   See pango_font_description_from_string() for a description of the
+ *   format of the string representation . Note that any other span
+ *   attributes will override this description. So if you have "Sans Italic"
+ *   and also a `style="normal"` attribute, you will get Sans normal,
+ *   not italic.
+ *
+ * * `font_family`:
+ *   A font family name
+ *
+ * * `font_size`, `size`:
+ *   Font size in 1024ths of a point, or one of the absolute
+ *   sizes `xx-small`, `x-small`, `small`, `medium`, `large`,
+ *   `x-large`, `xx-large`, or one of the relative sizes `smaller`
+ *   or `larger`. If you want to specify a absolute size, it's usually
+ *   easier to take advantage of the ability to specify a partial
+ *   font description using `font`; you can use `font='12.5'`
+ *   rather than `size='12800'`.
+ *
+ * * `font_style`:
+ *   One of `normal`, `oblique`, `italic`
+ *
+ * * `font_weight`:
+ *   One of `ultralight`, `light`, `normal`, `bold`,
+ *   `ultrabold`, `heavy`, or a numeric weight
+ *
+ * * `font_variant`:
+ *   One of `normal` or `smallcaps`
+ *
+ * * `font_stretch`, `stretch`:
+ *   One of `ultracondensed`, `extracondensed`, `condensed`,
+ *   `semicondensed`, `normal`, `semiexpanded`, `expanded`,
+ *   `extraexpanded`, `ultraexpanded`
+ *
+ * * `font_features`:
+ *   A comma-separated list of OpenType font feature
+ *   settings, in the same syntax as accepted by CSS. E.g:
+ *   `font_features='dlig=1, -kern, afrc on'`
+ *
+ * * `foreground`, `fgcolor`:
+ *   An RGB color specification such as `#00FF00` or a color
+ *   name such as `red`. Since 1.38, an RGBA color specification such
+ *   as `#00FF007F` will be interpreted as specifying both a foreground
+ *   color and foreground alpha.
+ *
+ * * `background`, `bgcolor`:
+ *   An RGB color specification such as `#00FF00` or a color
+ *   name such as `red`.
+ *   Since 1.38, an RGBA color specification such as `#00FF007F` will
+ *   be interpreted as specifying both a background color and
+ *   background alpha.
+ *
+ * * `alpha`, `fgalpha`:
+ *   An alpha value for the foreground color, either a plain
+ *   integer between 1 and 65536 or a percentage value like `50%`.
+ *
+ * * `background_alpha`, `bgalpha`:
+ *   An alpha value for the background color, either a plain
+ *   integer between 1 and 65536 or a percentage value like `50%`.
+ *
+ * * `underline`:
+ *   One of `none`, `single`, `double`, `low`, `error`,
+ *   `single-line`, `double-line` or `error-line`.
+ *
+ * * `underline_color`:
+ *   The color of underlines; an RGB color
+ *   specification such as `#00FF00` or a color name such as `red`
+ *
+ * * `overline`:
+ *   One of `none` or `single`
+ *
+ * * `overline_color`:
+ *   The color of overlines; an RGB color
+ *   specification such as `#00FF00` or a color name such as `red`
+ *
+ * * `rise`:
+ *   Vertical displacement, in Pango units. Can be negative for
+ *   subscript, positive for superscript.
+ *
+ * * `strikethrough`
+ *   `true` or `false` whether to strike through the text
+ *
+ * * `strikethrough_color`:
+ *   The color of strikethrough lines; an RGB
+ *   color specification such as `#00FF00` or a color name such as `red`
+ *
+ * * `fallback`:
+ *   `true` or `false` whether to enable fallback. If
+ *   disabled, then characters will only be used from the closest
+ *   matching font on the system. No fallback will be done to other
+ *   fonts on the system that might contain the characters in the text.
+ *   Fallback is enabled by default. Most applications should not
+ *   disable fallback.
+ *
+ * * `allow_breaks`:
+ *   `true` or `false` whether to allow line breaks or not. If
+ *   not allowed, the range will be kept in a single run as far
+ *   as possible. Breaks are allowed by default.
+ *
+ * * `insert_hyphens`:`
+ *   `true` or `false` whether to insert hyphens when breaking
+ *   lines in the middle of a word. Hyphens are inserted by default.
+ *
+ * * `show`:
+ *   A value determining how invisible characters are treated.
+ *   Possible values are `spaces`, `line-breaks`, `ignorables`
+ *   or combinations, such as `spaces|line-breaks`.
+ *
+ * * `lang`:
+ *   A language code, indicating the text language
+ *
+ * * `letter_spacing`:
+ *   Inter-letter spacing in 1024ths of a point.
+ *
+ * * `gravity`:
+ *   One of `south`, `east`, `north`, `west`, `auto`.
+ *
+ * * `gravity_hint`:
+ *   One of `natural`, `strong`, `line`.
+ *
+ * ## Convenience tags
+ *
+ * The following convenience tags are provided:
+ *
+ * * `<b>`:
+ *   Bold
+ *
+ * * `<big>`:
+ *   Makes font relatively larger, equivalent to `<span size="larger">`
+ *
+ * * `<i>`:
+ *   Italic
+ *
+ * * `<s>`:
+ *   Strikethrough
+ *
+ * * `<sub>`:
+ *   Subscript
+ *
+ * * `<sup>`:
+ *   Superscript
+ *
+ * * `<small>`:
+ *   Makes font relatively smaller, equivalent to `<span size="smaller">`
+ *
+ * * `<tt>`:
+ *   Monospace
+ *
+ * * `<u>`:
+ *   Underline
+ */
+
 /* FIXME */
 #define _(x) x
 
@@ -1100,6 +1291,32 @@ span_parse_enum (const char *attr_name,
 }
 
 static gboolean
+span_parse_flags (const char  *attr_name,
+                  const char  *attr_val,
+                  GType        type,
+                  int         *val,
+                  int          line_number,
+                  GError     **error)
+{
+  char *possible_values = NULL;
+
+  if (!pango_parse_flags (type, attr_val, val, &possible_values))
+    {
+      g_set_error (error,
+                   G_MARKUP_ERROR,
+                   G_MARKUP_ERROR_INVALID_CONTENT,
+                   _("'%s' is not a valid value for the '%s' "
+                     "attribute on <span> tag, line %d; valid "
+                     "values are %s or combinations with |"),
+                   attr_val, attr_name, line_number, possible_values);
+      g_free (possible_values);
+      return FALSE;
+    }
+
+  return TRUE;
+}
+
+static gboolean
 span_parse_func     (MarkupData            *md G_GNUC_UNUSED,
 		     OpenTag               *tag,
 		     const gchar          **names,
@@ -1121,6 +1338,8 @@ span_parse_func     (MarkupData            *md G_GNUC_UNUSED,
   const char *background = NULL;
   const char *underline = NULL;
   const char *underline_color = NULL;
+  const char *overline = NULL;
+  const char *overline_color = NULL;
   const char *strikethrough = NULL;
   const char *strikethrough_color = NULL;
   const char *rise = NULL;
@@ -1132,6 +1351,9 @@ span_parse_func     (MarkupData            *md G_GNUC_UNUSED,
   const char *font_features = NULL;
   const char *alpha = NULL;
   const char *background_alpha = NULL;
+  const char *allow_breaks = NULL;
+  const char *insert_hyphens = NULL;
+  const char *show = NULL;
 
   g_markup_parse_context_get_position (context,
 				       &line_number, &char_number);
@@ -1161,6 +1383,7 @@ span_parse_func     (MarkupData            *md G_GNUC_UNUSED,
 
       switch (names[i][0]) {
       case 'a':
+        CHECK_ATTRIBUTE (allow_breaks);
         CHECK_ATTRIBUTE (alpha);
         break;
       case 'b':
@@ -1192,6 +1415,7 @@ span_parse_func     (MarkupData            *md G_GNUC_UNUSED,
 	CHECK_ATTRIBUTE (font_features);
 	break;
       case 's':
+	CHECK_ATTRIBUTE (show);
 	CHECK_ATTRIBUTE (size);
 	CHECK_ATTRIBUTE (stretch);
 	CHECK_ATTRIBUTE (strikethrough);
@@ -1202,9 +1426,16 @@ span_parse_func     (MarkupData            *md G_GNUC_UNUSED,
 	CHECK_ATTRIBUTE (gravity);
 	CHECK_ATTRIBUTE (gravity_hint);
 	break;
+      case 'i':
+        CHECK_ATTRIBUTE (insert_hyphens);
+        break;
       case 'l':
 	CHECK_ATTRIBUTE (lang);
 	CHECK_ATTRIBUTE (letter_spacing);
+	break;
+      case 'o':
+	CHECK_ATTRIBUTE (overline);
+	CHECK_ATTRIBUTE (overline_color);
 	break;
       case 'u':
 	CHECK_ATTRIBUTE (underline);
@@ -1448,12 +1679,45 @@ span_parse_func     (MarkupData            *md G_GNUC_UNUSED,
       add_attribute (tag, pango_attr_underline_color_new (color.red, color.green, color.blue));
     }
 
+  if (G_UNLIKELY (overline))
+    {
+      PangoOverline ol = PANGO_OVERLINE_NONE;
+
+      if (!span_parse_enum ("overline", overline, PANGO_TYPE_OVERLINE, (int*)(void*)&ol, line_number, error))
+	goto error;
+
+      add_attribute (tag, pango_attr_overline_new (ol));
+    }
+
+  if (G_UNLIKELY (overline_color))
+    {
+      PangoColor color;
+
+      if (!span_parse_color ("overline_color", overline_color, &color, NULL, line_number, error))
+	goto error;
+
+      add_attribute (tag, pango_attr_overline_color_new (color.red, color.green, color.blue));
+    }
+
   if (G_UNLIKELY (gravity))
     {
       PangoGravity gr = PANGO_GRAVITY_SOUTH;
 
       if (!span_parse_enum ("gravity", gravity, PANGO_TYPE_GRAVITY, (int*)(void*)&gr, line_number, error))
 	goto error;
+
+      if (gr == PANGO_GRAVITY_AUTO)
+        {
+	  g_set_error (error,
+		       G_MARKUP_ERROR,
+		       G_MARKUP_ERROR_INVALID_CONTENT,
+		       _("'%s' is not a valid value for the 'stretch' "
+			 "attribute on <span> tag, line %d; valid "
+			 "values are for example 'south', 'east', "
+			 "'north', 'west'"),
+		       gravity, line_number);
+	  goto error;
+        }
 
       add_attribute (tag, pango_attr_gravity_new (gr));
     }
@@ -1498,6 +1762,16 @@ span_parse_func     (MarkupData            *md G_GNUC_UNUSED,
       add_attribute (tag, pango_attr_fallback_new (b));
     }
 
+  if (G_UNLIKELY (show))
+    {
+      PangoShowFlags flags;
+
+      if (!span_parse_flags ("show", show, PANGO_TYPE_SHOW_FLAGS, (int*)(void*)&flags, line_number, error))
+	goto error;
+
+      add_attribute (tag, pango_attr_show_new (flags));
+    }
+
   if (G_UNLIKELY (rise))
     {
       gint n = 0;
@@ -1527,6 +1801,26 @@ span_parse_func     (MarkupData            *md G_GNUC_UNUSED,
   if (G_UNLIKELY (font_features))
     {
       add_attribute (tag, pango_attr_font_features_new (font_features));
+    }
+
+  if (G_UNLIKELY (allow_breaks))
+    {
+      gboolean b = FALSE;
+
+      if (!span_parse_boolean ("allow_breaks", allow_breaks, &b, line_number, error))
+	goto error;
+
+      add_attribute (tag, pango_attr_allow_breaks_new (b));
+    }
+
+  if (G_UNLIKELY (insert_hyphens))
+    {
+      gboolean b = FALSE;
+
+      if (!span_parse_boolean ("insert_hyphens", insert_hyphens, &b, line_number, error))
+	goto error;
+
+      add_attribute (tag, pango_attr_insert_hyphens_new (b));
     }
 
   return TRUE;

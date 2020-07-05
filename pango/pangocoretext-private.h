@@ -25,8 +25,45 @@
 #define __PANGOCORETEXT_PRIVATE_H__
 
 #include "pangocoretext.h"
+#include "pango-font-private.h"
+#include "pango-fontmap-private.h"
+#include "pango-fontset-private.h"
 
 G_BEGIN_DECLS
+
+/**
+ * PANGO_RENDER_TYPE_CORE_TEXT:
+ *
+ * A string constant identifying the CoreText renderer. The associated quark (see
+ * g_quark_from_string()) is used to identify the renderer in pango_find_map().
+ */
+#define PANGO_RENDER_TYPE_CORE_TEXT "PangoRenderCoreText"
+
+#define PANGO_CORE_TEXT_FONT_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass), PANGO_TYPE_CORE_TEXT_FONT, PangoCoreTextFontClass))
+#define PANGO_IS_CORE_TEXT_FONT_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass), PANGO_TYPE_CORE_TEXT_FONT))
+#define PANGO_CORE_TEXT_FONT_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj), PANGO_TYPE_CORE_TEXT_FONT, PangoCoreTextFontClass))
+
+typedef struct _PangoCoreTextFontPrivate  PangoCoreTextFontPrivate;
+
+struct _PangoCoreTextFont
+{
+  PangoFont parent_instance;
+  PangoCoreTextFontPrivate *priv;
+};
+
+struct _PangoCoreTextFontClass
+{
+  PangoFontClass parent_class;
+
+  /*< private >*/
+
+  /* Padding for future expansion */
+  void (*_pango_reserved1) (void);
+  void (*_pango_reserved2) (void);
+  void (*_pango_reserved3) (void);
+  void (*_pango_reserved4) (void);
+};
+
 
 #define PANGO_TYPE_CORE_TEXT_FONT_MAP             (pango_core_text_font_map_get_type ())
 #define PANGO_CORE_TEXT_FONT_MAP(object)          (G_TYPE_CHECK_INSTANCE_CAST ((object), PANGO_TYPE_CORE_TEXT_FONT_MAP, PangoCoreTextFontMap))
@@ -114,15 +151,6 @@ _PANGO_EXTERN
 PangoGravity          pango_core_text_font_key_get_gravity          (const PangoCoreTextFontKey *key);
 _PANGO_EXTERN
 CTFontDescriptorRef   pango_core_text_font_key_get_ctfontdescriptor (const PangoCoreTextFontKey *key);
-
-void
-_pango_core_text_shape (PangoFont           *font,
-			const char          *text,
-			gint                 length,
-			const PangoAnalysis *analysis,
-			PangoGlyphString    *glyphs,
-			const char          *paragraph_text G_GNUC_UNUSED,
-			unsigned int         paragraph_length G_GNUC_UNUSED);
 
 G_END_DECLS
 

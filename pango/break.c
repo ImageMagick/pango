@@ -22,8 +22,10 @@
 #include "config.h"
 
 #include "pango-break.h"
-#include "pango-engine-private.h"
 #include "pango-script-private.h"
+#include "pango-emoji-private.h"
+#include "pango-attributes-private.h"
+#include "pango-break-table.h"
 #include "pango-impl-utils.h"
 #include <string.h>
 
@@ -123,7 +125,8 @@ static const CharJamoProps HangulJamoProps[] = {
 #define GREEK(wc) (((wc) >= 0x0370 && (wc) <= 0x3FF) || ((wc) >= 0x1F00 && (wc) <= 0x1FFF))
 #define KANA(wc) ((wc) >= 0x3040 && (wc) <= 0x30FF)
 #define HANGUL(wc) ((wc) >= 0xAC00 && (wc) <= 0xD7A3)
-#define BACKSPACE_DELETES_CHARACTER(wc) (!LATIN (wc) && !CYRILLIC (wc) && !GREEK (wc) && !KANA(wc) && !HANGUL(wc))
+#define EMOJI(wc) (_pango_Is_Emoji_Base_Character (wc))
+#define BACKSPACE_DELETES_CHARACTER(wc) (!LATIN (wc) && !CYRILLIC (wc) && !GREEK (wc) && !KANA (wc) && !HANGUL (wc) && !EMOJI (wc))
 
 /* Previously "123foo" was two words. But in UAX 29 of Unicode, 
  * we know don't break words between consecutive letters and numbers
@@ -138,19 +141,17 @@ typedef enum
 
 /**
  * pango_default_break:
- * @text: text to break
+ * @text: text to break. Must be valid UTF-8
  * @length: length of text in bytes (may be -1 if @text is nul-terminated)
  * @analysis: (nullable): a #PangoAnalysis for the @text
  * @attrs: logical attributes to fill in
  * @attrs_len: size of the array passed as @attrs
  *
- * This is the default break algorithm, used if no language
- * engine overrides it. Normally you should use pango_break()
- * instead. Unlike pango_break(),
- * @analysis can be %NULL, but only do that if you know what
- * you're doing. If you need an analysis to pass to pango_break(),
- * you need to pango_itemize().  In most cases however you should
- * simply use pango_get_log_attrs().
+ * This is the default break algorithm. It applies Unicode
+ * rules without language-specific tailoring, therefore
+ * the @analyis argument is unused and can be %NULL.
+ *
+ * See pango_tailor_break() for language-specific breaks.
  **/
 void
 pango_default_break (const gchar   *text,
@@ -194,16 +195,12 @@ pango_default_break (const gchar   *text,
     GB_SpacingMark,
     GB_InHangulSyllable, /* Handles all of L, V, T, LV, LVT rules */
     /* Use state machine to handle emoji sequence */
-    /* Rule GB10 and GB11 */
-    GB_E_Base,
-    GB_E_Modifier,
-    GB_Glue_After_Zwj,
-    GB_E_Base_GAZ,
     /* Rule GB12 and GB13 */
     GB_RI_Odd, /* Meets odd number of RI */
     GB_RI_Even, /* Meets even number of RI */
   } GraphemeBreakType;
   GraphemeBreakType prev_GB_type = GB_Other;
+  gboolean met_Extended_Pictographic = FALSE;
 
   /* See Word_Break Property Values table of UAX#29 */
   typedef enum
@@ -221,6 +218,7 @@ pango_default_break (const gchar   *text,
     WB_ExtendNumLet,
     WB_RI_Odd,
     WB_RI_Even,
+    WB_WSegSpace,
   } WordBreakType;
   WordBreakType prev_prev_WB_type = WB_Other, prev_WB_type = WB_Other;
   gint prev_WB_i = -1;
@@ -304,6 +302,9 @@ pango_default_break (const gchar   *text,
       gboolean is_word_boundary;
       gboolean is_sentence_boundary;
 
+      /* Emoji extended pictographics */
+      gboolean is_Extended_Pictographic;
+
 
       wc = next_wc;
       break_type = next_break_type;
@@ -371,10 +372,14 @@ pango_default_break (const gchar   *text,
       /* Just few spaces have variable width. So explicitly mark them.
        */
       attrs[i].is_expandable_space = (0x0020 == wc || 0x00A0 == wc);
+      is_Extended_Pictographic =
+	_pango_Is_Emoji_Extended_Pictographic (wc);
+
 
       /* ---- UAX#29 Grapheme Boundaries ---- */
       {
 	GraphemeBreakType GB_type;
+
         /* Find the GraphemeBreakType of wc */
 	GB_type = GB_Other;
 	switch ((int) type)
@@ -394,14 +399,13 @@ pango_default_break (const gchar   *text,
                             wc == 0x6DD ||
                             wc == 0x70F ||
                             wc == 0x8E2 ||
-                            wc == 0xD4E ||
                             wc == 0x110BD ||
-                            (wc >= 0x111C2 && wc <= 0x111C3)))
+                            wc == 0x110CD))
               {
                 GB_type = GB_Prepend;
                 break;
               }
-	    /* fall through */
+            G_GNUC_FALLTHROUGH;
 	  case G_UNICODE_CONTROL:
 	  case G_UNICODE_LINE_SEPARATOR:
 	  case G_UNICODE_PARAGRAPH_SEPARATOR:
@@ -417,10 +421,15 @@ pango_default_break (const gchar   *text,
 		GB_type = GB_ControlCRLF;
 		break;
 	      }
+            G_GNUC_FALLTHROUGH;
 
 	  case G_UNICODE_OTHER_LETTER:
 	    if (makes_hangul_syllable)
 	      GB_type = GB_InHangulSyllable;
+
+	    if (_pango_is_Consonant_Preceding_Repha (wc) ||
+		_pango_is_Consonant_Prefixed (wc))
+	      GB_type = GB_Prepend;
 	    break;
 
 	  case G_UNICODE_MODIFIER_LETTER:
@@ -447,70 +456,6 @@ pango_default_break (const gchar   *text,
 	    break;
 
           case G_UNICODE_OTHER_SYMBOL:
-            if (G_UNLIKELY(wc == 0x261D ||
-                           wc == 0x26F9 ||
-                           (wc >= 0x270A && wc <= 0x270D) ||
-                           wc == 0x1F385 ||
-                           (wc >= 0x1F3C2 && wc <= 0x1F3C4) ||
-                           wc == 0x1F3C7 ||
-                           (wc >= 0x1F3CA && wc <= 0x1F3CC) ||
-                           (wc >= 0x1F442 && wc <= 0x1F443) ||
-                           (wc >= 0x1F446 && wc <= 0x1F450) ||
-                           wc == 0x1F46E ||
-                           (wc >= 0x1F470 && wc <= 0x1F478) ||
-                           wc == 0x1F47C ||
-                           (wc >= 0x1F481 && wc <= 0x1F483) ||
-                           (wc >= 0x1F485 && wc <= 0x1F487) ||
-                           wc == 0x1F4AA ||
-                           (wc >= 0x1F574 && wc <= 0x1F575) ||
-                           wc == 0x1F57A ||
-                           wc == 0x1F590 ||
-                           (wc >= 0x1F595 && wc <= 0x1F596) ||
-                           (wc >= 0x1F645 && wc <= 0x1F647) ||
-                           (wc >= 0x1F64B && wc <= 0x1F64F) ||
-                           wc == 0x1F6A3 ||
-                           (wc >= 0x1F6B4 && wc <= 0x1F6B6) ||
-                           wc == 0x1F6C0 ||
-                           wc == 0x1F6CC ||
-                           (wc >= 0x1F918 && wc <= 0x1F91C) ||
-                           (wc >= 0x1F91E && wc <= 0x1F91F) ||
-                           wc == 0x1F926 ||
-                           (wc >= 0x1F930 && wc <= 0x1F939) ||
-                           (wc >= 0x1F93D && wc <= 0x1F93E) ||
-                           (wc >= 0x1F9D1 && wc <= 0x1F9DD)))
-              {
-                GB_type = GB_E_Base;
-                break;
-              }
-            if (G_UNLIKELY(wc == 0x2640 ||
-                           wc == 0x2642 ||
-                           (wc >= 0x2695 && wc <= 0x2696) ||
-                           wc == 0x2708 ||
-                           wc == 0x2764 ||
-                           wc == 0x1F308 ||
-                           wc == 0x1F33E ||
-                           wc == 0x1F373 ||
-                           wc == 0x1F393 ||
-                           wc == 0x1F3A4 ||
-                           wc == 0x1F3A8 ||
-                           wc == 0x1F3EB ||
-                           wc == 0x1F3ED ||
-                           wc == 0x1F48B ||
-                           (wc >= 0x1F4BB && wc <= 0x1F4BC) ||
-                           wc == 0x1F527 ||
-                           wc == 0x1F52C ||
-                           wc == 0x1F5E8 ||
-                           wc == 0x1F680 ||
-                           wc == 0x1F692))
-              {
-                GB_type = GB_Glue_After_Zwj;
-                break;
-              }
-            if (G_UNLIKELY(wc >= 0x1F466 && wc <= 0x1F469))
-              {
-                GB_type = GB_E_Base_GAZ;
-                break;
-              }
             if (G_UNLIKELY(wc >=0x1F1E6 && wc <=0x1F1FF))
               {
                 if (prev_GB_type == GB_RI_Odd)
@@ -525,11 +470,28 @@ pango_default_break (const gchar   *text,
 
           case G_UNICODE_MODIFIER_SYMBOL:
             if (wc >= 0x1F3FB && wc <= 0x1F3FF)
-              GB_type = GB_E_Modifier;
+              GB_type = GB_Extend;
             break;
 	  }
 
+	/* Rule GB11 */
+	if (met_Extended_Pictographic)
+	  {
+	    if (GB_type == GB_Extend)
+	      met_Extended_Pictographic = TRUE;
+	    else if (_pango_Is_Emoji_Extended_Pictographic (prev_wc) &&
+		     GB_type == GB_ZWJ)
+	      met_Extended_Pictographic = TRUE;
+	    else if (prev_GB_type == GB_Extend && GB_type == GB_ZWJ)
+	      met_Extended_Pictographic = TRUE;
+	    else if (prev_GB_type == GB_ZWJ && is_Extended_Pictographic)
+	      met_Extended_Pictographic = TRUE;
+	    else
+	      met_Extended_Pictographic = FALSE;
+	  }
+
 	/* Grapheme Cluster Boundary Rules */
+	is_grapheme_boundary = TRUE; /* Rule GB999 */
 
 	/* We apply Rules GB1 and GB2 at the end of the function */
 	if (wc == '\n' && prev_wc == '\r')
@@ -540,9 +502,6 @@ pango_default_break (const gchar   *text,
 	  is_grapheme_boundary = FALSE; /* Rules GB6, GB7, GB8 */
 	else if (GB_type == GB_Extend)
           {
-            /* Rule GB10 */
-            if (prev_GB_type == GB_E_Base || prev_GB_type == GB_E_Base_GAZ)
-	      GB_type = prev_GB_type;
 	    is_grapheme_boundary = FALSE; /* Rule GB9 */
           }
         else if (GB_type == GB_ZWJ)
@@ -551,37 +510,28 @@ pango_default_break (const gchar   *text,
 	  is_grapheme_boundary = FALSE; /* Rule GB9a */
 	else if (prev_GB_type == GB_Prepend)
 	  is_grapheme_boundary = FALSE; /* Rule GB9b */
-	/* Rule GB10 */
-	else if (prev_GB_type == GB_E_Base || prev_GB_type == GB_E_Base_GAZ)
-	  {
-            if (GB_type == GB_E_Modifier)
-              is_grapheme_boundary = FALSE;
-            else
-              is_grapheme_boundary = TRUE;
-          }
-	else if (prev_GB_type == GB_ZWJ &&
-                 (GB_type == GB_Glue_After_Zwj || GB_type == GB_E_Base_GAZ))
-	  is_grapheme_boundary = FALSE; /* Rule GB11 */
+	else if (is_Extended_Pictographic)
+	  { /* Rule GB11 */
+	    if (prev_GB_type == GB_ZWJ && met_Extended_Pictographic)
+	      is_grapheme_boundary = FALSE;
+	  }
 	else if (prev_GB_type == GB_RI_Odd && GB_type == GB_RI_Even)
 	  is_grapheme_boundary = FALSE; /* Rule GB12 and GB13 */
-	else
-	  is_grapheme_boundary = TRUE; /* Rule GB999 */
+
+	if (is_Extended_Pictographic)
+	  met_Extended_Pictographic = TRUE;
 
 	attrs[i].is_cursor_position = is_grapheme_boundary;
 	/* If this is a grapheme boundary, we have to decide if backspace
 	 * deletes a character or the whole grapheme cluster */
 	if (is_grapheme_boundary)
           {
-            if (prev_GB_type == GB_E_Base ||
-                prev_GB_type == GB_E_Base_GAZ ||
-                prev_GB_type == GB_Glue_After_Zwj ||
-                prev_GB_type == GB_Extend ||
-                prev_GB_type == GB_E_Modifier ||
-                prev_GB_type == GB_RI_Odd ||
-                prev_GB_type == GB_RI_Even)
-	      attrs[i].backspace_deletes_character = FALSE;
-            else
-	      attrs[i].backspace_deletes_character = BACKSPACE_DELETES_CHARACTER (base_character);
+	    attrs[i].backspace_deletes_character = BACKSPACE_DELETES_CHARACTER (base_character);
+
+	    /* Dependent Vowels for Indic language */
+	    if (_pango_is_Virama (prev_wc) ||
+		_pango_is_Vowel_Dependent (prev_wc))
+	      attrs[i].backspace_deletes_character = TRUE;
           }
 	else
 	  attrs[i].backspace_deletes_character = FALSE;
@@ -598,7 +548,7 @@ pango_default_break (const gchar   *text,
 	    PangoScript script;
 	    WordBreakType WB_type;
 
-	    script = g_unichar_get_script (wc);
+	    script = (PangoScript)g_unichar_get_script (wc);
 
 	    /* Find the WordBreakType of wc */
 	    WB_type = WB_Other;
@@ -624,7 +574,7 @@ pango_default_break (const gchar   *text,
 		    WB_type = WB_ExtendFormat; /* Other_Grapheme_Extend */
 		  break;
 		case 0x05:
-		  if (wc == 0x05F3)
+		  if (wc == 0x058A)
 		    WB_type = WB_ALetter; /* ALetter exceptions */
 		  break;
 		}
@@ -648,7 +598,7 @@ pango_default_break (const gchar   *text,
 		case G_UNICODE_CONTROL:
 		  if (wc != 0x000D && wc != 0x000A && wc != 0x000B && wc != 0x000C && wc != 0x0085)
 		    break;
-		  /* fall through */
+                  G_GNUC_FALLTHROUGH;
 		case G_UNICODE_LINE_SEPARATOR:
 		case G_UNICODE_PARAGRAPH_SEPARATOR:
 		  WB_type = WB_NewlineCRLF; /* CR, LF, Newline */
@@ -671,12 +621,16 @@ pango_default_break (const gchar   *text,
 		    WB_type = WB_MidNumLet; /* MidNumLet */
 		  break;
 		case G_UNICODE_OTHER_PUNCTUATION:
-		  if (wc == 0x0027 || wc == 0x002e || wc == 0x2024 ||
+		  if ((wc >= 0x055a && wc <= 0x055c) ||
+		      wc == 0x055e || wc == 0x05f3)
+		    WB_type = WB_ALetter; /* ALetter */
+		  else if (wc == 0x0027 || wc == 0x002e || wc == 0x2024 ||
 		      wc == 0xfe52 || wc == 0xff07 || wc == 0xff0e)
 		    WB_type = WB_MidNumLet; /* MidNumLet */
-		  else if (wc == 0x00b7 || wc == 0x05f4 || wc == 0x2027 || wc == 0x003a || wc == 0x0387 ||
+		  else if (wc == 0x00b7 || wc == 0x05f4 || wc == 0x2027 ||
+			   wc == 0x003a || wc == 0x0387 || wc == 0x055f ||
 			   wc == 0xfe13 || wc == 0xfe55 || wc == 0xff1a)
-		    WB_type = WB_MidLetter; /* WB_MidLetter */
+		    WB_type = WB_MidLetter; /* MidLetter */
 		  else if (wc == 0x066c ||
 			   wc == 0xfe50 || wc == 0xfe54 || wc == 0xff0c || wc == 0xff1b)
 		    WB_type = WB_MidNum; /* MidNum */
@@ -723,7 +677,14 @@ pango_default_break (const gchar   *text,
 		  break;
 		}
 
-	    /* Grapheme Cluster Boundary Rules */
+	    if (WB_type == WB_Other)
+	      {
+		if (type == G_UNICODE_SPACE_SEPARATOR &&
+		    break_type != G_UNICODE_BREAK_NON_BREAKING_GLUE)
+		  WB_type = WB_WSegSpace;
+	      }
+
+	    /* Word Cluster Boundary Rules */
 
 	    /* We apply Rules WB1 and WB2 at the end of the function */
 
@@ -739,6 +700,11 @@ pango_default_break (const gchar   *text,
 	      }
 	    else if (WB_type == WB_NewlineCRLF)
 	      is_word_boundary = TRUE; /* Rule WB3b */
+	    else if (prev_wc == 0x200D && is_Extended_Pictographic)
+	      is_word_boundary = FALSE; /* Rule WB3c */
+	    else if (prev_WB_type == WB_WSegSpace &&
+		     WB_type == WB_WSegSpace && prev_WB_i + 1 == i)
+	      is_word_boundary = FALSE; /* Rule WB3d */
 	    else if (WB_type == WB_ExtendFormat)
 	      is_word_boundary = FALSE; /* Rules WB4? */
 	    else if ((prev_WB_type == WB_ALetter  ||
@@ -892,69 +858,7 @@ pango_default_break (const gchar   *text,
 		      wc == 0xFF64)
 		    SB_type = SB_SContinue;
 
-		  if (wc == 0x0021 ||
-		      wc == 0x003F ||
-		      wc == 0x0589 ||
-		      wc == 0x061F ||
-		      wc == 0x06D4 ||
-		      (wc >= 0x0700 && wc <= 0x0702) ||
-		      wc == 0x07F9 ||
-		      (wc >= 0x0964 && wc <= 0x0965) ||
-		      (wc >= 0x104A && wc <= 0x104B) ||
-		      wc == 0x1362 ||
-		      (wc >= 0x1367 && wc <= 0x1368) ||
-		      wc == 0x166E ||
-		      (wc >= 0x1735 && wc <= 0x1736) ||
-		      wc == 0x1803 ||
-		      wc == 0x1809 ||
-		      (wc >= 0x1944 && wc <= 0x1945) ||
-		      (wc >= 0x1AA8 && wc <= 0x1AAB) ||
-		      (wc >= 0x1B5A && wc <= 0x1B5B) ||
-		      (wc >= 0x1B5E && wc <= 0x1B5F) ||
-		      (wc >= 0x1C3B && wc <= 0x1C3C) ||
-		      (wc >= 0x1C7E && wc <= 0x1C7F) ||
-		      (wc >= 0x203C && wc <= 0x203D) ||
-		      (wc >= 0x2047 && wc <= 0x2049) ||
-		      wc == 0x2E2E ||
-		      wc == 0x2E3C ||
-		      wc == 0x3002 ||
-		      wc == 0xA4FF ||
-		      (wc >= 0xA60E && wc <= 0xA60F) ||
-		      wc == 0xA6F3 ||
-		      wc == 0xA6F7 ||
-		      (wc >= 0xA876 && wc <= 0xA877) ||
-		      (wc >= 0xA8CE && wc <= 0xA8CF) ||
-		      wc == 0xA92F ||
-		      (wc >= 0xA9C8 && wc <= 0xA9C9) ||
-		      (wc >= 0xAA5D && wc <= 0xAA5F) ||
-		      (wc >= 0xAAF0 && wc <= 0xAAF1) ||
-		      wc == 0xABEB ||
-		      (wc >= 0xFE56 && wc <= 0xFE57) ||
-		      wc == 0xFF01 ||
-		      wc == 0xFF1F ||
-		      wc == 0xFF61 ||
-		      (wc >= 0x10A56 && wc <= 0x10A57) ||
-		      (wc >= 0x11047 && wc <= 0x11048) ||
-		      (wc >= 0x110BE && wc <= 0x110C1) ||
-		      (wc >= 0x11141 && wc <= 0x11143) ||
-		      (wc >= 0x111C5 && wc <= 0x111C6) ||
-		      wc == 0x111CD ||
-		      (wc >= 0x111DE && wc <= 0x111DF) ||
-		      (wc >= 0x11238 && wc <= 0x11239) ||
-		      (wc >= 0x1123B && wc <= 0x1123C) ||
-		      wc == 0x112A9 ||
-		      (wc >= 0x1144B && wc <= 0x1144C) ||
-		      (wc >= 0x115C2 && wc <= 0x115C3) ||
-		      (wc >= 0x115C9 && wc <= 0x115D7) ||
-		      (wc >= 0x11641 && wc <= 0x11642) ||
-		      (wc >= 0x1173C && wc <= 0x1173E) ||
-		      (wc >= 0x11C41 && wc <= 0x11C42) ||
-		      (wc >= 0x16A6E && wc <= 0x16A6F) ||
-		      wc == 0x16AF5 ||
-		      (wc >= 0x16B37 && wc <= 0x16B38) ||
-		      wc == 0x16B44 ||
-		      wc == 0x1BC9F ||
-		      wc == 0x1DA88)
+		  if (_pango_is_STerm(wc))
 		    SB_type = SB_STerm;
 
 		  break;
@@ -962,11 +866,13 @@ pango_default_break (const gchar   *text,
 
 	    if (SB_type == SB_Other)
 	      {
-		if (g_unichar_islower(wc))
+                if (type == G_UNICODE_LOWERCASE_LETTER)
 		  SB_type = SB_Lower;
-		else if (g_unichar_isupper(wc))
+                else if (type == G_UNICODE_UPPERCASE_LETTER)
 		  SB_type = SB_Upper;
-		else if (g_unichar_isalpha(wc))
+                else if (type == G_UNICODE_TITLECASE_LETTER ||
+                         type == G_UNICODE_MODIFIER_LETTER ||
+                         type == G_UNICODE_OTHER_LETTER)
 		  SB_type = SB_OLetter;
 
 		if (type == G_UNICODE_OPEN_PUNCTUATION ||
@@ -1089,7 +995,7 @@ pango_default_break (const gchar   *text,
 
       /* Rule LB1:
 	 assign a line breaking class to each code point of the input. */
-      switch ((int) break_type)
+      switch (break_type)
 	{
 	case G_UNICODE_BREAK_AMBIGUOUS:
 	case G_UNICODE_BREAK_SURROGATE:
@@ -1122,6 +1028,7 @@ pango_default_break (const gchar   *text,
 	  break_type == G_UNICODE_BREAK_HANGUL_T_JAMO ||
 	  break_type == G_UNICODE_BREAK_HANGUL_LV_SYLLABLE ||
 	  break_type == G_UNICODE_BREAK_HANGUL_LVT_SYLLABLE ||
+	  break_type == G_UNICODE_BREAK_EMOJI_MODIFIER ||
 	  break_type == G_UNICODE_BREAK_REGIONAL_INDICATOR)
 	{
 	  LineBreakType LB_type;
@@ -1175,10 +1082,12 @@ pango_default_break (const gchar   *text,
 	  if ((prev_break_type == G_UNICODE_BREAK_ALPHABETIC ||
 	       prev_break_type == G_UNICODE_BREAK_HEBREW_LETTER ||
 	       prev_break_type == G_UNICODE_BREAK_NUMERIC) &&
-	      break_type == G_UNICODE_BREAK_OPEN_PUNCTUATION)
+	      break_type == G_UNICODE_BREAK_OPEN_PUNCTUATION &&
+	      !_pango_is_EastAsianWide (wc))
 	    break_op = BREAK_PROHIBITED;
 
 	  if (prev_break_type == G_UNICODE_BREAK_CLOSE_PARANTHESIS &&
+	      !_pango_is_EastAsianWide (prev_wc)&&
 	      (break_type == G_UNICODE_BREAK_ALPHABETIC ||
 	       break_type == G_UNICODE_BREAK_HEBREW_LETTER ||
 	       break_type == G_UNICODE_BREAK_NUMERIC))
@@ -1320,25 +1229,7 @@ pango_default_break (const gchar   *text,
 
 	  /* Rule LB22 */
 	  if (break_type == G_UNICODE_BREAK_INSEPARABLE)
-	    {
-	      if (prev_break_type == G_UNICODE_BREAK_ALPHABETIC ||
-		  prev_break_type == G_UNICODE_BREAK_HEBREW_LETTER)
-		break_op = BREAK_PROHIBITED;
-
-	      if (prev_break_type == G_UNICODE_BREAK_EXCLAMATION)
-		break_op = BREAK_PROHIBITED;
-
-	      if (prev_break_type == G_UNICODE_BREAK_IDEOGRAPHIC ||
-		  prev_break_type == G_UNICODE_BREAK_EMOJI_BASE ||
-		  prev_break_type == G_UNICODE_BREAK_EMOJI_MODIFIER)
-		break_op = BREAK_PROHIBITED;
-
-	      if (prev_break_type == G_UNICODE_BREAK_INSEPARABLE)
-		break_op = BREAK_PROHIBITED;
-
-	      if (prev_break_type == G_UNICODE_BREAK_NUMERIC)
-		break_op = BREAK_PROHIBITED;
-	    }
+	    break_op = BREAK_PROHIBITED;
 
 	  if (break_type == G_UNICODE_BREAK_AFTER ||
 	      break_type == G_UNICODE_BREAK_HYPHEN ||
@@ -1425,10 +1316,7 @@ pango_default_break (const gchar   *text,
 	  if (row_break_type == G_UNICODE_BREAK_ZERO_WIDTH_SPACE)
 	    break_op = BREAK_ALLOWED; /* Rule LB8 */
 
-	  if (prev_wc == 0x200D &&
-	      (break_type == G_UNICODE_BREAK_IDEOGRAPHIC ||
-	       break_type == G_UNICODE_BREAK_EMOJI_BASE ||
-	       break_type == G_UNICODE_BREAK_EMOJI_MODIFIER))
+	  if (prev_wc == 0x200D)
 	    break_op = BREAK_PROHIBITED; /* Rule LB8a */
 
 	  if (break_type == G_UNICODE_BREAK_SPACE ||
@@ -1678,28 +1566,46 @@ pango_default_break (const gchar   *text,
 }
 
 static gboolean
-tailor_break (const gchar   *text,
-	     gint           length,
-	     PangoAnalysis *analysis,
-	     PangoLogAttr  *attrs,
-	     int            attrs_len)
-{
-  if (analysis->lang_engine && PANGO_ENGINE_LANG_GET_CLASS (analysis->lang_engine)->script_break)
-    {
-      if (length < 0)
-	length = strlen (text);
-      else if (text == NULL)
-	text = "";
+break_script (const char          *item_text,
+	      unsigned int         item_length,
+	      const PangoAnalysis *analysis,
+	      PangoLogAttr        *attrs,
+	      int                  attrs_len);
 
-      PANGO_ENGINE_LANG_GET_CLASS (analysis->lang_engine)->script_break (analysis->lang_engine, text, length, analysis, attrs, attrs_len);
-      return TRUE;
-    }
-  return FALSE;
+static gboolean
+break_attrs (const char   *text,
+	     int           length,
+             GSList       *attributes,
+             int           item_offset,
+             PangoLogAttr *attrs,
+             int           attrs_len);
+
+static gboolean
+tailor_break (const char    *text,
+	      int            length,
+	      PangoAnalysis *analysis,
+              int            item_offset,
+	      PangoLogAttr  *attrs,
+	      int            attrs_len)
+{
+  gboolean res;
+
+  if (length < 0)
+    length = strlen (text);
+  else if (text == NULL)
+    text = "";
+
+  res = break_script (text, length, analysis, attrs, attrs_len);
+
+  if (item_offset >= 0 && analysis->extra_attrs)
+    res |= break_attrs (text, length, analysis->extra_attrs, item_offset, attrs, attrs_len);
+
+  return res;
 }
 
 /**
  * pango_break:
- * @text:      the text to process
+ * @text:      the text to process. Must be valid UTF-8
  * @length:    length of @text in bytes (may be -1 if @text is nul-terminated)
  * @analysis:  #PangoAnalysis structure from pango_itemize()
  * @attrs:     (array length=attrs_len): an array to store character
@@ -1707,8 +1613,10 @@ tailor_break (const gchar   *text,
  * @attrs_len: size of the array passed as @attrs
  *
  * Determines possible line, word, and character breaks
- * for a string of Unicode text with a single analysis.  For most
- * purposes you may want to use pango_get_log_attrs().
+ * for a string of Unicode text with a single analysis.
+ * For most purposes you may want to use pango_get_log_attrs().
+ *
+ * Deprecated: 1.44: Use pango_default_break() and pango_tailor_break()
  */
 void
 pango_break (const gchar   *text,
@@ -1721,7 +1629,7 @@ pango_break (const gchar   *text,
   g_return_if_fail (attrs != NULL);
 
   pango_default_break (text, length, analysis, attrs, attrs_len);
-  tailor_break        (text, length, analysis, attrs, attrs_len);
+  tailor_break        (text, length, analysis, -1, attrs, attrs_len);
 }
 
 /**
@@ -1824,6 +1732,51 @@ pango_find_paragraph_boundary (const gchar *text,
     *next_paragraph_start = start - text;
 }
 
+/**
+ * pango_tailor_break:
+ * @text: text to process. Must be valid UTF-8
+ * @length: length in bytes of @text
+ * @analysis:  #PangoAnalysis structure from pango_itemize() for @text
+ * @offset: Byte offset of @text from the beginning of the
+ *     paragraph, or -1 to ignore attributes from @analysis
+ * @log_attrs: (array length=log_attrs_len): array with one #PangoLogAttr
+ *   per character in @text, plus one extra, to be filled in
+ * @log_attrs_len: length of @log_attrs array
+ *
+ * Apply language-specific tailoring to the breaks in
+ * @log_attrs, which are assumed to have been produced
+ * by pango_default_break().
+ *
+ * If @offset is not -1, it is used to apply attributes
+ * from @analysis that are relevant to line breaking.
+ *
+ * Since: 1.44
+ */
+void
+pango_tailor_break (const char    *text,
+                    int            length,
+                    PangoAnalysis *analysis,
+                    int            offset,
+                    PangoLogAttr  *log_attrs,
+                    int            log_attrs_len)
+{
+  PangoLogAttr *start = log_attrs;
+  PangoLogAttr attr_before = *start;
+
+  if (tailor_break (text, length, analysis, offset, log_attrs, log_attrs_len))
+    {
+      /* if tailored, we enforce some of the attrs from before
+       * tailoring at the boundary
+       */
+
+     start->backspace_deletes_character  = attr_before.backspace_deletes_character;
+
+     start->is_line_break      |= attr_before.is_line_break;
+     start->is_mandatory_break |= attr_before.is_mandatory_break;
+     start->is_cursor_position |= attr_before.is_cursor_position;
+    }
+}
+
 static int
 tailor_segment (const char      *range_start,
 		const char      *range_end,
@@ -1833,33 +1786,22 @@ tailor_segment (const char      *range_start,
 {
   int chars_in_range;
   PangoLogAttr *start = log_attrs + chars_broken;
-  PangoLogAttr attr_before = *start;
 
   chars_in_range = pango_utf8_strlen (range_start, range_end - range_start);
 
-  if (tailor_break (range_start,
-		    range_end - range_start,
-		    analysis,
-		    start,
-		    chars_in_range + 1))
-    {
-      /* if tailored, we enforce some of the attrs from before tailoring at
-       * the boundary
-       */
-
-     start->backspace_deletes_character  = attr_before.backspace_deletes_character;
-
-     start->is_line_break      |= attr_before.is_line_break;
-     start->is_mandatory_break |= attr_before.is_mandatory_break;
-     start->is_cursor_position |= attr_before.is_cursor_position;
-    }
+  pango_tailor_break (range_start,
+                      range_end - range_start,
+                      analysis,
+                      -1,
+                      start,
+                      chars_in_range + 1);
 
   return chars_in_range;
 }
 
 /**
  * pango_get_log_attrs:
- * @text: text to process
+ * @text: text to process. Must be valid UTF-8
  * @length: length in bytes of @text
  * @level: embedding level, or -1 if unknown
  * @language: language tag
@@ -1891,7 +1833,6 @@ pango_get_log_attrs (const char    *text,
   g_return_if_fail (log_attrs != NULL);
 
   analysis.level = level;
-  analysis.lang_engine = _pango_get_language_engine ();
 
   pango_default_break (text, length, &analysis, log_attrs, attrs_len);
 
@@ -1921,7 +1862,7 @@ pango_get_log_attrs (const char    *text,
 #include "break-indic.c"
 #include "break-thai.c"
 
-static void
+static gboolean
 break_script (const char          *item_text,
 	      unsigned int         item_length,
 	      const PangoAnalysis *analysis,
@@ -1950,43 +1891,71 @@ break_script (const char          *item_text,
     case PANGO_SCRIPT_THAI:
       break_thai (item_text, item_length, analysis, attrs, attrs_len);
       break;
+    default:
+      return FALSE;
     }
+
+  return TRUE;
 }
 
+static gboolean
+break_attrs (const char   *text,
+             int           length,
+             GSList       *attributes,
+             int           offset,
+             PangoLogAttr *log_attrs,
+             int           log_attrs_len)
+{
+  PangoAttrList list;
+  PangoAttrIterator iter;
+  GSList *l;
 
-/* Wrap language breaker in PangoEngineLang to pass it through old API,
- * from times when there were modules and engines. */
-typedef PangoEngineLang      PangoLanguageEngine;
-typedef PangoEngineLangClass PangoLanguageEngineClass;
-static GType pango_language_engine_get_type (void) G_GNUC_CONST;
-G_GNUC_BEGIN_IGNORE_DEPRECATIONS
-G_DEFINE_TYPE (PangoLanguageEngine, pango_language_engine, PANGO_TYPE_ENGINE_LANG);
-G_GNUC_END_IGNORE_DEPRECATIONS
-static void
-_pango_language_engine_break (PangoEngineLang *engine G_GNUC_UNUSED,
-			      const char      *item_text,
-			      int              item_length,
-			      PangoAnalysis   *analysis,
-			      PangoLogAttr    *attrs,
-			      int              attrs_len)
-{
-  break_script (item_text, item_length, analysis, attrs, attrs_len);
-}
-static void
-pango_language_engine_class_init (PangoEngineLangClass *class)
-{
-  class->script_break = _pango_language_engine_break;
-}
-static void
-pango_language_engine_init (PangoEngineLang *object)
-{
-}
+  _pango_attr_list_init (&list);
+  for (l = attributes; l; l = l->next)
+    {
+      PangoAttribute *attr = l->data;
 
-PangoEngineLang *
-_pango_get_language_engine (void)
-{
-  static PangoEngineLang *engine;
-  if (g_once_init_enter (&engine))
-    g_once_init_leave (&engine, g_object_new (pango_language_engine_get_type(), NULL));
-  return engine;
+      if (attr->klass->type == PANGO_ATTR_ALLOW_BREAKS)
+        pango_attr_list_insert (&list, pango_attribute_copy (attr));
+    }
+
+  if (!_pango_attr_list_has_attributes (&list))
+    {
+      _pango_attr_list_destroy (&list);
+      return FALSE;
+    }
+
+  _pango_attr_list_get_iterator (&list, &iter);
+  do {
+    const PangoAttribute *attr = pango_attr_iterator_get (&iter, PANGO_ATTR_ALLOW_BREAKS);
+
+    if (attr && ((PangoAttrInt*)attr)->value == 0)
+      {
+        int start, end;
+        int start_pos, end_pos;
+        int pos;
+
+        pango_attr_iterator_range (&iter, &start, &end);
+        if (start < offset)
+          start_pos = 0;
+        else
+          start_pos = g_utf8_pointer_to_offset (text, text + start - offset);
+        if (end >= offset + length)
+          end_pos = log_attrs_len;
+        else
+          end_pos = g_utf8_pointer_to_offset (text, text + end - offset);
+
+        for (pos = start_pos + 1; pos < end_pos; pos++)
+          {
+            log_attrs[pos].is_mandatory_break = FALSE;
+            log_attrs[pos].is_line_break = FALSE;
+            log_attrs[pos].is_char_break = FALSE;
+          }
+      }
+  } while (pango_attr_iterator_next (&iter));
+
+  _pango_attr_iterator_destroy (&iter);
+  _pango_attr_list_destroy (&list);
+
+  return TRUE;
 }

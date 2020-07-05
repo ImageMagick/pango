@@ -24,7 +24,8 @@
 
 #include "pango-glyph-item.h"
 #include "pango-layout-private.h"
-#include "pango-engine-private.h"
+#include "pango-font-private.h"
+#include "pango-attributes-private.h"
 #include "pango-impl-utils.h"
 
 typedef struct _EllipsizeState EllipsizeState;
@@ -105,21 +106,29 @@ struct _EllipsizeState
 
   LineIter gap_end_iter;	/* Iterator pointing to last cluster in gap */
   int gap_end_x;		/* x position of end of gap, in Pango units */
+
+  PangoShapeFlags shape_flags;
 };
 
 /* Compute global information needed for the itemization process
  */
 static void
 init_state (EllipsizeState  *state,
-	    PangoLayoutLine *line,
-	    PangoAttrList   *attrs)
+            PangoLayoutLine *line,
+            PangoAttrList   *attrs,
+            PangoShapeFlags  shape_flags)
 {
   GSList *l;
   int i;
   int start_offset;
 
   state->layout = line->layout;
-  state->attrs = attrs;
+  if (attrs)
+    state->attrs = pango_attr_list_ref (attrs);
+  else
+    state->attrs = pango_attr_list_new ();
+
+  state->shape_flags = shape_flags;
 
   state->n_runs = g_slist_length (line->runs);
   state->run_info = g_new (RunInfo, state->n_runs);
@@ -151,6 +160,7 @@ init_state (EllipsizeState  *state,
 static void
 free_state (EllipsizeState *state)
 {
+  pango_attr_list_unref (state->attrs);
   if (state->line_start_attr)
     pango_attr_iterator_destroy (state->line_start_attr);
   if (state->gap_start_attr)
@@ -290,14 +300,17 @@ itemize_text (EllipsizeState *state,
 static void
 shape_ellipsis (EllipsizeState *state)
 {
-  PangoAttrList *attrs = pango_attr_list_new ();
+  PangoAttrList attrs;
   GSList *run_attrs;
   PangoItem *item;
   PangoGlyphString *glyphs;
   GSList *l;
   PangoAttribute *fallback;
   const char *ellipsis_text;
+  int len;
   int i;
+
+  _pango_attr_list_init (&attrs);
 
   /* Create/reset state->ellipsis_run
    */
@@ -323,7 +336,7 @@ shape_ellipsis (EllipsizeState *state)
       attr->start_index = 0;
       attr->end_index = G_MAXINT;
 
-      pango_attr_list_insert (attrs, attr);
+      pango_attr_list_insert (&attrs, attr);
     }
 
   g_slist_free (run_attrs);
@@ -331,7 +344,7 @@ shape_ellipsis (EllipsizeState *state)
   fallback = pango_attr_fallback_new (FALSE);
   fallback->start_index = 0;
   fallback->end_index = G_MAXINT;
-  pango_attr_list_insert (attrs, fallback);
+  pango_attr_list_insert (&attrs, fallback);
 
   /* First try using a specific ellipsis character in the best matching font
    */
@@ -340,13 +353,13 @@ shape_ellipsis (EllipsizeState *state)
   else
     ellipsis_text = "\342\200\246";	/* U+2026: HORIZONTAL ELLIPSIS */
 
-  item = itemize_text (state, ellipsis_text, attrs);
+  item = itemize_text (state, ellipsis_text, &attrs);
 
   /* If that fails we use "..." in the first matching font
    */
   if (!item->analysis.font ||
-      !_pango_engine_shape_covers (item->analysis.shape_engine, item->analysis.font,
-				   item->analysis.language, g_utf8_get_char (ellipsis_text)))
+      !pango_font_has_char (item->analysis.font,
+                            g_utf8_get_char (ellipsis_text)))
     {
       pango_item_free (item);
 
@@ -355,10 +368,10 @@ shape_ellipsis (EllipsizeState *state)
       ((PangoAttrInt *)fallback)->value = TRUE;
 
       ellipsis_text = "...";
-      item = itemize_text (state, ellipsis_text, attrs);
+      item = itemize_text (state, ellipsis_text, &attrs);
     }
 
-  pango_attr_list_unref (attrs);
+  _pango_attr_list_destroy (&attrs);
 
   state->ellipsis_run->item = item;
 
@@ -366,8 +379,11 @@ shape_ellipsis (EllipsizeState *state)
    */
   glyphs = state->ellipsis_run->glyphs;
 
-  pango_shape (ellipsis_text, strlen (ellipsis_text),
-	       &item->analysis, glyphs);
+  len = strlen (ellipsis_text);
+  pango_shape_with_flags (ellipsis_text, len,
+                          ellipsis_text, len,
+	                  &item->analysis, glyphs,
+                          state->shape_flags);
 
   state->ellipsis_width = 0;
   for (i = 0; i < glyphs->num_glyphs; i++)
@@ -718,6 +734,7 @@ current_width (EllipsizeState *state)
  * _pango_layout_line_ellipsize:
  * @line: a #PangoLayoutLine
  * @attrs: Attributes being used for itemization/shaping
+ * @shape_flags: Flags to use when shaping
  *
  * Given a #PangoLayoutLine with the runs still in logical order, ellipsize
  * it according the layout's policy to fit within the set width of the layout.
@@ -727,6 +744,7 @@ current_width (EllipsizeState *state)
 gboolean
 _pango_layout_line_ellipsize (PangoLayoutLine *line,
 			      PangoAttrList   *attrs,
+                              PangoShapeFlags  shape_flags,
 			      int              goal_width)
 {
   EllipsizeState state;
@@ -734,7 +752,7 @@ _pango_layout_line_ellipsize (PangoLayoutLine *line,
 
   g_return_val_if_fail (line->layout->ellipsize != PANGO_ELLIPSIZE_NONE && goal_width >= 0, is_ellipsized);
 
-  init_state (&state, line, attrs);
+  init_state (&state, line, attrs, shape_flags);
 
   if (state.total_width <= goal_width)
     goto out;

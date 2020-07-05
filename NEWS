@@ -1,3 +1,122 @@
+Overview of changes in 1.45.3
+=============================
+- Fix pango_attr_list_change
+- Fix crashes with empty attribute lists
+
+Overview of changes in 1.45.2
+=============================
+- Fix several crashes in gtk2 applications
+- Revert an unintentional introspection API change
+- Include HarfBuzz when igenerating introspection data
+
+Overview of changes in 1.45.1
+=============================
+- Undo PangoFontsetSimple deprecation
+- Annotation fixes for various apis
+- Add api to compare attribute lists
+- Update data tables to Unicode 13.0
+- Various test improvements
+- Require GLib 2.60
+
+Overview of changes in 1.45.0
+=============================
+- Some new font enumeration apis:
+  pango_font_map_get_family
+  pango_font_family_get_face
+  pango_font_face_get_family
+  pango_font_get_face
+- Support for line-wide underlines
+- Support for overlines
+
+Overview of changes in 1.44.7
+=============================
+- Fix tests without libthai
+- Small speedup to Emoji iteration
+- Bring back PangoFontsetSimple (pygtk bind it)
+
+Overview of changes in 1.44.6
+=============================
+- docs: Fix symbol indices
+- Fix Thai line breaking
+- Re-add symbols needed by some bindings
+- Don't insert hyphens for some languages
+- Fix a crash with hyphenation
+
+Overview of changes in 1.44.5
+=============================
+- Revert a broken change (causing crashes on OS X)
+
+Overview of changes in 1.44.4
+=============================
+- Add an insert-hyphens attribute
+- Reinstate the return type of pango_fc_font_lock_face
+- Fix a problem with ellipses getting the wrong font
+- fc: Improve filtering by font format
+- Re-add PangoFcFont to public headers
+- Install PangoFc and PangoOT introspection files
+- Fix ink rectangles to have positive height
+- Fix mark positioning
+- Switch to using harfbuzz for metrics
+
+Overview of changes in 1.44.3
+=============================
+- Install pango-ot headers
+- Make subpixel positioning optional
+- fc: Ignore fonts with unsupported formats
+
+Overview of changes in 1.44.2
+=============================
+- Disable ligatures when letterspacing
+- Set design coords on hb_font_t
+- Expose more font options in pango-view
+- OS X: Make 'system-ui' font work
+- Keep deprecated pango-fc apis in headers
+- Make hex boxes work, always
+- introspection: Various build fixes
+- introspection: Add PangoPT, PangoFT2 namespaces
+- layout: Make the new line-spacing opt-in
+
+Overview of changes in 1.44.1
+=============================
+- Fix a crash with allow_break attributes
+- Fix Emoji spacing
+- Fix up includes and pkg-config requires
+- Correct some cases for hyphen insertion
+
+Overview of changes in 1.44.0
+=============================
+- Use harfbuzz for shaping on all platforms
+- Stop using freetype for font loading; this
+    drops support for type1 and bitmap fonts
+- Add a getter for hb_font_t
+- Make PangoCoverage a GObject
+- Add a pango_tailor_break api
+- font metrics: Add line height
+- layout: Support line spacing
+- layout: Draw hyphens for line breaks
+- Add an attribute to suppress line breaking
+- cairo: Don't render hex boxes for space
+- Add an attribute to show invisible characters
+- Stop quantizing glyph positions
+- Add tests for itemization and line breaking
+- Remove language and shape engine remnants
+- Rename meson options: gtk_doc, introspection
+- Require GLib 2.59.2
+- Require Harfbuzz 2.0
+
+Overview of changes in 1.43.0
+=============================
+- Drop autotools
+- Drop Visual Studio build
+- Build with meson everywhere
+- Update Emoji tables for Unicode 11
+- Update test data for Unicode 11
+- Fix a crash with Thai breaking
+- Fix a crash with font variations
+- Deprecate bidi apis in favor of fribidi
+- Add a variable font family api
+- Improve font fallback handling on win32
+
 Overview of changes in 1.42.4
 =============================
 - Fix build failures (OS X, C89)

@@ -24,6 +24,12 @@
 
 #include <glib.h>
 
+gboolean
+_pango_Is_Emoji_Base_Character (gunichar ch);
+
+gboolean
+_pango_Is_Emoji_Extended_Pictographic (gunichar ch);
+
 typedef struct _PangoEmojiIter PangoEmojiIter;
 
 struct _PangoEmojiIter
@@ -33,6 +39,10 @@ struct _PangoEmojiIter
   const gchar *start;
   const gchar *end;
   gboolean is_emoji;
+
+  unsigned char *types;
+  unsigned int n_chars;
+  unsigned int cursor;
 };
 
 PangoEmojiIter *

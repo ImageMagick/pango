@@ -18,11 +18,27 @@
  * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
  * Boston, MA 02111-1307, USA.
  *
- * Implementation of pango_emoji_iter is derived from Chromium:
+ * Implementation of pango_emoji_iter is based on Chromium's Ragel-based
+ * parser:
  *
- * https://cs.chromium.org/chromium/src/third_party/WebKit/Source/platform/fonts/FontFallbackPriority.h
- * https://cs.chromium.org/chromium/src/third_party/WebKit/Source/platform/text/CharacterEmoji.cpp
- * https://cs.chromium.org/chromium/src/third_party/WebKit/Source/platform/fonts/SymbolsIterator.cpp
+ * https://chromium-review.googlesource.com/c/chromium/src/+/1264577
+ *
+ * The grammar file emoji_presentation_scanner.rl was just modified to
+ * adapt the function signature and variables to our usecase.  The
+ * grammar itself was NOT modified:
+ *
+ * https://chromium-review.googlesource.com/c/chromium/src/+/1264577/3/third_party/blink/renderer/platform/fonts/emoji_presentation_scanner.rl
+ *
+ * The emoji_presentation_scanner.c is generated from .rl file by
+ * running ragel on it.
+ *
+ * The categorization is also based on:
+ *
+ * https://chromium-review.googlesource.com/c/chromium/src/+/1264577/3/third_party/blink/renderer/platform/fonts/utf16_ragel_iterator.h
+ *
+ * The iterator next() is based on:
+ *
+ * https://chromium-review.googlesource.com/c/chromium/src/+/1264577/3/third_party/blink/renderer/platform/fonts/symbols_iterator.cc
  *
  * // Copyright 2015 The Chromium Authors. All rights reserved.
  * // Use of this source code is governed by a BSD-style license that can be
@@ -76,7 +92,19 @@ DEFINE_pango_Is_(Emoji)
 DEFINE_pango_Is_(Emoji_Presentation)
 DEFINE_pango_Is_(Emoji_Modifier)
 DEFINE_pango_Is_(Emoji_Modifier_Base)
+DEFINE_pango_Is_(Extended_Pictographic)
 
+gboolean
+_pango_Is_Emoji_Base_Character (gunichar ch)
+{
+	return _pango_Is_Emoji (ch);
+}
+
+gboolean
+_pango_Is_Emoji_Extended_Pictographic (gunichar ch)
+{
+	return _pango_Is_Extended_Pictographic (ch);
+}
 
 static gboolean
 _pango_Is_Emoji_Text_Default (gunichar ch)
@@ -105,46 +133,77 @@ _pango_Is_Regional_Indicator (gunichar ch)
 
 const gunichar kCombiningEnclosingCircleBackslashCharacter = 0x20E0;
 const gunichar kCombiningEnclosingKeycapCharacter = 0x20E3;
-const gunichar kEyeCharacter = 0x1F441;
-const gunichar kFemaleSignCharacter = 0x2640;
-const gunichar kLeftSpeechBubbleCharacter = 0x1F5E8;
-const gunichar kMaleSignCharacter = 0x2642;
-const gunichar kRainbowCharacter = 0x1F308;
-const gunichar kStaffOfAesculapiusCharacter = 0x2695;
 const gunichar kVariationSelector15Character = 0xFE0E;
 const gunichar kVariationSelector16Character = 0xFE0F;
-const gunichar kWavingWhiteFlagCharacter = 0x1F3F3;
 const gunichar kZeroWidthJoinerCharacter = 0x200D;
 
+enum PangoEmojiScannerCategory {
+  EMOJI = 0,
+  EMOJI_TEXT_PRESENTATION = 1,
+  EMOJI_EMOJI_PRESENTATION = 2,
+  EMOJI_MODIFIER_BASE = 3,
+  EMOJI_MODIFIER = 4,
+  EMOJI_VS_BASE = 5,
+  REGIONAL_INDICATOR = 6,
+  KEYCAP_BASE = 7,
+  COMBINING_ENCLOSING_KEYCAP = 8,
+  COMBINING_ENCLOSING_CIRCLE_BACKSLASH = 9,
+  ZWJ = 10,
+  VS15 = 11,
+  VS16 = 12,
+  TAG_BASE = 13,
+  TAG_SEQUENCE = 14,
+  TAG_TERM = 15,
+  kMaxEmojiScannerCategory = 16
+};
 
-typedef enum {
-  PANGO_EMOJI_TYPE_INVALID,
-  PANGO_EMOJI_TYPE_TEXT, /* For regular non-symbols text */
-  PANGO_EMOJI_TYPE_EMOJI_TEXT, /* For emoji in text presentaiton */
-  PANGO_EMOJI_TYPE_EMOJI_EMOJI /* For emoji in emoji presentation */
-} PangoEmojiType;
-
-static PangoEmojiType
-_pango_get_emoji_type (gunichar codepoint)
+static unsigned char
+_pango_EmojiSegmentationCategory (gunichar codepoint)
 {
-  /* Those should only be Emoji presentation as combinations of two. */
-  if (_pango_Is_Emoji_Keycap_Base (codepoint) ||
-      _pango_Is_Regional_Indicator (codepoint))
-    return PANGO_EMOJI_TYPE_TEXT;
-
+  /* Specific ones first. */
   if (codepoint == kCombiningEnclosingKeycapCharacter)
-    return PANGO_EMOJI_TYPE_EMOJI_EMOJI;
+    return COMBINING_ENCLOSING_KEYCAP;
+  if (codepoint == kCombiningEnclosingCircleBackslashCharacter)
+    return COMBINING_ENCLOSING_CIRCLE_BACKSLASH;
+  if (codepoint == kZeroWidthJoinerCharacter)
+    return ZWJ;
+  if (codepoint == kVariationSelector15Character)
+    return VS15;
+  if (codepoint == kVariationSelector16Character)
+    return VS16;
+  if (codepoint == 0x1F3F4)
+    return TAG_BASE;
+  if ((codepoint >= 0xE0030 && codepoint <= 0xE0039) ||
+      (codepoint >= 0xE0061 && codepoint <= 0xE007A))
+    return TAG_SEQUENCE;
+  if (codepoint == 0xE007F)
+    return TAG_TERM;
+  if (_pango_Is_Emoji_Modifier_Base (codepoint))
+    return EMOJI_MODIFIER_BASE;
+  if (_pango_Is_Emoji_Modifier (codepoint))
+    return EMOJI_MODIFIER;
+  if (_pango_Is_Regional_Indicator (codepoint))
+    return REGIONAL_INDICATOR;
+  if (_pango_Is_Emoji_Keycap_Base (codepoint))
+    return KEYCAP_BASE;
 
-  if (_pango_Is_Emoji_Emoji_Default (codepoint) ||
-      _pango_Is_Emoji_Modifier_Base (codepoint) ||
-      _pango_Is_Emoji_Modifier (codepoint))
-    return PANGO_EMOJI_TYPE_EMOJI_EMOJI;
-
+  if (_pango_Is_Emoji_Emoji_Default (codepoint))
+    return EMOJI_EMOJI_PRESENTATION;
   if (_pango_Is_Emoji_Text_Default (codepoint))
-    return PANGO_EMOJI_TYPE_EMOJI_TEXT;
+    return EMOJI_TEXT_PRESENTATION;
+  if (_pango_Is_Emoji (codepoint))
+    return EMOJI;
 
-  return PANGO_EMOJI_TYPE_TEXT;
+  /* Ragel state machine will interpret unknown category as "any". */
+  return kMaxEmojiScannerCategory;
 }
+
+
+typedef gboolean bool;
+enum { false = FALSE, true = TRUE };
+typedef unsigned char *emoji_text_iter_t;
+
+#include "emoji_presentation_scanner.c"
 
 
 PangoEmojiIter *
@@ -152,15 +211,28 @@ _pango_emoji_iter_init (PangoEmojiIter *iter,
 			const char     *text,
 			int             length)
 {
-  iter->text_start = text;
+  unsigned int n_chars = g_utf8_strlen (text, length);
+  unsigned char *types = g_malloc (n_chars);
+  unsigned int i;
+  const char *p;
+
+  p = text;
+  for (i = 0; i < n_chars; i++)
+  {
+    types[i] = _pango_EmojiSegmentationCategory (g_utf8_get_char (p));
+    p = g_utf8_next_char (p);
+  }
+
+  iter->text_start = iter->start = iter->end = text;
   if (length >= 0)
     iter->text_end = text + length;
   else
     iter->text_end = text + strlen (text);
+  iter->is_emoji = FALSE;
 
-  iter->start = text;
-  iter->end = text;
-  iter->is_emoji = (gboolean) 2; /* HACK */
+  iter->types = types;
+  iter->n_chars = n_chars;
+  iter->cursor = 0;
 
   _pango_emoji_iter_next (iter);
 
@@ -170,100 +242,39 @@ _pango_emoji_iter_init (PangoEmojiIter *iter,
 void
 _pango_emoji_iter_fini (PangoEmojiIter *iter)
 {
+  g_free (iter->types);
 }
-
-#define PANGO_EMOJI_TYPE_IS_EMOJI(typ) ((typ) == PANGO_EMOJI_TYPE_EMOJI_EMOJI)
 
 gboolean
 _pango_emoji_iter_next (PangoEmojiIter *iter)
 {
-  PangoEmojiType current_emoji_type = PANGO_EMOJI_TYPE_INVALID;
+  unsigned int old_cursor, cursor;
+  gboolean is_emoji;
 
-  if (iter->end == iter->text_end)
+  if (iter->end >= iter->text_end)
     return FALSE;
 
   iter->start = iter->end;
 
-  for (; iter->end < iter->text_end; iter->end = g_utf8_next_char (iter->end))
-    {
-      gunichar ch = g_utf8_get_char (iter->end);
+  old_cursor = cursor = iter->cursor;
+  cursor = scan_emoji_presentation (iter->types + cursor,
+				    iter->types + iter->n_chars,
+				    &is_emoji) - iter->types;
+  do
+  {
+    iter->cursor = cursor;
+    iter->is_emoji = is_emoji;
 
-    /* Except at the beginning, ZWJ just carries over the emoji or neutral
-     * text type, VS15 & VS16 we just carry over as well, since we already
-     * resolved those through lookahead. Also, don't downgrade to text
-     * presentation for emoji that are part of a ZWJ sequence, example
-     * U+1F441 U+200D U+1F5E8, eye (text presentation) + ZWJ + left speech
-     * bubble, see below. */
-    if ((!(ch == kZeroWidthJoinerCharacter && !iter->is_emoji) &&
-	 ch != kVariationSelector15Character &&
-	 ch != kVariationSelector16Character &&
-	 ch != kCombiningEnclosingCircleBackslashCharacter &&
-	 !_pango_Is_Regional_Indicator(ch) &&
-	 !((ch == kLeftSpeechBubbleCharacter ||
-	    ch == kRainbowCharacter ||
-	    ch == kMaleSignCharacter ||
-	    ch == kFemaleSignCharacter ||
-	    ch == kStaffOfAesculapiusCharacter) &&
-	   !iter->is_emoji)) ||
-	current_emoji_type == PANGO_EMOJI_TYPE_INVALID) {
-      current_emoji_type = _pango_get_emoji_type (ch);
-    }
+    if (cursor == iter->n_chars)
+      break;
 
-    if (g_utf8_next_char (iter->end) < iter->text_end) /* Optimize. */
-    {
-      gunichar peek_char = g_utf8_get_char (g_utf8_next_char (iter->end));
-
-      /* Variation Selectors */
-      if (current_emoji_type ==
-	      PANGO_EMOJI_TYPE_EMOJI_EMOJI &&
-	  peek_char == kVariationSelector15Character) {
-	current_emoji_type = PANGO_EMOJI_TYPE_EMOJI_TEXT;
-      }
-
-      if ((current_emoji_type ==
-	       PANGO_EMOJI_TYPE_EMOJI_TEXT ||
-	   _pango_Is_Emoji_Keycap_Base(ch)) &&
-	  peek_char == kVariationSelector16Character) {
-	current_emoji_type = PANGO_EMOJI_TYPE_EMOJI_EMOJI;
-      }
-
-      /* Combining characters Keycap... */
-      if (_pango_Is_Emoji_Keycap_Base(ch) &&
-	  peek_char == kCombiningEnclosingKeycapCharacter) {
-	current_emoji_type = PANGO_EMOJI_TYPE_EMOJI_EMOJI;
-      };
-
-      /* Regional indicators */
-      if (_pango_Is_Regional_Indicator(ch) &&
-	  _pango_Is_Regional_Indicator(peek_char)) {
-	current_emoji_type = PANGO_EMOJI_TYPE_EMOJI_EMOJI;
-      }
-
-      /* Upgrade text presentation emoji to emoji presentation when followed by
-       * ZWJ, Example U+1F441 U+200D U+1F5E8, eye + ZWJ + left speech bubble. */
-      if ((ch == kEyeCharacter ||
-	   ch == kWavingWhiteFlagCharacter) &&
-	  peek_char == kZeroWidthJoinerCharacter) {
-	current_emoji_type = PANGO_EMOJI_TYPE_EMOJI_EMOJI;
-      }
-    }
-
-    if (iter->is_emoji == (gboolean) 2)
-      iter->is_emoji = !PANGO_EMOJI_TYPE_IS_EMOJI (current_emoji_type);
-    if (iter->is_emoji == PANGO_EMOJI_TYPE_IS_EMOJI (current_emoji_type))
-    {
-      iter->is_emoji = !PANGO_EMOJI_TYPE_IS_EMOJI (current_emoji_type);
-
-      /* Make sure we make progress.  Weird sequences, like a VC15 followed
-       * by VC16, can trick us into stalling otherwise. */
-      if (iter->start == iter->end)
-        iter->end = g_utf8_next_char (iter->end);
-
-      return TRUE;
-    }
+    cursor = scan_emoji_presentation (iter->types + cursor,
+				      iter->types + iter->n_chars,
+				      &is_emoji) - iter->types;
   }
+  while (iter->is_emoji == is_emoji);
 
-  iter->is_emoji = PANGO_EMOJI_TYPE_IS_EMOJI (current_emoji_type);
+  iter->end = g_utf8_offset_to_pointer (iter->start, iter->cursor - old_cursor);
 
   return TRUE;
 }

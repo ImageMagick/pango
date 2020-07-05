@@ -29,7 +29,7 @@
  * implementation of fonts. The #PangoFont structure
  * represents an abstract rendering-system-independent font.
  * Pango provides routines to list available fonts, and
- * to load a font of a given description.
+ * to load a font matching a given description.
  */
 
 #include "config.h"
@@ -37,8 +37,10 @@
 #include <math.h>
 #include <string.h>
 
+#include <gio/gio.h>
+
 #include "pango-types.h"
-#include "pango-font.h"
+#include "pango-font-private.h"
 #include "pango-fontmap.h"
 #include "pango-impl-utils.h"
 
@@ -1215,17 +1217,47 @@ parse_variations (const char  *word,
  * @str: string representation of a font description.
  *
  * Creates a new font description from a string representation in the
- * form "[FAMILY-LIST] [STYLE-OPTIONS] [SIZE]", where FAMILY-LIST is a
- * comma separated list of families optionally terminated by a comma,
- * STYLE_OPTIONS is a whitespace separated list of words where each word
- * describes one of style, variant, weight, stretch, or gravity, and SIZE
- * is a decimal number (size in points) or optionally followed by the
- * unit modifier "px" for absolute size. Any one of the options may
- * be absent.  If FAMILY-LIST is absent, then the family_name field of
- * the resulting font description will be initialized to %NULL.  If
- * STYLE-OPTIONS is missing, then all style options will be set to the
- * default values. If SIZE is missing, the size in the resulting font
- * description will be set to 0.
+ * form
+ *
+ * "\[FAMILY-LIST] \[STYLE-OPTIONS] \[SIZE] \[VARIATIONS]",
+ *
+ * where FAMILY-LIST is a comma-separated list of families optionally
+ * terminated by a comma, STYLE_OPTIONS is a whitespace-separated list
+ * of words where each word describes one of style, variant, weight,
+ * stretch, or gravity, and SIZE is a decimal number (size in points)
+ * or optionally followed by the unit modifier "px" for absolute size.
+ * VARIATIONS is a comma-separated list of font variation
+ * specifications of the form "\@axis=value" (the = sign is optional).
+ *
+ * The following words are understood as styles:
+ * "Normal", "Roman", "Oblique", "Italic".
+ *
+ * The following words are understood as variants:
+ * "Small-Caps".
+ *
+ * The following words are understood as weights:
+ * "Thin", "Ultra-Light", "Extra-Light", "Light", "Semi-Light",
+ * "Demi-Light", "Book", "Regular", "Medium", "Semi-Bold", "Demi-Bold",
+ * "Bold", "Ultra-Bold", "Extra-Bold", "Heavy", "Black", "Ultra-Black",
+ * "Extra-Black".
+ *
+ * The following words are understood as stretch values:
+ * "Ultra-Condensed", "Extra-Condensed", "Condensed", "Semi-Condensed",
+ * "Semi-Expanded", "Expanded", "Extra-Expanded", "Ultra-Expanded".
+ *
+ * The following words are understood as gravity values:
+ * "Not-Rotated", "South", "Upside-Down", "North", "Rotated-Left",
+ * "East", "Rotated-Right", "West".
+ *
+ * Any one of the options may be absent. If FAMILY-LIST is absent, then
+ * the family_name field of the resulting font description will be
+ * initialized to %NULL. If STYLE-OPTIONS is missing, then all style
+ * options will be set to the default values. If SIZE is missing, the
+ * size in the resulting font description will be set to 0.
+ *
+ * A typical example:
+ *
+ * "Cantarell Italic Light 15 \@wght=200"
  *
  * Return value: a new #PangoFontDescription.
  **/
@@ -1527,7 +1559,7 @@ parse_field (const char *what,
 /**
  * pango_parse_style:
  * @str: a string to parse.
- * @style: (out caller-allocates): a #PangoStyle to store the result
+ * @style: (out): a #PangoStyle to store the result
  *   in.
  * @warn: if %TRUE, issue a g_warning() on bad input.
  *
@@ -1548,7 +1580,7 @@ pango_parse_style (const char *str,
 /**
  * pango_parse_variant:
  * @str: a string to parse.
- * @variant: (out caller-allocates): a #PangoVariant to store the
+ * @variant: (out): a #PangoVariant to store the
  *   result in.
  * @warn: if %TRUE, issue a g_warning() on bad input.
  *
@@ -1569,7 +1601,7 @@ pango_parse_variant (const char   *str,
 /**
  * pango_parse_weight:
  * @str: a string to parse.
- * @weight: (out caller-allocates): a #PangoWeight to store the result
+ * @weight: (out): a #PangoWeight to store the result
  *   in.
  * @warn: if %TRUE, issue a g_warning() on bad input.
  *
@@ -1590,7 +1622,7 @@ pango_parse_weight (const char  *str,
 /**
  * pango_parse_stretch:
  * @str: a string to parse.
- * @stretch: (out caller-allocates): a #PangoStretch to store the
+ * @stretch: (out): a #PangoStretch to store the
  *   result in.
  * @warn: if %TRUE, issue a g_warning() on bad input.
  *
@@ -1617,11 +1649,29 @@ pango_parse_stretch (const char   *str,
  * PangoFont
  */
 
-G_DEFINE_ABSTRACT_TYPE (PangoFont, pango_font, G_TYPE_OBJECT)
+typedef struct {
+  hb_font_t *hb_font;
+} PangoFontPrivate;
+
+G_DEFINE_ABSTRACT_TYPE_WITH_PRIVATE (PangoFont, pango_font, G_TYPE_OBJECT)
+
+static void
+pango_font_finalize (GObject *object)
+{
+  PangoFont *font = PANGO_FONT (object);
+  PangoFontPrivate *priv = pango_font_get_instance_private (font);
+
+  hb_font_destroy (priv->hb_font);
+
+  G_OBJECT_CLASS (pango_font_parent_class)->finalize (object);
+}
 
 static void
 pango_font_class_init (PangoFontClass *class G_GNUC_UNUSED)
 {
+  GObjectClass *object_class = G_OBJECT_CLASS (class);
+
+  object_class->finalize = pango_font_finalize;
 }
 
 static void
@@ -1702,20 +1752,14 @@ pango_font_get_coverage (PangoFont     *font,
  * language tag and character point.
  *
  * Return value: (transfer none): the best matching shaper.
+ * Deprecated: Shape engines are no longer used
  **/
 PangoEngineShape *
 pango_font_find_shaper (PangoFont     *font,
 			PangoLanguage *language,
 			guint32        ch)
 {
-  PangoEngineShape* shaper;
-
-  if (G_UNLIKELY (!font))
-    return NULL;
-
-  shaper = PANGO_FONT_GET_CLASS (font)->find_shaper (font, language, ch);
-
-  return shaper;
+  return NULL;
 }
 
 /**
@@ -1793,6 +1837,7 @@ pango_font_get_metrics (PangoFont        *font,
 
       metrics->ascent = PANGO_SCALE * PANGO_UNKNOWN_GLYPH_HEIGHT;
       metrics->descent = 0;
+      metrics->height = 0;
       metrics->approximate_char_width = PANGO_SCALE * PANGO_UNKNOWN_GLYPH_WIDTH;
       metrics->approximate_digit_width = PANGO_SCALE * PANGO_UNKNOWN_GLYPH_WIDTH;
       metrics->underline_position = -PANGO_SCALE;
@@ -1835,6 +1880,56 @@ pango_font_get_font_map (PangoFont *font)
     return PANGO_FONT_GET_CLASS (font)->get_font_map (font);
   else
     return NULL;
+}
+
+/**
+ * pango_font_get_face:
+ * @font: a #PangoFont
+ *
+ * Gets the #PangoFontFace to which @font belongs.
+ *
+ * Returns: (transfer none): the #PangoFontFace
+ *
+ * Since: 1.46
+ */
+PangoFontFace *
+pango_font_get_face (PangoFont *font)
+{
+  PangoFontMap *map = pango_font_get_font_map (font);
+
+  return PANGO_FONT_MAP_GET_CLASS (map)->get_face (map,font);
+}
+
+/**
+ * pango_font_get_hb_font: (skip)
+ * @font: a #PangoFont
+ *
+ * Get a hb_font_t object backing this font.
+ *
+ * Note that the objects returned by this function
+ * are cached and immutable. If you need to make
+ * changes to the hb_font_t, use hb_font_create_sub_font().
+ *
+ * Returns: (transfer none) (nullable): the hb_font_t object backing the
+ *          font, or %NULL if the font does not have one
+ *
+ * Since: 1.44
+ */
+hb_font_t *
+pango_font_get_hb_font (PangoFont *font)
+{
+  PangoFontPrivate *priv = pango_font_get_instance_private (font);
+
+  g_return_val_if_fail (PANGO_IS_FONT (font), NULL);
+
+  if (priv->hb_font)
+    return priv->hb_font;
+
+  priv->hb_font = PANGO_FONT_GET_CLASS (font)->create_hb_font (font);
+
+  hb_font_make_immutable (priv->hb_font);
+
+  return priv->hb_font;
 }
 
 G_DEFINE_BOXED_TYPE (PangoFontMetrics, pango_font_metrics,
@@ -1937,6 +2032,28 @@ pango_font_metrics_get_descent (PangoFontMetrics *metrics)
   g_return_val_if_fail (metrics != NULL, 0);
 
   return metrics->descent;
+}
+
+/**
+ * pango_font_metrics_get_height:
+ * @metrics: a #PangoFontMetrics structure
+ *
+ * Gets the line height from a font metrics structure. The
+ * line height is the distance between successive baselines
+ * in wrapped text.
+ *
+ * If the line height is not available, 0 is returned.
+ *
+ * Return value: the height, in Pango units
+ *
+ * Since: 1.44
+ */
+int
+pango_font_metrics_get_height (PangoFontMetrics *metrics)
+{
+  g_return_val_if_fail (metrics != NULL, 0);
+
+  return metrics->height;
 }
 
 /**
@@ -2061,11 +2178,62 @@ pango_font_metrics_get_strikethrough_thickness (PangoFontMetrics *metrics)
  * PangoFontFamily
  */
 
-G_DEFINE_ABSTRACT_TYPE (PangoFontFamily, pango_font_family, G_TYPE_OBJECT)
+static GType
+pango_font_family_get_item_type (GListModel *list)
+{
+  return PANGO_TYPE_FONT_FACE;
+}
+
+static guint
+pango_font_family_get_n_items (GListModel *list)
+{
+  PangoFontFamily *family = PANGO_FONT_FAMILY (list);
+  int n_faces;
+
+  pango_font_family_list_faces (family, NULL, &n_faces);
+
+  return (guint)n_faces;
+}
+
+static gpointer
+pango_font_family_get_item (GListModel *list,
+                            guint       position)
+{
+  PangoFontFamily *family = PANGO_FONT_FAMILY (list);
+  PangoFontFace **faces;
+  int n_faces;
+  PangoFontFace *face;
+
+  pango_font_family_list_faces (family, &faces, &n_faces);
+
+  if (position < n_faces)
+    face = g_object_ref (faces[position]);
+  else
+    face = NULL;
+
+  g_free (faces);
+
+  return face;
+}
+
+static void
+pango_font_family_list_model_init (GListModelInterface *iface)
+{
+  iface->get_item_type = pango_font_family_get_item_type;
+  iface->get_n_items = pango_font_family_get_n_items;
+  iface->get_item = pango_font_family_get_item;
+}
+
+G_DEFINE_ABSTRACT_TYPE_WITH_CODE (PangoFontFamily, pango_font_family, G_TYPE_OBJECT,
+                                  G_IMPLEMENT_INTERFACE (G_TYPE_LIST_MODEL, pango_font_family_list_model_init))
+
+static PangoFontFace *pango_font_family_real_get_face (PangoFontFamily *family,
+                                                       const char      *name);
 
 static void
 pango_font_family_class_init (PangoFontFamilyClass *class G_GNUC_UNUSED)
 {
+  class->get_face = pango_font_family_real_get_face;
 }
 
 static void
@@ -2115,6 +2283,62 @@ pango_font_family_list_faces (PangoFontFamily  *family,
   PANGO_FONT_FAMILY_GET_CLASS (family)->list_faces (family, faces, n_faces);
 }
 
+static PangoFontFace *
+pango_font_family_real_get_face (PangoFontFamily *family,
+                                 const char      *name)
+{
+  PangoFontFace **faces;
+  int n_faces;
+  PangoFontFace *face;
+  int i;
+
+  pango_font_family_list_faces (family, &faces, &n_faces);
+
+  face = NULL;
+  if (name == NULL)
+    {
+      face = faces[0];
+    }
+  else
+    {
+      for (i = 0; i < n_faces; i++)
+        {
+          if (strcmp (name, pango_font_face_get_face_name (faces[i])) == 0)
+            {
+              face = faces[i];
+              break;
+            }
+        }
+    }
+
+  g_free (faces);
+
+  return face;
+}
+
+/**
+ * pango_font_family_get_face:
+ * @family: a #PangoFontFamily
+ * @name: (nullable): the name of a face. If the name is %NULL,
+ *     the family's default face (fontconfig calls it "Regular")
+ *     will be returned.
+ *
+ * Gets the #PangoFontFace of @family with the given name.
+ *
+ * Returns: (transfer none) (nullable): the #PangoFontFace,
+ *     or %NULL if no face with the given name exists.
+ *
+ * Since: 1.46
+ */
+PangoFontFace *
+pango_font_family_get_face (PangoFontFamily *family,
+                            const char      *name)
+{
+  g_return_val_if_fail (PANGO_IS_FONT_FAMILY (family), NULL);
+
+  return PANGO_FONT_FAMILY_GET_CLASS (family)->get_face (family, name);
+}
+
 /**
  * pango_font_family_is_monospace:
  * @family: a #PangoFontFamily
@@ -2143,6 +2367,28 @@ pango_font_family_is_monospace (PangoFontFamily  *family)
 
   if (PANGO_FONT_FAMILY_GET_CLASS (family)->is_monospace)
     return PANGO_FONT_FAMILY_GET_CLASS (family)->is_monospace (family);
+  else
+    return FALSE;
+}
+
+/**
+ * pango_font_family_is_variable:
+ * @family: a #PangoFontFamily
+ *
+ * A variable font is a font which has axes that can be modified to
+ * produce different faces.
+ *
+ * Return value: %TRUE if the family is variable
+ *
+ * Since: 1.44
+ **/
+gboolean
+pango_font_family_is_variable (PangoFontFamily  *family)
+{
+  g_return_val_if_fail (PANGO_IS_FONT_FAMILY (family), FALSE);
+
+  if (PANGO_FONT_FAMILY_GET_CLASS (family)->is_variable)
+    return PANGO_FONT_FAMILY_GET_CLASS (family)->is_variable (family);
   else
     return FALSE;
 }
@@ -2260,4 +2506,70 @@ pango_font_face_list_sizes (PangoFontFace  *face,
 	*sizes = NULL;
       *n_sizes = 0;
     }
+}
+
+/**
+ * pango_font_face_get_family:
+ * @face: a #PangoFontFace
+ *
+ * Gets the #PangoFontFamily that @face
+ * belongs to.
+ *
+ * Returns: (transfer none): the #PangoFontFamily
+ *
+ * Since: 1.46
+ */
+PangoFontFamily *
+pango_font_face_get_family (PangoFontFace *face)
+{
+  g_return_val_if_fail (PANGO_IS_FONT_FACE (face), NULL);
+
+  return PANGO_FONT_FACE_GET_CLASS (face)->get_family (face);
+}
+
+/**
+ * pango_font_has_char:
+ * @font: a #PangoFont
+ * @wc: a Unicode character
+ *
+ * Returns whether the font provides a glyph for this character.
+ *
+ * Returns %TRUE if @font can render @wc
+ *
+ * Since: 1.44
+ */
+gboolean
+pango_font_has_char (PangoFont *font,
+                     gunichar   wc)
+{
+  PangoCoverage *coverage = pango_font_get_coverage (font, pango_language_get_default ());
+  PangoCoverageLevel result = pango_coverage_get (coverage, wc);
+  pango_coverage_unref (coverage);
+  return result != PANGO_COVERAGE_NONE;
+}
+
+/**
+ * pango_font_get_features:
+ * @font: a #PangoFont
+ * @features: (out caller-allocates) (array length=len): Array to features in
+ * @len: the length of @features
+ * @num_features: (inout): the number of used items in @features
+ *
+ * Obtain the OpenType features that are provided by the font.
+ * These are passed to the rendering system, together with features
+ * that have been explicitly set via attributes.
+ *
+ * Note that this does not include OpenType features which the
+ * rendering system enables by default.
+ *
+ * Since: 1.44
+ */
+void
+pango_font_get_features (PangoFont    *font,
+                         hb_feature_t *features,
+                         guint         len,
+                         guint        *num_features)
+{
+  if (PANGO_FONT_GET_CLASS (font)->get_features)
+    PANGO_FONT_GET_CLASS (font)->get_features (font, features, len, num_features);
 }

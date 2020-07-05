@@ -73,25 +73,35 @@
  * pango_script_for_unichar:
  * @ch: a Unicode character
  *
- * Looks up the #PangoScript for a particular character (as defined by
+ * Looks up the script for a particular character (as defined by
  * Unicode Standard Annex \#24). No check is made for @ch being a
  * valid Unicode character; if you pass in invalid character, the
  * result is undefined.
  *
- * As of Pango 1.18, this function simply returns the return value of
- * g_unichar_get_script().
+ * Note that while the return type of this function is declared
+ * as PangoScript, as of Pango 1.18, this function simply returns
+ * the return value of g_unichar_get_script(). Callers must be
+ * prepared to handle unknown values.
  *
  * Return value: the #PangoScript for the character.
  *
  * Since: 1.4
+ * Deprecated: 1.44. Use g_unichar_get_script()
  **/
 PangoScript
 pango_script_for_unichar (gunichar ch)
 {
-  return g_unichar_get_script (ch);
+  return (PangoScript)g_unichar_get_script (ch);
 }
 
 /**********************************************************************/
+
+static PangoScriptIter *pango_script_iter_copy (PangoScriptIter *iter);
+
+G_DEFINE_BOXED_TYPE (PangoScriptIter,
+                     pango_script_iter,
+                     pango_script_iter_copy,
+                     pango_script_iter_free)
 
 PangoScriptIter *
 _pango_script_iter_init (PangoScriptIter *iter,
@@ -139,6 +149,12 @@ pango_script_iter_new (const char *text,
   return _pango_script_iter_init (g_slice_new (PangoScriptIter), text, length);
 }
 
+static PangoScriptIter *
+pango_script_iter_copy (PangoScriptIter *iter)
+{
+  return g_slice_dup (PangoScriptIter, iter);
+}
+
 void
 _pango_script_iter_fini (PangoScriptIter *iter)
 {
@@ -170,6 +186,11 @@ pango_script_iter_free (PangoScriptIter *iter)
  * The range is the set of locations p where *start <= p < *end.
  * (That is, it doesn't include the character stored at *end)
  *
+ * Note that while the type of the @script argument is declared
+ * as PangoScript, as of Pango 1.18, this function simply returns
+ * GUnicodeScript values. Callers must be prepared to handle unknown
+ * values.
+ *
  * Since: 1.4
  **/
 void
@@ -192,9 +213,42 @@ static const gunichar paired_chars[] = {
   0x005b, 0x005d,
   0x007b, 0x007d,
   0x00ab, 0x00bb, /* guillemets */
+  0x0f3a, 0x0f3b, /* tibetan */
+  0x0f3c, 0x0f3d,
+  0x169b, 0x169c, /* ogham */
   0x2018, 0x2019, /* general punctuation */
   0x201c, 0x201d,
   0x2039, 0x203a,
+  0x2045, 0x2046,
+  0x207d, 0x207e,
+  0x208d, 0x208e,
+  0x27e6, 0x27e7, /* math */
+  0x27e8, 0x27e9,
+  0x27ea, 0x27eb,
+  0x27ec, 0x27ed,
+  0x27ee, 0x27ef,
+  0x2983, 0x2984,
+  0x2985, 0x2986,
+  0x2987, 0x2988,
+  0x2989, 0x298a,
+  0x298b, 0x298c,
+  0x298d, 0x298e,
+  0x298f, 0x2990,
+  0x2991, 0x2992,
+  0x2993, 0x2994,
+  0x2995, 0x2996,
+  0x2997, 0x2998,
+  0x29fc, 0x29fd,
+  0x2e02, 0x2e03,
+  0x2e04, 0x2e05,
+  0x2e09, 0x2e0a,
+  0x2e0c, 0x2e0d,
+  0x2e1c, 0x2e1d,
+  0x2e20, 0x2e21,
+  0x2e22, 0x2e23,
+  0x2e24, 0x2e25,
+  0x2e26, 0x2e27,
+  0x2e28, 0x2e29,
   0x3008, 0x3009, /* chinese paired punctuation */
   0x300a, 0x300b,
   0x300c, 0x300d,
@@ -203,7 +257,15 @@ static const gunichar paired_chars[] = {
   0x3014, 0x3015,
   0x3016, 0x3017,
   0x3018, 0x3019,
-  0x301a, 0x301b
+  0x301a, 0x301b,
+  0xfe59, 0xfe5a,
+  0xfe5b, 0xfe5c,
+  0xfe5d, 0xfe5e,
+  0xff08, 0xff09,
+  0xff3b, 0xff3d,
+  0xff5b, 0xff5d,
+  0xff5f, 0xff60,
+  0xff62, 0xff63
 };
 
 static int
@@ -266,7 +328,7 @@ pango_script_iter_next (PangoScriptIter *iter)
       PangoScript sc;
       int pair_index;
 
-      sc = g_unichar_get_script (ch);
+      sc = (PangoScript)g_unichar_get_script (ch);
       if (sc != PANGO_SCRIPT_COMMON)
 	pair_index = -1;
       else

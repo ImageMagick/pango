@@ -242,7 +242,15 @@ pango_cairo_context_set_font_options (PangoContext               *context,
 
   g_return_if_fail (PANGO_IS_CONTEXT (context));
 
-  info  = get_context_info (context, TRUE);
+  info = get_context_info (context, TRUE);
+
+  if (!info->set_options && !options)
+    return;
+
+  if (info->set_options &&
+      options &&
+      cairo_font_options_equal (info->set_options, options))
+    return;
 
   if (info->set_options || options)
     pango_context_changed (context);
@@ -374,7 +382,7 @@ pango_cairo_context_set_shape_renderer (PangoContext                *context,
  * attributes of type %PANGO_ATTR_SHAPE as set by
  * pango_cairo_context_set_shape_renderer(), if any.
  *
- * Return value: (nullable): the shape rendering callback previously
+ * Return value: (transfer none) (nullable): the shape rendering callback previously
  *   set on the context, or %NULL if no shape rendering callback have
  *   been set.
  *

@@ -133,7 +133,7 @@ dump_runs (PangoLayout *layout, GString *string)
   PangoLayoutRun *run;
   PangoItem *item;
   const gchar *text;
-  gint index, index2;
+  gint index;
   gboolean has_more;
   gchar *char_str;
   gint i;
@@ -143,28 +143,18 @@ dump_runs (PangoLayout *layout, GString *string)
   iter = pango_layout_get_iter (layout);
 
   has_more = TRUE;
-  index = pango_layout_iter_get_index (iter);
-  index2 = 0;
   i = 0;
   while (has_more)
     {
       run = pango_layout_iter_get_run (iter);
+      index = pango_layout_iter_get_index (iter);
       has_more = pango_layout_iter_next_run (iter);
       i++;
-
-      if (has_more)
-        {
-          index2 = pango_layout_iter_get_index (iter);
-          char_str = g_strndup (text + index, index2 - index);
-        }
-      else
-        {
-          char_str = g_strdup (text + index);
-        }
 
       if (run)
         {
           item = ((PangoGlyphItem*)run)->item;
+          char_str = g_strndup (text + item->offset, item->length);
           font = font_name (item->analysis.font);
           g_string_append_printf (string, "i=%d, index=%d, chars=%d, level=%d, gravity=%s, flags=%d, font=%s, script=%s, language=%s, '%s'\n",
                                   i, index, item->num_chars, item->analysis.level,
@@ -176,15 +166,13 @@ dump_runs (PangoLayout *layout, GString *string)
                                   char_str);
           print_attributes (item->analysis.extra_attrs, string);
           g_free (font);
+          g_free (char_str);
         }
       else
         {
           g_string_append_printf (string, "i=%d, index=%d, no run, line end\n",
                                   i, index);
         }
-
-      g_free (char_str);
-      index = index2;
     }
   pango_layout_iter_free (iter);
 }
@@ -250,17 +238,14 @@ test_file (const gchar *filename, GString *string)
   PangoWrapMode wrap = PANGO_WRAP_WORD;
   PangoFontDescription *desc;
 
-  if (!g_file_get_contents (filename, &contents, &length, &error))
-    {
-      fprintf (stderr, "%s\n", error->message);
-      g_error_free (error);
-      return;
-    }
+  g_file_get_contents (filename, &contents, &length, &error);
+  g_assert_no_error (error);
 
   p = strchr (contents, '\n');
   g_assert (p);
   markup = p + 1;
   *p = '\0';
+  length = strlen (markup);
 
   parse_params (contents, &width, &ellipsize_at, &ellipsize, &wrap);
 
@@ -278,17 +263,17 @@ test_file (const gchar *filename, GString *string)
   pango_layout_set_wrap (layout, wrap);
 
   g_string_append (string, pango_layout_get_text (layout));
-  g_string_append (string, "\n---\n\n");
+  g_string_append (string, "\n--- parameters\n\n");
   g_string_append_printf (string, "wrapped: %d\n", pango_layout_is_wrapped (layout));
   g_string_append_printf (string, "ellipsized: %d\n", pango_layout_is_ellipsized (layout));
   g_string_append_printf (string, "lines: %d\n", pango_layout_get_line_count (layout));
   if (width != 0)
     g_string_append_printf (string, "width: %d\n", pango_layout_get_width (layout));
-  g_string_append (string, "\n---\n\n");
+  g_string_append (string, "\n--- attributes\n\n");
   print_attr_list (pango_layout_get_attributes (layout), string);
-  g_string_append (string, "\n---\n\n");
+  g_string_append (string, "\n--- lines\n\n");
   dump_lines (layout, string);
-  g_string_append (string, "\n---\n\n");
+  g_string_append (string, "\n--- runs\n\n");
   dump_runs (layout, string);
 
   g_object_unref (layout);
@@ -319,6 +304,19 @@ test_layout (gconstpointer d)
   GString *dump;
   gchar *diff;
 
+  const char *old_locale = setlocale (LC_ALL, NULL);
+  setlocale (LC_ALL, "en_US.utf8");
+  if (strstr (setlocale (LC_ALL, NULL), "en_US") == NULL)
+    {
+      char *msg = g_strdup_printf ("Locale en_US.UTF-8 not available, skipping layout %s", filename);
+      g_test_skip (msg);
+      g_free (msg);
+      return;
+    }
+
+  if (context == NULL)
+    context = pango_font_map_create_context (pango_cairo_font_map_get_default ());
+
   expected_file = get_expected_filename (filename);
 
   dump = g_string_sized_new (0);
@@ -328,10 +326,21 @@ test_layout (gconstpointer d)
   diff = diff_with_file (expected_file, dump->str, dump->len, &error);
   g_assert_no_error (error);
 
+  setlocale (LC_ALL, old_locale);
+
   if (diff && diff[0])
     {
-      g_printerr ("Contents don't match expected contents:\n%s", diff);
+      char **lines = g_strsplit (diff, "\n", -1);
+      const char *line;
+      int i = 0;
+
+      g_test_message ("Contents don't match expected contents");
+
+      for (line = lines[0]; line != NULL; line = lines[++i])
+        g_test_message ("%s", line);
+
       g_test_fail ();
+      g_strfreev (lines);
       g_free (diff);
     }
 
@@ -347,12 +356,7 @@ main (int argc, char *argv[])
   const gchar *name;
   gchar *path;
 
-  g_setenv ("LC_ALL", "C", TRUE);
-  setlocale (LC_ALL, "");
-
   g_test_init (&argc, &argv, NULL);
-
-  context = pango_font_map_create_context (pango_cairo_font_map_get_default ());
 
   /* allow to easily generate expected output for new test cases */
   if (argc > 1)
@@ -361,7 +365,7 @@ main (int argc, char *argv[])
 
       string = g_string_sized_new (0);
       test_file (argv[1], string);
-      g_print ("%s", string->str);
+      g_test_message ("%s", string->str);
 
       return 0;
     }

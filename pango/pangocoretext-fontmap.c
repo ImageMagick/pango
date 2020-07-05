@@ -136,6 +136,16 @@ get_real_family (const char *family_name)
 {
   switch (family_name[0])
     {
+    case 'c':
+    case 'C':
+      if (g_ascii_strcasecmp (family_name, "cursive") == 0)
+	return "Apple Chancery";
+      break;
+    case 'f':
+    case 'F':
+      if (g_ascii_strcasecmp (family_name, "fantasy") == 0)
+	return "Papyrus";
+      break;
     case 'm':
     case 'M':
       if (g_ascii_strcasecmp (family_name, "monospace") == 0)
@@ -147,6 +157,8 @@ get_real_family (const char *family_name)
 	return "Helvetica";
       else if (g_ascii_strcasecmp (family_name, "serif") == 0)
 	return "Times";
+      else if (g_ascii_strcasecmp (family_name, "system-ui") == 0)
+	return ".AppleSystemUIFont";
       break;
     }
 
@@ -547,6 +559,14 @@ pango_core_text_face_is_synthesized (PangoFontFace *face)
   return cface->synthetic_italic;
 }
 
+static PangoFontFamily *
+pango_core_text_face_get_family (PangoFontFace *face)
+{
+  PangoCoreTextFace *cface = PANGO_CORE_TEXT_FACE (face);
+
+  return PANGO_FONT_FAMILY (cface->family);
+}
+
 static void
 pango_core_text_face_class_init (PangoCoreTextFaceClass *klass)
 {
@@ -559,6 +579,7 @@ pango_core_text_face_class_init (PangoCoreTextFaceClass *klass)
   pfclass->get_face_name = pango_core_text_face_get_face_name;
   pfclass->list_sizes = pango_core_text_face_list_sizes;
   pfclass->is_synthesized = pango_core_text_face_is_synthesized;
+  pfclass->get_family = pango_core_text_face_get_family;
 }
 
 /*
@@ -1176,6 +1197,7 @@ find_best_match (PangoCoreTextFamily         *font_family,
   for (i = 0; i < font_family->n_faces; i++)
     {
       new_desc = pango_font_face_describe (font_family->faces[i]);
+      pango_font_description_set_gravity (new_desc, pango_font_description_get_gravity (description));
 
       if (pango_font_description_better_match (description, best_description,
                                                new_desc))
@@ -1323,7 +1345,8 @@ pango_core_text_font_map_load_fontset (PangoFontMap               *fontmap,
 
       if (G_UNLIKELY (!fontset))
         {
-          /* If no font(set) could be loaded, we fallback to "Sans",
+          /* If no font(set) could be loaded, we fallback to "Apple Color
+           * Emoji" for emoji font, fallback to "Sans" for other fonts,
            * which should always work on Mac. We try to adhere to the
            * requested style at first.
            */
@@ -1333,7 +1356,10 @@ pango_core_text_font_map_load_fontset (PangoFontMap               *fontmap,
           pango_font_description_free (key.desc);
 
           tmp_desc = pango_font_description_copy_static (desc);
-          pango_font_description_set_family_static (tmp_desc, "Sans");
+          if (strcmp (pango_font_description_get_family (tmp_desc), "emoji") == 0)
+            pango_font_description_set_family_static (tmp_desc, "Apple Color Emoji");
+          else
+            pango_font_description_set_family_static (tmp_desc, "Sans");
 
           pango_core_text_fontset_key_init (&key, ctfontmap, context, tmp_desc,
                                             language);
@@ -1381,6 +1407,9 @@ pango_core_text_font_map_load_fontset (PangoFontMap               *fontmap,
                   g_error ("Could not load fallback font, bailing out.");
                 }
             }
+
+          if (tmp_desc)
+            pango_font_description_free (tmp_desc);
         }
 
       if (insert_in_hash)
@@ -1466,21 +1495,29 @@ pango_core_text_font_map_init (PangoCoreTextFontMap *ctfontmap)
     }
 
   /* Insert aliases */
-  family = g_object_new (PANGO_TYPE_CORE_TEXT_FAMILY, NULL);
-  family->family_name = g_strdup ("Sans");
-  g_hash_table_insert (ctfontmap->families,
-                       g_utf8_casefold (family->family_name, -1), family);
+  /* Keep in sync with get_real_family() */
+  gchar* aliases[] = {
+    "Sans", "Serif", "system-ui", "cursive", "fantasy", "Monospace"
+  };
 
-  family = g_object_new (PANGO_TYPE_CORE_TEXT_FAMILY, NULL);
-  family->family_name = g_strdup ("Serif");
-  g_hash_table_insert (ctfontmap->families,
-                       g_utf8_casefold (family->family_name, -1), family);
+  for (int i = 0; i <  G_N_ELEMENTS(aliases); i++)
+  {
+    family = g_object_new (PANGO_TYPE_CORE_TEXT_FAMILY, NULL);
+    family->family_name = g_strdup (aliases[i]);
+    if (g_ascii_strcasecmp (family->family_name, "Monospace") == 0)
+      family->is_monospace = TRUE;
+    g_hash_table_insert (ctfontmap->families,
+                         g_utf8_casefold (family->family_name, -1), family);
+  }
+}
 
-  family = g_object_new (PANGO_TYPE_CORE_TEXT_FAMILY, NULL);
-  family->family_name = g_strdup ("Monospace");
-  family->is_monospace = TRUE;
-  g_hash_table_insert (ctfontmap->families,
-                       g_utf8_casefold (family->family_name, -1), family);
+static PangoFontFace *
+pango_core_text_font_map_get_face (PangoFontMap *fontmap,
+                                   PangoFont    *font)
+{
+  PangoCoreTextFont *cfont = PANGO_CORE_TEXT_FONT (font);
+
+  return PANGO_FONT_FACE (_pango_core_text_font_get_face (cfont));
 }
 
 static void
@@ -1497,6 +1534,7 @@ pango_core_text_font_map_class_init (PangoCoreTextFontMapClass *class)
   fontmap_class->shape_engine_type = PANGO_RENDER_TYPE_CORE_TEXT;
   fontmap_class->get_serial = pango_core_text_font_map_get_serial;
   fontmap_class->changed = pango_core_text_font_map_changed;
+  fontmap_class->get_face = pango_core_text_font_map_get_face;
 }
 
 /*
@@ -1524,6 +1562,7 @@ struct _PangoCoreTextFontset
 
   GPtrArray *fonts;
   GPtrArray *coverages;
+  guint real_font_count;
 };
 
 struct _PangoCoreTextFontsetClass
@@ -1554,10 +1593,9 @@ pango_core_text_fontset_new (PangoCoreTextFontsetKey    *key,
   gchar **family_names;
   const gchar *family;
   gchar *name;
-  GPtrArray *fonts;
   int i;
 
-  fonts = g_ptr_array_new ();
+  fontset = g_object_new (PANGO_TYPE_CORE_TEXT_FONTSET, NULL);
   family = pango_font_description_get_family (description);
   family_names = g_strsplit (family ? family : "", ",", -1);
 
@@ -1584,7 +1622,7 @@ pango_core_text_fontset_new (PangoCoreTextFontsetKey    *key,
 
               if (font)
                 {
-                  g_ptr_array_add (fonts, font);
+                  g_ptr_array_add (fontset->fonts, font);
                   if (best_font == NULL) best_font = font;
                 }
             }
@@ -1595,17 +1633,15 @@ pango_core_text_fontset_new (PangoCoreTextFontsetKey    *key,
 
   if (!best_font)
     {
-      g_ptr_array_free (fonts, false);
+      g_object_unref (fontset);
       return NULL;
     }
 
   /* Create a font set with best font */
-  fontset = g_object_new (PANGO_TYPE_CORE_TEXT_FONTSET, NULL);
   fontset->key = pango_core_text_fontset_key_copy (key);
   fontset->orig_description = pango_font_description_copy (description);
 
-  fontset->fonts = fonts;
-  fontset->coverages = g_ptr_array_new ();
+  fontset->real_font_count = fontset->fonts->len;
 
   /* Add the cascade list for this language */
 #if defined(MAC_OS_X_VERSION_10_8) && MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_8
@@ -1639,9 +1675,9 @@ pango_core_text_fontset_new (PangoCoreTextFontsetKey    *key,
   fontset->cascade_list = CTFontCopyDefaultCascadeList (pango_core_text_font_get_ctfont (best_font));
 #endif
 
-  /* length of cascade list + 1 for the "real" font at the front */
-  g_ptr_array_set_size (fontset->fonts, CFArrayGetCount (fontset->cascade_list) + fonts->len);
-  g_ptr_array_set_size (fontset->coverages, CFArrayGetCount (fontset->cascade_list) + fonts->len);
+  /* length of cascade list + real_font_count for the "real" fonts at the front */
+  g_ptr_array_set_size (fontset->fonts, CFArrayGetCount (fontset->cascade_list) + fontset->real_font_count);
+  g_ptr_array_set_size (fontset->coverages, CFArrayGetCount (fontset->cascade_list) + fontset->real_font_count);
 
   return fontset;
 }
@@ -1670,8 +1706,8 @@ static PangoFont *
 pango_core_text_fontset_get_font_at (PangoCoreTextFontset *ctfontset,
                                      unsigned int          i)
 {
-  /* The first font is loaded as soon as the fontset is created */
-  if (i == 0)
+  /* These fonts are loaded as soon as the fontset is created */
+  if (i < ctfontset->real_font_count)
     return g_ptr_array_index (ctfontset->fonts, i);
 
   if (i >= ctfontset->fonts->len)
@@ -1679,7 +1715,7 @@ pango_core_text_fontset_get_font_at (PangoCoreTextFontset *ctfontset,
 
   if (g_ptr_array_index (ctfontset->fonts, i) == NULL)
     {
-      CTFontDescriptorRef ctdescriptor = CFArrayGetValueAtIndex (ctfontset->cascade_list, i - 1);
+      CTFontDescriptorRef ctdescriptor = CFArrayGetValueAtIndex (ctfontset->cascade_list, i - ctfontset->real_font_count);
       PangoFont *font = pango_core_text_fontset_load_font (ctfontset, ctdescriptor);
       g_ptr_array_index (ctfontset->fonts, i) = font;
       g_ptr_array_index (ctfontset->coverages, i) = NULL;
@@ -1708,6 +1744,7 @@ pango_core_text_fontset_init (PangoCoreTextFontset *ctfontset)
   ctfontset->cascade_list = NULL;
   ctfontset->fonts = g_ptr_array_new ();
   ctfontset->coverages = g_ptr_array_new ();
+  ctfontset->real_font_count = 0;
 }
 
 static void
@@ -1732,7 +1769,8 @@ pango_core_text_fontset_finalize (GObject *object)
     }
   g_ptr_array_free (ctfontset->coverages, TRUE);
 
-  CFRelease (ctfontset->cascade_list);
+  if (ctfontset->cascade_list)
+    CFRelease (ctfontset->cascade_list);
 
   pango_font_description_free (ctfontset->orig_description);
 

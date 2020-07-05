@@ -26,6 +26,7 @@ pango_sources = [
   'pango-utils.c',
   'reorder-items.c',
   'shape.c',
+  'pangofc-shape.c',
 ]
 
 pango_headers = [
@@ -35,6 +36,7 @@ pango_headers = [
   'pango-break.h',
   'pango-context.h',
   'pango-coverage.h',
+  'pango-direction.h',
   'pango-engine.h',
   'pango-font.h',
   'pango-fontmap.h',
@@ -98,8 +100,6 @@ pango_cflags = [
   '-DG_LOG_DOMAIN="Pango"',
   '-DG_LOG_USE_STRUCTURED=1',
   '-DPANGO_COMPILATION',
-  '-DPANGO_ENABLE_BACKEND',
-  '-DPANGO_ENABLE_ENGINE',
   '-DSYSCONFDIR="@0@"'.format(pango_sysconfdir),
   '-DLIBDIR="@0@"'.format(pango_libdir),
 ]
@@ -107,12 +107,13 @@ pango_cflags = [
 pango_inc = include_directories('.')
 
 libpango = library(
-  'pango-@0@'.format(pango_api_version),
+  pango_api_name,
   sources: pango_sources + pango_enums,
   version: pango_libversion,
   soversion: pango_soversion,
+  darwin_versions : pango_osxversion,
   install: true,
-  dependencies: [ gobject_dep, mathlib_dep, thai_dep, fribidi_dep ],
+  dependencies: pango_deps,
   include_directories: [ root_inc, pango_inc ],
   c_args: common_cflags + pango_debug_cflags + pango_cflags,
   link_args: common_ldflags,
@@ -120,13 +121,11 @@ libpango = library(
 
 pango_dep_sources = [pango_enum_h]
 
-build_gir = get_option('gir')
+build_gir = get_option('introspection')
 
 if build_gir
   gir_args = [
     '--quiet',
-    '-DPANGO_ENABLE_BACKEND',
-    '-DPANGO_ENABLE_ENGINE',
   ]
 
   pango_gir = gnome.generate_gir(
@@ -137,7 +136,7 @@ if build_gir
     identifier_prefix: 'Pango',
     symbol_prefix: 'pango',
     export_packages: 'pango',
-    includes: [ 'GObject-2.0', 'cairo-1.0', ],
+    includes: [ 'HarfBuzz-0.0', 'GObject-2.0', 'cairo-1.0', ],
     header: 'pango/pango.h',
     install: true,
     extra_args: gir_args,
@@ -153,32 +152,55 @@ libpango_dep = declare_dependency(
   sources: pango_dep_sources,
 )
 
+pango_pkg_requires = ['gobject-2.0']
+if harfbuzz_dep.type_name() == 'pkgconfig'
+  pango_pkg_requires += 'harfbuzz'
+endif
+
+pkgconfig.generate(libpango,
+  name: 'Pango',
+  description: 'Internationalized text handling',
+  requires: pango_pkg_requires,
+  filebase: 'pango',
+  subdirs: pango_api_name,
+)
+
 # FreeType
 if build_pangoft2
-  pangoft2_headers = [
-    'pango-ot.h',
+  pangofc_headers = [
     'pangofc-font.h',
     'pangofc-fontmap.h',
     'pangofc-decoder.h',
-    'pangoft2.h',
   ]
 
-  pangoft2_public_sources = [
+  pangofc_public_sources = [
     'pangofc-font.c',
     'pangofc-fontmap.c',
     'pangofc-decoder.c',
-    'pangofc-shape.c',
-    'pangoft2.c',
   ]
 
-  pangoft2_sources = pangoft2_public_sources + [
-    'pangoft2-fontmap.c',
-    'pangoft2-render.c',
+  pangoot_headers = [
+    'pango-ot.h',
+  ]
+
+  pangoot_public_sources = [
     'pango-ot-buffer.c',
     'pango-ot-info.c',
     'pango-ot-ruleset.c',
     'pango-ot-tag.c',
   ]
+
+  pangoft2_headers = [
+    'pangoft2.h',
+  ]
+
+  pangoft2_public_sources = [
+    'pangoft2-fontmap.c',
+    'pangoft2-render.c',
+    'pangoft2.c',
+  ]
+
+  pangoft2_sources = pangofc_public_sources + pangoot_public_sources + pangoft2_public_sources
 
   if host_system == 'windows'
     pangoft2_rc = configure_file(
@@ -190,13 +212,14 @@ if build_pangoft2
     pangoft2_sources += pangoft2_res
   endif
 
-  install_headers(pangoft2_headers, subdir: pango_api_path)
+  install_headers(pangoft2_headers + pangofc_headers + pangoot_headers, subdir: pango_api_path)
 
   libpangoft2 = library(
     'pangoft2-@0@'.format(pango_api_version),
     sources: pangoft2_sources,
     version: pango_libversion,
     soversion: pango_soversion,
+    darwin_versions : pango_osxversion,
     install: true,
     dependencies: pango_deps + [ libpango_dep ],
     include_directories: [ root_inc, pango_inc ],
@@ -209,16 +232,51 @@ if build_pangoft2
   pangoft2_dep_sources = []
 
   if build_gir
+    pangofc_gir = gnome.generate_gir(
+      libpangoft2,
+      sources: pangofc_headers + pangofc_public_sources,
+      dependencies: [ libpango_dep, pango_gir_dep ],
+      namespace: 'PangoFc',
+      nsversion: pango_api_version,
+      identifier_prefix: 'PangoFc',
+      symbol_prefix: 'pango_fc',
+      export_packages: 'pangofc',
+      includes: [ pango_gir[0], 'fontconfig-2.0', ],
+      header: 'pango/pangofc-fontmap.h',
+      install: true,
+      extra_args: gir_args,
+    )
+    pangofc_gir_dep = declare_dependency(sources: pangofc_gir)
+    pangoft2_dep_sources += pangofc_gir
+
+    # Deprecated API, still needed for PangoXft
+    pangoot_gir = gnome.generate_gir(
+      libpangoft2,
+      sources: pangoot_headers + pangoot_public_sources,
+      dependencies: [ libpango_dep, pango_gir_dep, pangofc_gir_dep ],
+      namespace: 'PangoOT',
+      nsversion: pango_api_version,
+      identifier_prefix: 'PangoOT',
+      symbol_prefix: 'pango_ot',
+      export_packages: 'pangoot',
+      includes: [ pangofc_gir[0], 'freetype2-2.0', ],
+      header: 'pango/pango-ot.h',
+      install: true,
+      extra_args: gir_args,
+    )
+    pangoot_gir_dep = declare_dependency(sources: pangoot_gir)
+    pangoft2_dep_sources += pangoot_gir
+
     pangoft2_gir = gnome.generate_gir(
       libpangoft2,
       sources: pangoft2_headers + pangoft2_public_sources,
-      dependencies: [ libpango_dep, pango_gir_dep ],
+      dependencies: [ libpango_dep, pango_gir_dep, pangofc_gir_dep, pangoot_gir_dep ],
       namespace: 'PangoFT2',
       nsversion: pango_api_version,
       identifier_prefix: 'PangoFT2',
       symbol_prefix: 'pango_ft2',
       export_packages: 'pangoft2',
-      includes: [ pango_gir[0], 'GObject-2.0', 'cairo-1.0', 'freetype2-2.0', 'fontconfig-2.0', ],
+      includes: [ pangofc_gir[0], 'freetype2-2.0', ],
       header: 'pango/pangoft2.h',
       install: true,
       extra_args: gir_args,
@@ -233,13 +291,42 @@ if build_pangoft2
     dependencies: pango_deps + [ libpango_dep ],
     sources: pangoft2_dep_sources,
   )
+
+  pkgconfig.generate(libpangoft2,
+    name: 'Pango FT2 and Pango Fc',
+    description: 'Freetype 2.0 and fontconfig font support for Pango',
+    filebase: 'pangoft2',
+    subdirs: pango_api_name,
+    requires: [ 'pango', freetype2_pc, fontconfig_pc ],
+  )
+
+  # Since we split the introspection data, we also need a split pkg-config
+  # file for Vala
+  pkgconfig.generate(
+    name: 'Pango OT',
+    description: 'OpenType font support for Pango (deprecated)',
+    filebase: 'pangoot',
+    subdirs: pango_api_name,
+    requires: [ 'pangoft2' ],
+  )
+
+  pkgconfig.generate(
+    name: 'Pango FC',
+    description: 'Fontconfig support for Pango',
+    filebase: 'pangofc',
+    subdirs: pango_api_name,
+    requires: [ 'pangoft2' ],
+  )
 else
   # For usage as a subproject
   libpangoft2_dep = dependency('', required : false)
+  # Needed for making ft2 no-op while generating pangoxft_gir below
+  pangoft2_gir_dep = dependency('', required : false)
+  pangoft2_gir = [[]]
 endif
 
 # Xft
-if xft_dep.found()
+if xft_dep.found() and fontconfig_dep.found()
   pangoxft_headers = [
     'pangoxft.h',
     'pangoxft-render.h',
@@ -258,6 +345,7 @@ if xft_dep.found()
     sources: pangoxft_sources,
     version: pango_libversion,
     soversion: pango_soversion,
+    darwin_versions : pango_osxversion,
     install: true,
     dependencies: pango_deps + [ libpango_dep, libpangoft2_dep ],
     include_directories: [ root_inc, pango_inc ],
@@ -272,13 +360,13 @@ if xft_dep.found()
     pangoxft_gir = gnome.generate_gir(
       libpangoxft,
       sources: pangoxft_headers + pangoxft_sources,
-      dependencies: [ libpango_dep, libpangoft2_dep, pango_gir_dep, pangoft2_gir_dep ],
+      dependencies: [ libpango_dep, libpangoft2_dep, pango_gir_dep, pangoot_gir_dep, pangoft2_gir_dep ],
       namespace: 'PangoXft',
       nsversion: pango_api_version,
       identifier_prefix: 'PangoXft',
       symbol_prefix: 'pango_xft',
       export_packages: 'pangoxft',
-      includes: [ pango_gir[0], pangoft2_gir[0], 'GObject-2.0', 'xft-2.0', 'xlib-2.0' ],
+      includes: [ pango_gir[0], pangoot_gir[0], pangoft2_gir[0], 'GObject-2.0', 'xft-2.0', 'xlib-2.0' ],
       header: 'pango/pangoxft.h',
       install: true,
       extra_args: gir_args,
@@ -291,6 +379,14 @@ if xft_dep.found()
     include_directories: root_inc,
     dependencies: pango_deps + [ libpango_dep, libpangoft2_dep ],
     sources: pangoxft_dep_sources,
+  )
+
+  pkgconfig.generate(libpangoxft,
+    name: 'Pango Xft',
+    description: 'Xft font support for Pango',
+    filebase: 'pangoxft',
+    subdirs: pango_api_name,
+    requires: [ 'pangoft2', 'xft' ],
   )
 else
   # For usage as a subproject
@@ -307,14 +403,10 @@ if host_system == 'windows'
     'pangowin32.c',
     'pangowin32-fontcache.c',
     'pangowin32-fontmap.c',
-    'pangowin32-shape.c',
   ]
 
-  # usp10 needs to be before gdi32
-  # see https://bugzilla.gnome.org/show_bug.cgi?id=795045#c0
   pangowin32_deps = pango_deps + [
     libpango_dep,
-    cc.find_library('usp10'),
     cc.find_library('gdi32'),
   ]
 
@@ -346,6 +438,14 @@ if host_system == 'windows'
     link_with: libpangowin32,
     include_directories: root_inc,
     dependencies: pango_deps + [ libpango_dep ],
+  )
+
+  pkgconfig.generate(libpangowin32,
+    name: 'Pango Win32',
+    description: 'Win32 GDI font support for Pango',
+    filebase: 'pangowin32',
+    subdirs: pango_api_name,
+    requires: 'pango',
   )
 else
   # For usage as a subproject
@@ -398,11 +498,9 @@ if cairo_dep.found()
     pangocairo_sources += [
       'pangocoretext.c',
       'pangocoretext-fontmap.c',
-      'pangocoretext-shape.c',
       'pangocairo-coretextfont.c',
       'pangocairo-coretextfontmap.c',
     ]
-    pangocairo_deps += dependency('appleframeworks', modules: [ 'CoreFoundation', 'ApplicationServices' ])
   endif
 
   install_headers(pangocairo_headers, subdir: pango_api_path)
@@ -412,6 +510,7 @@ if cairo_dep.found()
     sources: pangocairo_sources,
     version: pango_libversion,
     soversion: pango_soversion,
+    darwin_versions : pango_osxversion,
     install: true,
     dependencies: pango_deps + pangocairo_deps,
     include_directories: [ root_inc, pango_inc ],
@@ -445,6 +544,22 @@ if cairo_dep.found()
     include_directories: root_inc,
     dependencies: pango_deps + [ libpango_dep ],
     sources: pangocairo_dep_sources,
+  )
+
+  # Create pangocairo.pc according to whether we found Cairo
+  # manually
+  if ['pkgconfig', 'internal'].contains(cairo_found_type)
+    pango_cairo_requires = [ 'pango', cairo_pc ]
+  else
+    pango_cairo_requires = [ 'pango' ]
+  endif
+
+  pkgconfig.generate(libpangocairo,
+    name: 'Pango Cairo',
+    description: 'Cairo rendering support for Pango',
+    filebase: 'pangocairo',
+    subdirs: pango_api_name,
+    requires: pango_cairo_requires,
   )
 else
   # For usage as a subproject

@@ -25,9 +25,11 @@
  * @title:OpenType Font Handling
  * @stability:Unstable
  *
- * Functions and macros in this section are used to implement the OpenType Layout
- * features and algorithms.  These are mostly useful when writing Fontconfig-based
- * shaping engines
+ * Functions and macros in this section are used to implement
+ * the OpenType Layout features and algorithms.
+ *
+ * They have been superseded by the harfbuzz library, and should
+ * not be used anymore.
  */
 #include "config.h"
 
@@ -78,8 +80,8 @@ pango_ot_info_finalizer (void *object)
  *
  * Returns the #PangoOTInfo structure for the given FreeType font face.
  *
- * Return value: the #PangoOTInfo for @face. This object will have
- * the same lifetime as @face.
+ * Return value: (transfer none): the #PangoOTInfo for @face. This object
+ *   will have the same lifetime as @face.
  *
  * Since: 1.2
  **/
@@ -182,14 +184,17 @@ pango_ot_info_find_language (PangoOTInfo      *info,
 			     guint            *required_feature_index)
 {
   gboolean ret;
-  unsigned l_index;
+  guint l_index;
   hb_tag_t tt = get_hb_table_type (table_type);
 
-  ret = hb_ot_layout_script_find_language (info->hb_face, tt,
-					   script_index,
-					   language_tag,
-					   &l_index);
-  if (language_index) *language_index = l_index;
+  ret = hb_ot_layout_script_select_language (info->hb_face,
+                                             table_type,
+                                             script_index,
+                                             1,
+                                             &language_tag,
+                                             &l_index);
+  if (language_index)
+    *language_index = l_index;
 
   hb_ot_layout_language_get_required_feature_index (info->hb_face, tt,
 						    script_index,

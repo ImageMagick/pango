@@ -1,8 +1,16 @@
-option('enable_docs',
+option('gtk_doc',
        description: 'Build API reference for Pango using GTK-Doc',
        type: 'boolean',
        value: false)
-option('gir',
+option('introspection',
        description: 'Build the GObject introspection data for Pango',
        type: 'boolean',
        value: true)
+option('install-tests',
+       description : 'Install tests',
+       type: 'boolean',
+       value: 'false')
+option('use_fontconfig',
+       description : 'Force using FontConfig where it is optional, on Windows and macOS.  This is ignored on platforms where it is required',
+       type: 'boolean',
+       value: 'false')

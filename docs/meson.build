@@ -7,50 +7,34 @@ configure_file(input: 'version.xml.in',
                configuration: version_xml_conf)
 
 private_headers = [
-  'pangoatsui-private.h',
   'pangocairo-private.h',
+  'pangocairo-fc-private.h',
   'pangocairo-fc.h',
   'pangocairo-win32.h',
   'pangocairo-atsui.h',
+  'pango-coverage-private.h',
   'pango-color-table.h',
-  'pango-engine-private.h',
+  'pango-emoji-private.h',
+  'pango-font-private.h',
+  'pango-fontmap-private.h',
+  'pango-fontset-private.h',
   'pango-impl-utils.h',
   'pango-glyph-item-private.h',
   'pango-layout-private.h',
   'pango-script-table.h',
   'pango-script-private.h',
+  'pango-utils-private.h',
   'pangofc-private.h',
+  'pangofc-fontmap-private.h',
   'pangoft2-private.h',
   'pangowin32-private.h',
   'pangoatsui-private.h',
-  'pangox-private.h',
   'pangoxft-private.h',
   'pango-ot-private.h',
   'pango-script-lang-table.h',
   'pango-language-sample-table.h',
   'pangocoretext-private.h',
-  'pangoatsui-private.h',
 ]
-
-if host_system != 'darwin'
-  private_headers += [
-    'pangocairo-coretextfont.h',
-    'pangocairo-coretext.h',
-    'pangocoretext.h',
-  ]
-endif
-
-if host_system != 'windows'
-  private_headers += [
-    'pangocairo-win32.h',
-    'pangowin32.h',
-  ]
-else
-  private_headers += [
-    'pangoxft.h',
-    'pangoxft-render.h',
-  ]
-endif
 
 content_files = [
   'pango_markup.sgml',
@@ -58,8 +42,11 @@ content_files = [
 ]
 
 html_images = [
-  'layout.gif',
+  'layout.png',
+  'pipeline.png',
   'rotated-text.png',
+  'rects1.png',
+  'rects2.png',
 ]
 
 docdeps = [ libpango_dep ]
@@ -68,7 +55,7 @@ if build_pangoft2
   docdeps += libpangoft2_dep
 endif
 
-if xft_dep.found()
+if xft_dep.found() and fontconfig_dep.found()
   docdeps += libpangoxft_dep
 endif
 
@@ -85,13 +72,13 @@ docpath = join_paths(pango_datadir, 'gtk-doc', 'html')
 gnome.gtkdoc('pango',
              main_xml: 'pango-docs.sgml',
              src_dir: [
-               join_paths(meson.source_root(), 'pango'),
-               join_paths(meson.build_root(), 'pango'),
+               pango_inc,
              ],
              dependencies: docdeps,
-             gobject_typesfile: 'pango.types',
+             gobject_typesfile: configure_file(input: 'pango.types.in',
+                                               output: 'pango.types',
+                                               configuration: pango_conf),
              scan_args: [
-               '--rebuild-types',
                '--deprecated-guards=PANGO_DISABLE_DEPRECATED',
                '--ignore-decorators=_PANGO_EXTERN',
                '--ignore-headers=' + ' '.join(private_headers),

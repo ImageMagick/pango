@@ -10,18 +10,21 @@ if host_system == 'windows'
   test_cflags += '-DHAVE_WIN32'
 endif
 
-test_env = [
-  'srcdir=@0@'.format(meson.current_source_dir()),
-  'G_TEST_SRCDIR=@0@'.format(meson.current_source_dir()),
-  'G_TEST_BUILDDIR=@0@'.format(meson.current_build_dir()),
-]
+test_env = environment()
+test_env.set('srcdir', meson.current_source_dir())
+test_env.set('G_TEST_SRCDIR', meson.current_source_dir())
+test_env.set('G_TEST_BUILDDIR', meson.current_build_dir())
 
 tests = [
+  [ 'test-coverage' ],
   [ 'testboundaries' ],
   [ 'testboundaries_ucd' ],
   [ 'testcolor' ],
+  [ 'testmisc', [ 'testmisc.c' ], [ libpangocairo_dep ] ],
   [ 'testscript' ],
-  [ 'cxx-test', [ 'cxx-test.cpp' ] ],
+  [ 'test-harfbuzz', [ 'test-harfbuzz.c' ], [ libpangocairo_dep ] ],
+  [ 'cxx-test', [ 'cxx-test.cpp' ], [ libpangocairo_dep ] ],
+  [ 'test-break', [ 'test-break.c', 'test-common.c' ], [libpangocairo_dep ] ],
 ]
 
 if build_pangoft2
@@ -35,22 +38,37 @@ if cairo_dep.found()
   test_cflags += '-DHAVE_CAIRO'
   tests += [
     [ 'testiter', [ 'testiter.c' ], [ libpangocairo_dep ] ],
-    [ 'test-pangocairo-threads', [ 'test-pangocairo-threads.c' ], [ libpangocairo_dep, cairo_dep ] ],
-    [ 'markup-parse', [ 'markup-parse.c' ], [ libpangocairo_dep ] ],
+    [ 'test-ellipsize', [ 'test-ellipsize.c' ], [ libpangocairo_dep ] ],
+    [ 'markup-parse', [ 'markup-parse.c' , 'test-common.c' ], [ libpangocairo_dep ] ],
     [ 'test-layout', [ 'test-layout.c', 'test-common.c' ], [ libpangocairo_dep ] ],
+    [ 'test-itemize', [ 'test-itemize.c', 'test-common.c' ], [ libpangocairo_dep ] ],
+    [ 'test-shape', [ 'test-shape.c', 'test-common.c' ], [ libpangocairo_dep ] ],
     [ 'test-font', [ 'test-font.c' ], [ libpangocairo_dep ] ],
     [ 'testattributes', [ 'testattributes.c', 'test-common.c' ], [ libpangocairo_dep ] ],
   ]
+
+  if pango_cairo_backends.contains('png')
+    tests += [
+      [ 'test-pangocairo-threads', [ 'test-pangocairo-threads.c' ], [ libpangocairo_dep, cairo_dep ] ],
+    ]
+  endif
 endif
 
 installed_test_data = [
   'boundaries.utf8',
   'GraphemeBreakTest.txt',
+  'WordBreakTest.txt',
+  'SentenceBreakTest.txt',
+  'EmojiBreakTest.txt',
+  'CharBreakTest.txt',
 ]
 
 test_layouts_data = [
   'layouts/valid-1',
   'layouts/valid-2',
+  'layouts/valid-3',
+  'layouts/valid-4',
+  'layouts/valid-5',
 ]
 
 test_markups_data = [
@@ -68,6 +86,24 @@ test_markups_data = [
   'markups/valid-7',
   'markups/valid-8',
   'markups/valid-9',
+  'markups/valid-10',
+  'markups/valid-11',
+  'markups/valid-12',
+]
+
+test_breaks_data = [
+  'breaks/one',
+  'breaks/two',
+  'breaks/three',
+  'breaks/four',
+]
+
+if thai_dep.found()
+  test_breaks_data += [ 'breaks/four', ]
+endif
+
+test_items_data = [
+  'itemize/one',
 ]
 
 installed_test_layouts_data = []
@@ -82,12 +118,28 @@ foreach d: test_markups_data
   installed_test_markups_data += d + '.expected'
 endforeach
 
+installed_test_breaks_data = []
+foreach d: test_breaks_data
+  installed_test_breaks_data += d + '.break'
+  installed_test_breaks_data += d + '.expected'
+endforeach
+
+installed_test_items_data = []
+foreach d: test_items_data
+  installed_test_items_data += d + '.items'
+  installed_test_items_data += d + '.expected'
+endforeach
+
 installed_test_datadir = join_paths(pango_datadir, 'installed-tests', 'pango')
 installed_test_bindir = join_paths(pango_libexecdir, 'installed-tests', 'pango')
 
-install_data(installed_test_data, install_dir: installed_test_bindir)
-install_data(installed_test_layouts_data, install_dir: join_paths(installed_test_bindir, 'layouts'))
-install_data(installed_test_markups_data, install_dir: join_paths(installed_test_bindir, 'markups'))
+if get_option('install-tests')
+  install_data(installed_test_data, install_dir: installed_test_bindir)
+  install_data(installed_test_layouts_data, install_dir: join_paths(installed_test_bindir, 'layouts'))
+  install_data(installed_test_markups_data, install_dir: join_paths(installed_test_bindir, 'markups'))
+  install_data(installed_test_breaks_data, install_dir: join_paths(installed_test_bindir, 'breaks'))
+  install_data(installed_test_items_data, install_dir: join_paths(installed_test_bindir, 'itemize'))
+endif
 
 python = import('python3').find_python()
 gen_installed_test = files([ 'gen-installed-test.py' ])
@@ -98,7 +150,7 @@ custom_target('all-unicode',
               command: [
                 python, gen_all_unicode, '@OUTPUT@'
               ],
-              install: true,
+              install: get_option('install-tests'),
               install_dir: installed_test_bindir)
 
 foreach t: tests
@@ -114,7 +166,7 @@ foreach t: tests
                   name,
                   '@OUTDIR@',
                 ],
-                install: true,
+                install: get_option('install-tests'),
                 install_dir: installed_test_datadir)
 
   bin = executable(name, src,
@@ -122,8 +174,13 @@ foreach t: tests
                    include_directories: root_inc,
                    c_args: common_cflags + pango_debug_cflags + test_cflags,
                    cpp_args: common_cppflags + pango_debug_cflags + test_cflags,
-                   install: true,
+                   install: get_option('install-tests'),
                    install_dir: installed_test_bindir)
 
-  test(name, bin, env: test_env)
+  test(name, bin,
+    args: ['-k', '--tap'],
+    env: test_env,
+    suite: 'pango',
+    protocol: 'tap',
+  )
 endforeach

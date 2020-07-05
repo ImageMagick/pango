@@ -53,17 +53,9 @@
 #endif
 
 #include "pangowin32.h"
-
-typedef enum
-  {
-    PANGO_WIN32_COVERAGE_UNSPEC,
-    PANGO_WIN32_COVERAGE_ZH_TW,
-    PANGO_WIN32_COVERAGE_ZH_CN,
-    PANGO_WIN32_COVERAGE_JA,
-    PANGO_WIN32_COVERAGE_KO,
-    PANGO_WIN32_COVERAGE_VI,
-    PANGO_WIN32_N_COVERAGES
-  } PangoWin32CoverageLanguageClass;
+#include "pango-font-private.h"
+#include "pango-fontset-private.h"
+#include "pango-fontmap-private.h"
 
 #define PANGO_TYPE_WIN32_FONT_MAP             (_pango_win32_font_map_get_type ())
 #define PANGO_WIN32_FONT_MAP(object)          (G_TYPE_CHECK_INSTANCE_CAST ((object), PANGO_TYPE_WIN32_FONT_MAP, PangoWin32FontMap))
@@ -104,6 +96,12 @@ struct _PangoWin32FontMap
    */
   GHashTable *fonts;
 
+  /* keeps track of the system font aliases that we might have */
+  GHashTable *aliases;
+
+  /* keeps track of the warned fonts that we might have */
+  GHashTable *warned_fonts;
+
   double resolution;		/* (points / pixel) * PANGO_SCALE */
 };
 
@@ -115,7 +113,7 @@ struct _PangoWin32FontMapClass
 			   PangoContext               *context,
 			   PangoWin32Face             *face,
 			   const PangoFontDescription *desc);
-
+  GHashTable *aliases;
 };
 
 struct _PangoWin32Font
@@ -155,9 +153,10 @@ struct _PangoWin32Face
 {
   PangoFontFace parent_instance;
 
+  gpointer family;
   LOGFONTW logfontw;
   PangoFontDescription *description;
-  PangoCoverage *coverages[PANGO_WIN32_N_COVERAGES];
+  PangoCoverage *coverage;
   char *face_name;
   gboolean is_synthetic;
 
@@ -271,28 +270,11 @@ void            _pango_win32_fontmap_cache_remove   (PangoFontMap   *fontmap,
 						     PangoWin32Font *xfont);
 
 _PANGO_EXTERN
-gboolean	_pango_win32_get_name_header	    (HDC                 hdc,
-						     struct name_header *header);
-_PANGO_EXTERN
-gboolean	_pango_win32_get_name_record        (HDC                 hdc,
-						     gint                i,
-						     struct name_record *record);
-
-_PANGO_EXTERN
 HFONT		_pango_win32_font_get_hfont         (PangoFont          *font);
 
 _PANGO_EXTERN
-void
-_pango_win32_shape (PangoFont        	*font,
-		    const char       	*text,
-		    unsigned int     	 length,
-		    const PangoAnalysis *analysis,
-		    PangoGlyphString    *glyphs,
-		    const char          *paragraph_text G_GNUC_UNUSED,
-		    unsigned int         paragraph_length G_GNUC_UNUSED);
+HDC             _pango_win32_get_display_dc                 (void);
 
-extern HDC _pango_win32_hdc;
-extern OSVERSIONINFO _pango_win32_os_version_info;
 extern gboolean _pango_win32_debug;
 
 #endif /* __PANGOWIN32_PRIVATE_H__ */

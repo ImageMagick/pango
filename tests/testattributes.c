@@ -53,7 +53,10 @@ test_attributes_basic (void)
   test_copy (pango_attr_font_desc_new (desc));
   pango_font_description_free (desc);
   test_copy (pango_attr_underline_new (PANGO_UNDERLINE_LOW));
+  test_copy (pango_attr_underline_new (PANGO_UNDERLINE_ERROR_LINE));
   test_copy (pango_attr_underline_color_new (100, 200, 300));
+  test_copy (pango_attr_overline_new (PANGO_OVERLINE_SINGLE));
+  test_copy (pango_attr_overline_color_new (100, 200, 300));
   test_copy (pango_attr_strikethrough_new (TRUE));
   test_copy (pango_attr_strikethrough_color_new (100, 200, 300));
   test_copy (pango_attr_rise_new (256));
@@ -63,6 +66,9 @@ test_attributes_basic (void)
   test_copy (pango_attr_shape_new (&rect, &rect));
   test_copy (pango_attr_gravity_new (PANGO_GRAVITY_SOUTH));
   test_copy (pango_attr_gravity_hint_new (PANGO_GRAVITY_HINT_STRONG));
+  test_copy (pango_attr_allow_breaks_new (FALSE));
+  test_copy (pango_attr_show_new (PANGO_SHOW_SPACES));
+  test_copy (pango_attr_insert_hyphens_new (FALSE));
 }
 
 static void
@@ -86,11 +92,49 @@ test_attributes_equal (void)
 }
 
 static void
+assert_attributes (GSList     *attrs,
+                   const char *expected)
+{
+  GString *s;
+
+  s = g_string_new ("");
+  print_attributes (attrs, s);
+  if (strcmp (s->str, expected) != 0)
+    {
+      g_print ("-----\nattribute list mismatch\nexpected:\n%s-----\nreceived:\n%s-----\n",
+               expected, s->str);
+      g_assert_not_reached ();
+    }
+  g_string_free (s, TRUE);
+}
+
+static void
+assert_attr_list (PangoAttrList *list,
+                  const char    *expected)
+{
+  GSList *attrs;
+
+  attrs = pango_attr_list_get_attributes (list);
+  assert_attributes (attrs, expected);
+  g_slist_free_full (attrs, (GDestroyNotify)pango_attribute_destroy);
+}
+
+static void
+assert_attr_iterator (PangoAttrIterator *iter,
+                      const char        *expected)
+{
+  GSList *attrs;
+
+  attrs = pango_attr_iterator_get_attrs (iter);
+  assert_attributes (attrs, expected);
+  g_slist_free_full (attrs, (GDestroyNotify)pango_attribute_destroy);
+}
+
+static void
 test_list (void)
 {
   PangoAttrList *list;
   PangoAttribute *attr;
-  GString *s;
 
   list = pango_attr_list_new ();
 
@@ -101,13 +145,9 @@ test_list (void)
   attr = pango_attr_size_new (30);
   pango_attr_list_insert (list, attr);
 
-  s = g_string_new ("");
-  print_attributes (attr_list_to_list (list), s);
-  g_assert_cmpstr (s->str, ==,
-"  [0 -1] size 10\n"
-"  [0 -1] size 20\n"
-"  [0 -1] size 30\n");
-  g_string_free (s, FALSE);
+  assert_attr_list (list, "[0,-1]size=10\n"
+                          "[0,-1]size=20\n"
+                          "[0,-1]size=30\n");
   pango_attr_list_unref (list);
 
   list = pango_attr_list_new ();
@@ -126,14 +166,10 @@ test_list (void)
   attr->end_index = 40;
   pango_attr_list_insert_before (list, attr);
 
-  s = g_string_new ("");
-  print_attributes (attr_list_to_list (list), s);
-  g_assert_cmpstr (s->str, ==,
-"  [0 -1] size 10\n"
-"  [0 -1] size 30\n"
-"  [10 40] size 40\n"
-"  [10 20] size 20\n");
-  g_string_free (s, FALSE);
+  assert_attr_list (list, "[0,-1]size=10\n"
+                          "[0,-1]size=30\n"
+                          "[10,40]size=40\n"
+                          "[10,20]size=20\n");
   pango_attr_list_unref (list);
 }
 
@@ -142,7 +178,6 @@ test_list_change (void)
 {
   PangoAttrList *list;
   PangoAttribute *attr;
-  GString *s;
 
   list = pango_attr_list_new ();
 
@@ -159,13 +194,9 @@ test_list_change (void)
   attr->end_index = 30;
   pango_attr_list_insert (list, attr);
 
-  s = g_string_new ("");
-  print_attributes (attr_list_to_list (list), s);
-  g_assert_cmpstr (s->str, ==,
-"  [0 10] size 10\n"
-"  [0 30] weight 700\n"
-"  [20 30] size 20\n");
-  g_string_free (s, FALSE);
+  assert_attr_list (list, "[0,10]size=10\n"
+                          "[0,30]weight=700\n"
+                          "[20,30]size=20\n");
 
   /* simple insertion with pango_attr_list_change */
   attr = pango_attr_variant_new (PANGO_VARIANT_SMALL_CAPS);
@@ -173,14 +204,10 @@ test_list_change (void)
   attr->end_index = 20;
   pango_attr_list_change (list, attr);
 
-  s = g_string_new ("");
-  print_attributes (attr_list_to_list (list), s);
-  g_assert_cmpstr (s->str, ==,
-"  [0 10] size 10\n"
-"  [0 30] weight 700\n"
-"  [10 20] variant 1\n"
-"  [20 30] size 20\n");
-  g_string_free (s, FALSE);
+  assert_attr_list (list, "[0,10]size=10\n"
+                          "[0,30]weight=700\n"
+                          "[10,20]variant=1\n"
+                          "[20,30]size=20\n");
 
   /* insertion with splitting */
   attr = pango_attr_weight_new (PANGO_WEIGHT_LIGHT);
@@ -188,16 +215,12 @@ test_list_change (void)
   attr->end_index = 20;
   pango_attr_list_change (list, attr);
 
-  s = g_string_new ("");
-  print_attributes (attr_list_to_list (list), s);
-  g_assert_cmpstr (s->str, ==,
-"  [0 10] size 10\n"
-"  [0 15] weight 700\n"
-"  [10 20] variant 1\n"
-"  [15 20] weight 300\n"
-"  [20 30] size 20\n"
-"  [20 30] weight 700\n");
-  g_string_free (s, FALSE);
+  assert_attr_list (list, "[0,10]size=10\n"
+                          "[0,15]weight=700\n"
+                          "[10,20]variant=1\n"
+                          "[15,20]weight=300\n"
+                          "[20,30]size=20\n"
+                          "[20,30]weight=700\n");
 
   /* insertion with joining */
   attr = pango_attr_size_new (20);
@@ -205,16 +228,12 @@ test_list_change (void)
   attr->end_index = 20;
   pango_attr_list_change (list, attr);
 
-  s = g_string_new ("");
-  print_attributes (attr_list_to_list (list), s);
-  g_assert_cmpstr (s->str, ==,
-"  [0 5] size 10\n"
-"  [0 15] weight 700\n"
-"  [5 30] size 20\n"
-"  [10 20] variant 1\n"
-"  [15 20] weight 300\n"
-"  [20 30] weight 700\n");
-  g_string_free (s, FALSE);
+  assert_attr_list (list, "[0,5]size=10\n"
+                          "[0,15]weight=700\n"
+                          "[5,30]size=20\n"
+                          "[10,20]variant=1\n"
+                          "[15,20]weight=300\n"
+                          "[20,30]weight=700\n");
 
   pango_attr_list_unref (list);
 }
@@ -226,7 +245,6 @@ test_list_splice (void)
   PangoAttrList *list;
   PangoAttrList *other;
   PangoAttribute *attr;
-  GString *s;
 
   base = pango_attr_list_new ();
   attr = pango_attr_size_new (10);
@@ -242,26 +260,18 @@ test_list_splice (void)
   attr->end_index = 30;
   pango_attr_list_insert (base, attr);
 
-  s = g_string_new ("");
-  print_attributes (attr_list_to_list (base), s);
-  g_assert_cmpstr (s->str, ==,
-"  [0 -1] size 10\n"
-"  [10 15] weight 700\n"
-"  [20 30] variant 1\n");
-  g_string_free (s, FALSE);
+  assert_attr_list (base, "[0,-1]size=10\n"
+                          "[10,15]weight=700\n"
+                          "[20,30]variant=1\n");
 
   /* splice in an empty list */
   list = pango_attr_list_copy (base);
   other = pango_attr_list_new ();
   pango_attr_list_splice (list, other, 11, 5);
 
-  s = g_string_new ("");
-  print_attributes (attr_list_to_list (list), s);
-  g_assert_cmpstr (s->str, ==,
-"  [0 -1] size 10\n"
-"  [10 20] weight 700\n"
-"  [25 35] variant 1\n");
-  g_string_free (s, FALSE);
+  assert_attr_list (list, "[0,-1]size=10\n"
+                          "[10,20]weight=700\n"
+                          "[25,35]variant=1\n");
 
   pango_attr_list_unref (list);
   pango_attr_list_unref (other);
@@ -280,21 +290,52 @@ test_list_splice (void)
 
   pango_attr_list_splice (list, other, 11, 5);
 
-  s = g_string_new ("");
-  print_attributes (attr_list_to_list (list), s);
-  g_assert_cmpstr (s->str, ==,
-"  [0 11] size 10\n"
-"  [10 20] weight 700\n"
-"  [11 14] size 20\n"
-"  [13 15] stretch 2\n"
-"  [14 -1] size 10\n"
-"  [25 35] variant 1\n");
-  g_string_free (s, FALSE);
+  assert_attr_list (list, "[0,11]size=10\n"
+                          "[10,20]weight=700\n"
+                          "[11,14]size=20\n"
+                          "[13,15]stretch=2\n"
+                          "[14,-1]size=10\n"
+                          "[25,35]variant=1\n");
 
   pango_attr_list_unref (list);
   pango_attr_list_unref (other);
 
   pango_attr_list_unref (base);
+}
+
+/* Test that empty lists work in pango_attr_list_splice */
+static void
+test_list_splice2 (void)
+{
+  PangoAttrList *list;
+  PangoAttrList *other;
+  PangoAttribute *attr;
+
+  list = pango_attr_list_new ();
+  other = pango_attr_list_new ();
+
+  pango_attr_list_splice (list, other, 11, 5);
+
+  g_assert_null (pango_attr_list_get_attributes (list));
+
+  attr = pango_attr_size_new (10);
+  attr->start_index = 0;
+  attr->end_index = -1;
+  pango_attr_list_insert (other, attr);
+
+  pango_attr_list_splice (list, other, 11, 5);
+
+  assert_attr_list (list, "[11,-1]size=10\n");
+
+  pango_attr_list_unref (other);
+  other = pango_attr_list_new ();
+
+  pango_attr_list_splice (list, other, 11, 5);
+
+  assert_attr_list (list, "[11,-1]size=10\n");
+
+  pango_attr_list_unref (other);
+  pango_attr_list_unref (list);
 }
 
 static gboolean
@@ -318,7 +359,6 @@ test_list_filter (void)
   PangoAttrList *list;
   PangoAttrList *out;
   PangoAttribute *attr;
-  GString *s;
 
   list = pango_attr_list_new ();
   attr = pango_attr_size_new (10);
@@ -331,13 +371,9 @@ test_list_filter (void)
   attr->start_index = 20;
   pango_attr_list_insert (list, attr);
 
-  s = g_string_new ("");
-  print_attributes (attr_list_to_list (list), s);
-  g_assert_cmpstr (s->str, ==,
-"  [0 -1] size 10\n"
-"  [10 20] stretch 2\n"
-"  [20 -1] weight 700\n");
-  g_string_free (s, FALSE);
+  assert_attr_list (list, "[0,-1]size=10\n"
+                          "[10,20]stretch=2\n"
+                          "[20,-1]weight=700\n");
 
   out = pango_attr_list_filter (list, never_true, NULL);
   g_assert_null (out);
@@ -345,18 +381,9 @@ test_list_filter (void)
   out = pango_attr_list_filter (list, just_weight, NULL);
   g_assert_nonnull (out);
 
-  s = g_string_new ("");
-  print_attributes (attr_list_to_list (list), s);
-  g_assert_cmpstr (s->str, ==,
-"  [0 -1] size 10\n"
-"  [10 20] stretch 2\n");
-  g_string_free (s, FALSE);
-
-  s = g_string_new ("");
-  print_attributes (attr_list_to_list (out), s);
-  g_assert_cmpstr (s->str, ==,
-"  [20 -1] weight 700\n");
-  g_string_free (s, FALSE);
+  assert_attr_list (list, "[0,-1]size=10\n"
+                          "[10,20]stretch=2\n");
+  assert_attr_list (out, "[20,-1]weight=700\n");
 
   pango_attr_list_unref (list);
   pango_attr_list_unref (out);
@@ -370,6 +397,15 @@ test_iter (void)
   PangoAttrIterator *iter;
   PangoAttrIterator *copy;
   gint start, end;
+
+  /* Empty list */
+  list = pango_attr_list_new ();
+  iter = pango_attr_list_get_iterator (list);
+
+  g_assert_false (pango_attr_iterator_next (iter));
+  g_assert_null (pango_attr_iterator_get_attrs (iter));
+  pango_attr_iterator_destroy (iter);
+  pango_attr_list_unref (list);
 
   list = pango_attr_list_new ();
   attr = pango_attr_size_new (10);
@@ -462,7 +498,6 @@ test_iter_get_font (void)
   PangoFontDescription *desc2;
   PangoLanguage *lang;
   GSList *attrs;
-  GString *s;
 
   list = pango_attr_list_new ();
   attr = pango_attr_size_new (10 * PANGO_SCALE);
@@ -511,12 +546,8 @@ test_iter_get_font (void)
   desc2 = pango_font_description_from_string ("Times Condensed 10");
   g_assert_true (pango_font_description_equal (desc, desc2));
   g_assert_null (lang);
-  s = g_string_new ("");
-  print_attributes (attrs, s);
-  g_assert_cmpstr (s->str, ==,
-"  [20 -1] rise 100\n"
-"  [20 -1] fallback 0\n");
-  g_string_free (s, FALSE);
+  assert_attributes (attrs, "[20,-1]rise=100\n"
+                            "[20,-1]fallback=0\n");
   g_slist_free_full (attrs, (GDestroyNotify)pango_attribute_destroy);
 
   pango_font_description_free (desc);
@@ -532,8 +563,6 @@ test_iter_get_attrs (void)
   PangoAttrList *list;
   PangoAttribute *attr;
   PangoAttrIterator *iter;
-  GSList *attrs;
-  GString *s;
 
   list = pango_attr_list_new ();
   attr = pango_attr_size_new (10 * PANGO_SCALE);
@@ -556,57 +585,362 @@ test_iter_get_attrs (void)
   pango_attr_list_insert (list, attr);
 
   iter = pango_attr_list_get_iterator (list);
-  attrs = pango_attr_iterator_get_attrs (iter);
-  s = g_string_new ("");
-  print_attributes (attrs, s);
-  g_assert_cmpstr (s->str, ==,
-"  [0 -1] size 10240\n"
-"  [0 -1] family Times\n");
-  g_string_free (s, FALSE);
-  g_slist_free_full (attrs, (GDestroyNotify)pango_attribute_destroy);
+  assert_attr_iterator (iter, "[0,-1]size=10240\n"
+                              "[0,-1]family=Times\n");
 
   pango_attr_iterator_next (iter);
-  attrs = pango_attr_iterator_get_attrs (iter);
-  s = g_string_new ("");
-  print_attributes (attrs, s);
-  g_assert_cmpstr (s->str, ==,
-"  [0 -1] size 10240\n"
-"  [0 -1] family Times\n"
-"  [10 30] stretch 2\n"
-"  [10 20] language ja-jp\n");
-  g_string_free (s, FALSE);
-  g_slist_free_full (attrs, (GDestroyNotify)pango_attribute_destroy);
+  assert_attr_iterator (iter, "[0,-1]size=10240\n"
+                              "[0,-1]family=Times\n"
+                              "[10,30]stretch=2\n"
+                              "[10,20]language=ja-jp\n");
 
   pango_attr_iterator_next (iter);
-  attrs = pango_attr_iterator_get_attrs (iter);
-  s = g_string_new ("");
-  print_attributes (attrs, s);
-  g_assert_cmpstr (s->str, ==,
-"  [0 -1] size 10240\n"
-"  [0 -1] family Times\n"
-"  [10 30] stretch 2\n"
-"  [20 -1] rise 100\n"
-"  [20 -1] fallback 0\n");
-  g_string_free (s, FALSE);
-  g_slist_free_full (attrs, (GDestroyNotify)pango_attribute_destroy);
+  assert_attr_iterator (iter, "[0,-1]size=10240\n"
+                              "[0,-1]family=Times\n"
+                              "[10,30]stretch=2\n"
+                              "[20,-1]rise=100\n"
+                              "[20,-1]fallback=0\n");
 
   pango_attr_iterator_next (iter);
-  attrs = pango_attr_iterator_get_attrs (iter);
-  s = g_string_new ("");
-  print_attributes (attrs, s);
-  g_assert_cmpstr (s->str, ==,
-"  [0 -1] size 10240\n"
-"  [0 -1] family Times\n"
-"  [20 -1] rise 100\n"
-"  [20 -1] fallback 0\n");
-  g_string_free (s, FALSE);
-  g_slist_free_full (attrs, (GDestroyNotify)pango_attribute_destroy);
+  assert_attr_iterator (iter, "[0,-1]size=10240\n"
+                              "[0,-1]family=Times\n"
+                              "[20,-1]rise=100\n"
+                              "[20,-1]fallback=0\n");
 
   pango_attr_iterator_next (iter);
-  attrs = pango_attr_iterator_get_attrs (iter);
-  g_assert_null (attrs);
+  g_assert_null (pango_attr_iterator_get_attrs (iter));
 
   pango_attr_iterator_destroy (iter);
+  pango_attr_list_unref (list);
+}
+
+static void
+test_list_update (void)
+{
+  PangoAttrList *list;
+  PangoAttribute *attr;
+
+  list = pango_attr_list_new ();
+  attr = pango_attr_size_new (10 * PANGO_SCALE);
+  attr->start_index = 10;
+  attr->end_index = 11;
+  pango_attr_list_insert (list, attr);
+  attr = pango_attr_rise_new (100);
+  attr->start_index = 0;
+  attr->end_index = 200;
+  pango_attr_list_insert (list, attr);
+  attr = pango_attr_family_new ("Times");
+  attr->start_index = 5;
+  attr->end_index = 15;
+  pango_attr_list_insert (list, attr);
+  attr = pango_attr_fallback_new (FALSE);
+  attr->start_index = 11;
+  attr->end_index = 100;
+  pango_attr_list_insert (list, attr);
+  attr = pango_attr_stretch_new (PANGO_STRETCH_CONDENSED);
+  attr->start_index = 30;
+  attr->end_index = 60;
+  pango_attr_list_insert (list, attr);
+
+  assert_attr_list (list, "[0,200]rise=100\n"
+                          "[5,15]family=Times\n"
+                          "[10,11]size=10240\n"
+                          "[11,100]fallback=0\n"
+                          "[30,60]stretch=2\n");
+
+  pango_attr_list_update (list, 8, 10, 20);
+
+  assert_attr_list (list, "[0,210]rise=100\n"
+                          "[5,8]family=Times\n"
+                          "[28,110]fallback=0\n"
+                          "[40,70]stretch=2\n");
+
+  pango_attr_list_unref (list);
+}
+
+/* Test that empty lists work in pango_attr_list_update */
+static void
+test_list_update2 (void)
+{
+  PangoAttrList *list;
+
+  list = pango_attr_list_new ();
+  pango_attr_list_update (list, 8, 10, 20);
+
+  g_assert_null (pango_attr_list_get_attributes (list));
+
+  pango_attr_list_unref (list);
+}
+
+static void
+test_list_equal (void)
+{
+  PangoAttrList *list1, *list2;
+  PangoAttribute *attr;
+
+  list1 = pango_attr_list_new ();
+  list2 = pango_attr_list_new ();
+
+  g_assert_true (pango_attr_list_equal (NULL, NULL));
+  g_assert_false (pango_attr_list_equal (list1, NULL));
+  g_assert_false (pango_attr_list_equal (NULL, list1));
+  g_assert_true (pango_attr_list_equal (list1, list1));
+  g_assert_true (pango_attr_list_equal (list1, list2));
+
+  attr = pango_attr_size_new (10 * PANGO_SCALE);
+  attr->start_index = 0;
+  attr->end_index = 7;
+  pango_attr_list_insert (list1, pango_attribute_copy (attr));
+  pango_attr_list_insert (list2, pango_attribute_copy (attr));
+  pango_attribute_destroy (attr);
+
+  g_assert_true (pango_attr_list_equal (list1, list2));
+
+  attr = pango_attr_stretch_new (PANGO_STRETCH_CONDENSED);
+  attr->start_index = 0;
+  attr->end_index = 1;
+  pango_attr_list_insert (list1, pango_attribute_copy (attr));
+  g_assert_true (!pango_attr_list_equal (list1, list2));
+
+  pango_attr_list_insert (list2, pango_attribute_copy (attr));
+  g_assert_true (pango_attr_list_equal (list1, list2));
+  pango_attribute_destroy (attr);
+
+  attr = pango_attr_size_new (30 * PANGO_SCALE);
+  /* Same range as the first attribute */
+  attr->start_index = 0;
+  attr->end_index = 7;
+  pango_attr_list_insert (list2, pango_attribute_copy (attr));
+  g_assert_true (!pango_attr_list_equal (list1, list2));
+  pango_attr_list_insert (list1, pango_attribute_copy (attr));
+  g_assert_true (pango_attr_list_equal (list1, list2));
+  pango_attribute_destroy (attr);
+
+  pango_attr_list_unref (list1);
+  pango_attr_list_unref (list2);
+
+
+  /* Same range but different order */
+  {
+    PangoAttrList *list1, *list2;
+    PangoAttribute *attr1, *attr2;
+
+    list1 = pango_attr_list_new ();
+    list2 = pango_attr_list_new ();
+
+    attr1 = pango_attr_size_new (10 * PANGO_SCALE);
+    attr2 = pango_attr_stretch_new (PANGO_STRETCH_CONDENSED);
+
+    pango_attr_list_insert (list1, pango_attribute_copy (attr1));
+    pango_attr_list_insert (list1, pango_attribute_copy (attr2));
+
+    pango_attr_list_insert (list2, pango_attribute_copy (attr2));
+    pango_attr_list_insert (list2, pango_attribute_copy (attr1));
+
+    pango_attribute_destroy (attr1);
+    pango_attribute_destroy (attr2);
+
+    g_assert_true (pango_attr_list_equal (list1, list2));
+    g_assert_true (pango_attr_list_equal (list2, list1));
+
+    pango_attr_list_unref (list1);
+    pango_attr_list_unref (list2);
+  }
+}
+
+static void
+test_insert (void)
+{
+  PangoAttrList *list;
+  PangoAttribute *attr;
+
+  list = pango_attr_list_new ();
+  attr = pango_attr_size_new (10 * PANGO_SCALE);
+  attr->start_index = 10;
+  attr->end_index = 11;
+  pango_attr_list_insert (list, attr);
+  attr = pango_attr_rise_new (100);
+  attr->start_index = 0;
+  attr->end_index = 200;
+  pango_attr_list_insert (list, attr);
+  attr = pango_attr_family_new ("Times");
+  attr->start_index = 5;
+  attr->end_index = 15;
+  pango_attr_list_insert (list, attr);
+  attr = pango_attr_fallback_new (FALSE);
+  attr->start_index = 11;
+  attr->end_index = 100;
+  pango_attr_list_insert (list, attr);
+  attr = pango_attr_stretch_new (PANGO_STRETCH_CONDENSED);
+  attr->start_index = 30;
+  attr->end_index = 60;
+  pango_attr_list_insert (list, attr);
+
+  assert_attr_list (list, "[0,200]rise=100\n"
+                          "[5,15]family=Times\n"
+                          "[10,11]size=10240\n"
+                          "[11,100]fallback=0\n"
+                          "[30,60]stretch=2\n");
+
+  attr = pango_attr_family_new ("Times");
+  attr->start_index = 10;
+  attr->end_index = 25;
+  pango_attr_list_change (list, attr);
+
+  assert_attr_list (list, "[0,200]rise=100\n"
+                          "[5,25]family=Times\n"
+                          "[10,11]size=10240\n"
+                          "[11,100]fallback=0\n"
+                          "[30,60]stretch=2\n");
+
+  attr = pango_attr_family_new ("Futura");
+  attr->start_index = 11;
+  attr->end_index = 25;
+  pango_attr_list_insert (list, attr);
+
+  assert_attr_list (list, "[0,200]rise=100\n"
+                          "[5,25]family=Times\n"
+                          "[10,11]size=10240\n"
+                          "[11,100]fallback=0\n"
+                          "[11,25]family=Futura\n"
+                          "[30,60]stretch=2\n");
+
+  pango_attr_list_unref (list);
+}
+
+static gboolean
+attr_list_merge_filter (PangoAttribute *attribute,
+                        gpointer        list)
+{
+  pango_attr_list_change (list, pango_attribute_copy (attribute));
+  return FALSE;
+}
+
+/* test something that gtk does */
+static void
+test_merge (void)
+{
+  PangoAttrList *list;
+  PangoAttrList *list2;
+  PangoAttribute *attr;
+
+  list = pango_attr_list_new ();
+  attr = pango_attr_size_new (10 * PANGO_SCALE);
+  attr->start_index = 10;
+  attr->end_index = 11;
+  pango_attr_list_insert (list, attr);
+  attr = pango_attr_rise_new (100);
+  attr->start_index = 0;
+  attr->end_index = 200;
+  pango_attr_list_insert (list, attr);
+  attr = pango_attr_family_new ("Times");
+  attr->start_index = 5;
+  attr->end_index = 15;
+  pango_attr_list_insert (list, attr);
+  attr = pango_attr_fallback_new (FALSE);
+  attr->start_index = 11;
+  attr->end_index = 100;
+  pango_attr_list_insert (list, attr);
+  attr = pango_attr_stretch_new (PANGO_STRETCH_CONDENSED);
+  attr->start_index = 30;
+  attr->end_index = 60;
+  pango_attr_list_insert (list, attr);
+
+  assert_attr_list (list, "[0,200]rise=100\n"
+                          "[5,15]family=Times\n"
+                          "[10,11]size=10240\n"
+                          "[11,100]fallback=0\n"
+                          "[30,60]stretch=2\n");
+
+  list2 = pango_attr_list_new ();
+  attr = pango_attr_size_new (10 * PANGO_SCALE);
+  attr->start_index = 11;
+  attr->end_index = 13;
+  pango_attr_list_insert (list2, attr);
+  attr = pango_attr_size_new (11 * PANGO_SCALE);
+  attr->start_index = 13;
+  attr->end_index = 15;
+  pango_attr_list_insert (list2, attr);
+  attr = pango_attr_size_new (12 * PANGO_SCALE);
+  attr->start_index = 40;
+  attr->end_index = 50;
+  pango_attr_list_insert (list2, attr);
+
+  assert_attr_list (list2, "[11,13]size=10240\n"
+                           "[13,15]size=11264\n"
+                           "[40,50]size=12288\n");
+
+  pango_attr_list_filter (list2, attr_list_merge_filter, list);
+
+  assert_attr_list (list, "[0,200]rise=100\n"
+                          "[5,15]family=Times\n"
+                          "[10,13]size=10240\n"
+                          "[11,100]fallback=0\n"
+                          "[13,15]size=11264\n"
+                          "[30,60]stretch=2\n"
+                          "[40,50]size=12288\n");
+
+  pango_attr_list_unref (list);
+  pango_attr_list_unref (list2);
+}
+
+/* reproduce what the links example in gtk4-demo does
+ * with the colored Google link
+ */
+static void
+test_merge2 (void)
+{
+  PangoAttrList *list;
+  PangoAttribute *attr;
+
+  list = pango_attr_list_new ();
+  attr = pango_attr_underline_new (PANGO_UNDERLINE_SINGLE);
+  attr->start_index = 0;
+  attr->end_index = 10;
+  pango_attr_list_insert (list, attr);
+  attr = pango_attr_foreground_new (0, 0, 0xffff);
+  attr->start_index = 0;
+  attr->end_index = 10;
+  pango_attr_list_insert (list, attr);
+
+  assert_attr_list (list, "[0,10]underline=1\n"
+                          "[0,10]foreground=#00000000ffff\n");
+
+  attr = pango_attr_foreground_new (0xffff, 0, 0);
+  attr->start_index = 2;
+  attr->end_index = 3;
+
+  pango_attr_list_change (list, attr);
+
+  assert_attr_list (list, "[0,10]underline=1\n"
+                          "[0,2]foreground=#00000000ffff\n"
+                          "[2,3]foreground=#ffff00000000\n"
+                          "[3,10]foreground=#00000000ffff\n");
+
+  attr = pango_attr_foreground_new (0, 0xffff, 0);
+  attr->start_index = 3;
+  attr->end_index = 4;
+
+  pango_attr_list_change (list, attr);
+
+  assert_attr_list (list, "[0,10]underline=1\n"
+                          "[0,2]foreground=#00000000ffff\n"
+                          "[2,3]foreground=#ffff00000000\n"
+                          "[3,4]foreground=#0000ffff0000\n"
+                          "[4,10]foreground=#00000000ffff\n");
+
+  attr = pango_attr_foreground_new (0, 0, 0xffff);
+  attr->start_index = 4;
+  attr->end_index = 5;
+
+  pango_attr_list_change (list, attr);
+
+  assert_attr_list (list, "[0,10]underline=1\n"
+                          "[0,2]foreground=#00000000ffff\n"
+                          "[2,3]foreground=#ffff00000000\n"
+                          "[3,4]foreground=#0000ffff0000\n"
+                          "[4,10]foreground=#00000000ffff\n");
+
   pango_attr_list_unref (list);
 }
 
@@ -620,7 +954,14 @@ main (int argc, char *argv[])
   g_test_add_func ("/attributes/list/basic", test_list);
   g_test_add_func ("/attributes/list/change", test_list_change);
   g_test_add_func ("/attributes/list/splice", test_list_splice);
+  g_test_add_func ("/attributes/list/splice2", test_list_splice2);
   g_test_add_func ("/attributes/list/filter", test_list_filter);
+  g_test_add_func ("/attributes/list/update", test_list_update);
+  g_test_add_func ("/attributes/list/update2", test_list_update2);
+  g_test_add_func ("/attributes/list/equal", test_list_equal);
+  g_test_add_func ("/attributes/list/insert", test_insert);
+  g_test_add_func ("/attributes/list/merge", test_merge);
+  g_test_add_func ("/attributes/list/merge2", test_merge2);
   g_test_add_func ("/attributes/iter/basic", test_iter);
   g_test_add_func ("/attributes/iter/get", test_iter_get);
   g_test_add_func ("/attributes/iter/get_font", test_iter_get_font);

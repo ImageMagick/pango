@@ -1,12 +1,14 @@
 project('pango', 'c', 'cpp',
-        version: '1.42.3',
+        version: '1.45.3',
         license: 'LGPLv2.1+',
         default_options: [
           'buildtype=debugoptimized',
           'warning_level=1',
-          'c_std=c99',
+          # We only need c99, but glib needs GNU-specific features
+          # https://github.com/mesonbuild/meson/issues/2289
+          'c_std=gnu99',
         ],
-        meson_version : '>= 0.43.0')
+        meson_version : '>= 0.50.0')
 
 add_project_arguments([ '-D_POSIX_C_SOURCE=200809L', '-D_POSIX_THREAD_SAFE_FUNCTIONS', '-D_GNU_SOURCE', ], language: 'c')
 
@@ -26,7 +28,8 @@ pango_interface_age = pango_minor_version.is_odd() ? 0 : pango_micro_version
 pango_binary_age = pango_minor_version * 100 + pango_micro_version
 
 pango_api_version = '@0@.0'.format(pango_major_version)
-pango_api_path = 'pango-@0@/pango'.format(pango_api_version)
+pango_api_name = 'pango-@0@'.format(pango_api_version)
+pango_api_path = join_paths(pango_api_name, 'pango')
 
 pango_conf = configuration_data()
 
@@ -39,6 +42,8 @@ pango_conf.set('PANGO_VERSION_MICRO', pango_micro_version)
 # Maintain version scheme with libtool
 pango_soversion = 0
 pango_libversion = '@0@.@1@.@2@'.format(pango_soversion, (pango_binary_age - pango_interface_age), pango_interface_age)
+osx_current = pango_binary_age - pango_interface_age + 1
+pango_osxversion = [osx_current, '@0@.@1@.0'.format(osx_current, pango_interface_age)]
 
 cc = meson.get_compiler('c')
 host_system = host_machine.system()
@@ -52,8 +57,8 @@ common_ldflags = []
 if cc.get_id() == 'msvc'
   # Compiler options taken from msvc_recommended_pragmas.h
   # in GLib, based on _Win32_Programming_ by Rector and Newcomer
-  test_cflags = []
-  add_project_arguments([ '-FImsvc_recommended_pragmas.h' ], language: 'c')
+  test_cflags = ['-FImsvc_recommended_pragmas', '-utf-8']
+  add_project_arguments(cc.get_supported_arguments(test_cflags), language: 'c')
   test_c_only_flags = []
 elif cc.get_id() == 'gcc' or cc.get_id() == 'clang'
   test_c_only_flags = [
@@ -64,6 +69,8 @@ elif cc.get_id() == 'gcc' or cc.get_id() == 'clang'
     '-Wold-style-definition',
     '-Wno-int-conversion',
     '-Wno-discarded-qualifiers',
+    '-Werror=implicit',
+    '-Werror=pointer-to-int-cast',
   ]
 
   test_cflags = test_c_only_flags + [
@@ -81,8 +88,7 @@ elif cc.get_id() == 'gcc' or cc.get_id() == 'clang'
     '-Wlogical-op',
     '-Wno-uninitialized',
     '-Wno-shadow',
-    '-Werror=redundant-decls',
-    '-Werror=implicit',
+    '-Werror=implicit-fallthrough',
     '-Werror=nonnull',
     '-Werror=init-self',
     '-Werror=main',
@@ -94,14 +100,16 @@ elif cc.get_id() == 'gcc' or cc.get_id() == 'clang'
     '-Werror=write-strings',
     '-Werror=address',
     '-Werror=int-to-pointer-cast',
-    '-Werror=pointer-to-int-cast',
     '-Werror=empty-body',
     '-Werror=write-strings',
+    '-Werror=unused-but-set-variable',
     '-Wundef', # FIXME: https://bugzilla.gnome.org/show_bug.cgi?id=792481
   ]
 
   if host_system == 'windows'
     test_cflags += [ '-mms-bitfields' ]
+  else
+    test_cflags += [ '-Werror=redundant-decls' ]
   endif
 else
   test_cflags = []
@@ -123,11 +131,7 @@ if get_option('default_library') != 'static'
 endif
 
 # Check all compiler flags
-foreach cflag: test_cflags
-  if cc.has_argument(cflag)
-    common_cflags += [ cflag ]
-  endif
-endforeach
+common_cflags += cc.get_supported_arguments(test_cflags)
 
 # Isolate the C++ compiler flags
 foreach cflag: common_cflags
@@ -138,16 +142,7 @@ endforeach
 
 # Linker flags
 if host_machine.system() == 'linux'
-  foreach ldflag: [ '-Wl,-Bsymbolic', '-Wl,-z,relro', '-Wl,-z,now', ]
-    if cc.has_argument(ldflag)
-      common_ldflags += [ ldflag ]
-    endif
-  endforeach
-endif
-
-# Maintain compatibility with autotools on macOS
-if host_machine.system() == 'darwin'
-  common_ldflags += [ '-compatibility_version 1', '-current_version 1.0', ]
+  common_ldflags += cc.get_supported_link_arguments([ '-Wl,-Bsymbolic', '-Wl,-z,relro', '-Wl,-z,now', ])
 endif
 
 # Functions
@@ -177,26 +172,28 @@ foreach h: checked_headers
   endif
 endforeach
 
-buildtype = get_option('buildtype')
-if buildtype.startswith('debug')
-  pango_debug_cflags = [ '-DPANGO_ENABLE_DEBUG', ]
-elif buildtype == 'release'
-  pango_debug_cflags = [ '-DG_DISABLE_CAST_CHECKS', ]
+# Use debug/optimization flags to determine whether to enable debug or disable
+# cast checks
+pango_debug_cflags = []
+if get_option('debug')
+  pango_debug_cflags = [ '-DPANGO_ENABLE_DEBUG' ]
+  message('Enabling various debug infrastructure')
+elif get_option('optimization') in ['2', '3', 's']
+  pango_debug_cflags = [ '-DG_DISABLE_CAST_CHECKS' ]
+  message('Disabling cast checks')
   # TODO: We may want a configuration argument to add `G_DISABLE_CHECKS`
   # and `G_DISABLE_ASSERT` from the build, for specific build environments.
   # On the other hand, those who need these symbols can inject them in their
   # build as well.
-else
-  pango_debug_cflags = []
 endif
 
 # Dependencies
 pango_deps = []
 
-glib_req_version = '>= 2.33.12'
+glib_req_version = '>= 2.60'
 fribidi_req_version = '>= 0.19.7'
 libthai_req_version = '>= 0.1.9'
-harfbuzz_req_version = '>= 1.4.2'
+harfbuzz_req_version = '>= 2.0.0'
 fontconfig_req_version = '>= 2.11.91'
 xft_req_version = '>= 2.0.0'
 cairo_req_version = '>= 1.12.10'
@@ -206,10 +203,17 @@ mathlib_dep = cc.find_library('m', required: false)
 pango_deps += mathlib_dep
 
 # gobject
-gobject_dep = dependency('gobject-2.0', version: glib_req_version)
-pango_deps += gobject_dep
+glib_dep = dependency('glib-2.0', version: glib_req_version,
+                      fallback: ['glib', 'libglib_dep'])
+gobject_dep = dependency('gobject-2.0', version: glib_req_version,
+                         fallback: ['glib', 'libgobject_dep'])
+gio_dep = dependency('gio-2.0', version: glib_req_version,
+                         fallback: ['glib', 'libgio_dep'])
+pango_deps += [glib_dep, gobject_dep, gio_dep]
 
-fribidi_dep = dependency('fribidi', version: fribidi_req_version)
+fribidi_dep = dependency('fribidi', version: fribidi_req_version,
+                         fallback: ['fribidi', 'libfribidi_dep'],
+                         default_options: ['docs=false'])
 pango_deps += fribidi_dep
 
 thai_dep = dependency('libthai', version: libthai_req_version, required: false)
@@ -233,7 +237,6 @@ harfbuzz_pc=''
 freetype2_pc=''
 fontconfig_pc=''
 harfbuzz_lib=''
-freetype2_lib=''
 fontconfig_lib=''
 
 harfbuzz_dep = dependency('harfbuzz', version: harfbuzz_req_version, required: false)
@@ -242,16 +245,32 @@ if harfbuzz_dep.found()
 else
   if cc.get_id() == 'msvc' and cc.has_header('hb.h')
     # The CMake build files for HarfBuzz (which is used for MSVC builds) do not
-    # generate pkg-config files, so look for harfbuzz.lib
-    harfbuzz_dep = cc.find_library('harfbuzz', required: false)
-    if harfbuzz_dep.found()
-      harfbuzz_lib = '-lharfbuzz'
+    # generate pkg-config files, so look for harfbuzz.lib.  Ensure that we
+    # we look for HarfBuzz 2.0.0 or later.
+    harfbuzz_lib = cc.find_library('harfbuzz', required: false)
+    if harfbuzz_lib.found()
+      if cc.has_function('hb_ot_tags_from_script_and_language', dependencies: harfbuzz_lib)
+        harfbuzz_dep = harfbuzz_lib
+      endif
     endif
   endif
 endif
-if harfbuzz_dep.found()
-  pango_deps += harfbuzz_dep
+
+# Remove when Meson acquires ability to declare deps declaratively, or
+# when finding dependencies via CMake files is fixed.
+if not harfbuzz_dep.found()
+  harfbuzz_dep = dependency('harfbuzz', version: harfbuzz_req_version,
+                            fallback: ['harfbuzz', 'libharfbuzz_dep'])
 endif
+
+if not harfbuzz_dep.found()
+  error('harfbuzz not found')
+endif
+
+pango_deps += harfbuzz_dep
+
+# Only use FontConfig fallback when required or requested
+fontconfig_required = (host_system != 'windows' and host_system != 'darwin') or get_option('use_fontconfig')
 
 fontconfig_dep = dependency('fontconfig', version: fontconfig_req_version, required: false)
 if fontconfig_dep.found()
@@ -267,13 +286,29 @@ else
   endif
 endif
 
+if fontconfig_required and not fontconfig_dep.found()
+  fontconfig_dep = dependency('fontconfig', version: fontconfig_req_version,
+                              fallback: ['fontconfig', 'fontconfig_dep'])
+endif
+
 if fontconfig_dep.found()
   pango_deps += fontconfig_dep
 
-  if cc.has_function('FcWeightFromOpenTypeDouble', dependencies: fontconfig_dep)
+  if fontconfig_pc == 'fontconfig'
+    if fontconfig_dep.version().version_compare('>=2.12.92')
+      pango_conf.set('HAVE_FCWEIGHTFROMOPENTYPEDOUBLE', 1)
+    endif
+  elif cc.has_function('FcWeightFromOpenTypeDouble', dependencies: fontconfig_dep)
     pango_conf.set('HAVE_FCWEIGHTFROMOPENTYPEDOUBLE', 1)
   endif
 endif
+
+if pango_conf.has('HAVE_FCWEIGHTFROMOPENTYPEDOUBLE')
+  res = 'YES'
+else
+  res = 'NO'
+endif
+message('fontconfig has FcWeightFromOpenTypeDouble: ' + res)
 
 # The first version of freetype with a pkg-config file is 2.1.5
 # We require both fontconfig and freetype if we are to have either.
@@ -294,6 +329,11 @@ else
   endif
 endif
 
+if fontconfig_required and not freetype_dep.found()
+  freetype_dep = dependency('freetype2', required: false,
+                            fallback: ['freetype2', 'freetype_dep'])
+endif
+
 # To build pangoft2, we need HarfBuzz, FontConfig and FreeType
 build_pangoft2 = harfbuzz_dep.found() and fontconfig_dep.found() and freetype_dep.found()
 if build_pangoft2
@@ -302,7 +342,7 @@ if build_pangoft2
 endif
 
 xft_dep = dependency('xft', version: xft_req_version, required: false)
-if xft_dep.found()
+if xft_dep.found() and fontconfig_dep.found() and freetype_dep.found()
   pango_conf.set('HAVE_XFT', 1)
   pango_deps += dependency('xrender', required: false)
   pango_deps += xft_dep
@@ -319,23 +359,34 @@ if host_system == 'darwin'
   if has_core_text
     pango_conf.set('HAVE_CORE_TEXT', 1)
   endif
+
+  pango_deps += dependency('appleframeworks', modules: [ 'CoreFoundation', 'ApplicationServices' ])
 endif
 
-cairo_pkgconfig_found = false
+cairo_found_type = ''
 cairo_dep = dependency('cairo', version: cairo_req_version, required: false)
 
 if cairo_dep.found()
-  cairo_pkgconfig_found = true
+  cairo_found_type = cairo_dep.type_name()
 else
   if cc.get_id() == 'msvc' and cc.has_header('cairo.h')
     cairo_dep = cc.find_library('cairo', required: false)
+    cairo_found_type = 'library'
   endif
+endif
+
+# Remove once Meson gains capability to declare dependencies
+# in a declarative way
+if not cairo_dep.found()
+  cairo_dep = dependency('cairo', version: cairo_req_version,
+                         fallback: ['cairo', 'libcairo_dep'])
+  cairo_found_type = cairo_dep.type_name()
 endif
 
 pango_font_backends = []
 pango_cairo_backends = []
 
-if cairo_pkgconfig_found
+if ['pkgconfig', 'internal'].contains(cairo_found_type)
   # Check the following Cairo font backends
   # - dependency
   # - version
@@ -349,8 +400,22 @@ if cairo_pkgconfig_found
     [ 'cairo-quartz', cairo_req_version, 'HAVE_CAIRO_QUARTZ', 'quartz', ],
   ]
 
+  if cairo_found_type == 'internal'
+    cairo_features = subproject('cairo').get_variable('built_features')
+  endif
+
   foreach b: cairo_font_backends
-    dep = dependency(b[0], version: b[1], required: false)
+    if cairo_found_type == 'pkgconfig'
+      dep = dependency(b[0], version: b[1], required: false)
+    else
+      dep = dependency('', required: false)
+      foreach f: cairo_features
+        if f['name'] == b[0]
+          dep = cairo_dep
+          message('Cairo font backend "@0@" enabled'.format(b))
+        endif
+      endforeach
+    endif
     if dep.found()
       if b[0] == 'cairo-ft'
         if build_pangoft2
@@ -381,7 +446,17 @@ if cairo_pkgconfig_found
   ]
 
   foreach b: cairo_surface_backends
-    dep = dependency(b[0], version: b[1], required: false)
+    if cairo_found_type == 'pkgconfig'
+      dep = dependency(b[0], version: b[1], required: false)
+    else
+      dep = dependency('', required: false)
+      foreach f: cairo_features
+        if f['name'] == b[0]
+          dep = cairo_dep
+          message('Cairo surface backend "@0@" enabled'.format(b))
+        endif
+      endforeach
+    endif
     if dep.found()
       pango_conf.set(b[2], 1)
       pango_cairo_backends += b[3]
@@ -391,7 +466,7 @@ if cairo_pkgconfig_found
   # This is to set up pangocairo.pc so that things that refer to
   # it will link correctly
   cairo_pc = 'cairo'
-elif (cc.get_id() == 'msvc' and cairo_dep.found())
+elif cairo_found_type == 'library'
   # Fallback: Look for Cairo items manually
   # We need to check for headers for some
   cairo_headers = [ 'win32', 'quartz', 'ps', 'pdf', 'xlib' ]
@@ -425,7 +500,7 @@ elif (cc.get_id() == 'msvc' and cairo_dep.found())
   endif
 
   if pango_font_backends.length() == 0
-    error('No Cairo font backends found')
+    error('Cairo found, but no Cairo font backends found')
   endif
 
   # Check for Cairo's libpng output surface support
@@ -463,51 +538,14 @@ if cairo_dep.found()
   endif
 endif
 
-# Compat variables for pkgconfig
-pkgconf = configuration_data()
-pkgconf.set('prefix', pango_prefix)
-pkgconf.set('exec_prefix', pango_prefix)
-pkgconf.set('libdir', pango_libdir)
-pkgconf.set('includedir', pango_includedir)
-pkgconf.set('VERSION', meson.project_version())
-pkgconf.set('PANGO_API_VERSION', pango_api_version)
-pkgconf.set('PKGCONFIG_CAIRO_REQUIRES', pangocairo_requires)
-pkgconf.set('CAIRO_PC', cairo_pc)
-pkgconf.set('CAIRO_LIB', cairo_lib)
-pkgconf.set('FREETYPE2_PC', freetype2_pc)
-pkgconf.set('FREETYPE2_LIB', freetype2_lib)
-pkgconf.set('FONTCONFIG_PC', fontconfig_pc)
-pkgconf.set('FONTCONFIG_LIB', fontconfig_lib)
-pkgconf.set('HARFBUZZ_PC', harfbuzz_pc)
-pkgconf.set('HARFBUZZ_LIB', harfbuzz_lib)
-
-pkgconf_files = [
-  [ 'pango.pc' ],
-  [ 'pangowin32.pc', host_system == 'windows' ],
-  [ 'pangoft2.pc', build_pangoft2 ],
-  [ 'pangoxft.pc', xft_dep.found() ],
-  [ 'pangocairo.pc', cairo_dep.found() ],
-]
-
-foreach pkg: pkgconf_files
-  pkg_name = pkg[0]
-  pkg_enabled = pkg.get(1, true)
-
-  if pkg_enabled
-    configure_file(input: pkg_name + '.in',
-                   output: pkg_name,
-                   configuration: pkgconf,
-                   install: true,
-                   install_dir: join_paths(pango_libdir, 'pkgconfig'))
-  endif
-endforeach
-
 gnome = import('gnome')
+pkgconfig = import('pkgconfig')
 
 # Internal configuration header
 configure_file(output: 'config.h', configuration: pango_conf)
 
 root_inc = include_directories('.')
+pango_inc = include_directories('pango')
 
 subdir('pango')
 subdir('utils')
@@ -515,6 +553,6 @@ subdir('examples')
 subdir('tests')
 subdir('tools')
 
-if get_option('enable_docs')
+if get_option('gtk_doc')
   subdir('docs')
 endif

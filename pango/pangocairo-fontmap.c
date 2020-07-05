@@ -24,7 +24,6 @@
 #include "pangocairo.h"
 #include "pangocairo-private.h"
 #include "pango-impl-utils.h"
-#include "gconstructor.h"
 
 #if defined (HAVE_CORE_TEXT) && defined (HAVE_CAIRO_QUARTZ)
 #  include "pangocairo-coretext.h"
@@ -77,10 +76,6 @@ pango_cairo_font_map_new (void)
   const char *backend = getenv ("PANGOCAIRO_BACKEND");
   if (backend && !*backend)
     backend = NULL;
-#if !GLIB_CHECK_VERSION (2, 35, 3)
-  /* Make sure that the type system is initialized */
-  g_type_init ();
-#endif
 #if defined(HAVE_CORE_TEXT) && defined (HAVE_CAIRO_QUARTZ)
   if (!backend || 0 == strcmp (backend, "coretext"))
     return g_object_new (PANGO_TYPE_CAIRO_CORE_TEXT_FONT_MAP, NULL);
@@ -132,10 +127,6 @@ pango_cairo_font_map_new (void)
 PangoFontMap *
 pango_cairo_font_map_new_for_font_type (cairo_font_type_t fonttype)
 {
-#if !GLIB_CHECK_VERSION (2, 35, 3)
-  /* Make sure that the type system is initialized */
-  g_type_init ();
-#endif
   switch ((int) fonttype)
   {
 #if defined(HAVE_CORE_TEXT) && defined (HAVE_CAIRO_QUARTZ)
@@ -304,17 +295,4 @@ pango_cairo_font_map_get_font_type (PangoCairoFontMap *fontmap)
   g_return_val_if_fail (PANGO_IS_CAIRO_FONT_MAP (fontmap), CAIRO_FONT_TYPE_TOY);
 
   return (* PANGO_CAIRO_FONT_MAP_GET_IFACE (fontmap)->get_font_type) (fontmap);
-}
-
-G_DEFINE_DESTRUCTOR(pango_init_dtor)
-
-static void
-pango_init_dtor(void)
-{
-  PangoFontMap *fontmap = g_private_get(&default_font_map);
-  if (fontmap == NULL)
-    return;
-
-  g_object_unref(fontmap);
-  g_private_set(&default_font_map, NULL);
 }

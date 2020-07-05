@@ -22,8 +22,8 @@
 
 /**
  * SECTION:coretext-fonts
- * @short_description:Font handling with CoreText fonts
- * @title:CoreText Fonts
+ * @short_description:Font handling and rendering on OS X
+ * @title:CoreText Fonts and Rendering
  *
  * The macros and functions in this section are used to access fonts natively on
  * OS X using the CoreText text rendering subsystem.
@@ -32,8 +32,7 @@
 
 #include "pangocoretext.h"
 #include "pangocoretext-private.h"
-
-G_DEFINE_TYPE (PangoCoreTextFont, pango_core_text_font, PANGO_TYPE_FONT);
+#include <hb-coretext.h>
 
 struct _PangoCoreTextFontPrivate
 {
@@ -47,6 +46,8 @@ struct _PangoCoreTextFontPrivate
 
   PangoFontMap *fontmap;
 };
+
+G_DEFINE_TYPE_WITH_PRIVATE (PangoCoreTextFont, pango_core_text_font, PANGO_TYPE_FONT)
 
 static void
 pango_core_text_font_finalize (GObject *object)
@@ -160,46 +161,6 @@ pango_core_text_font_get_coverage (PangoFont     *font,
   return pango_coverage_ref (priv->coverage);
 }
 
-/* Wrap shaper in PangoEngineShape to pass it through old API,
- * from times when there were modules and engines. */
-typedef PangoEngineShape      PangoCoreTextShapeEngine;
-typedef PangoEngineShapeClass PangoCoreTextShapeEngineClass;
-static GType pango_core_text_shape_engine_get_type (void) G_GNUC_CONST;
-G_DEFINE_TYPE (PangoCoreTextShapeEngine, pango_core_text_shape_engine, PANGO_TYPE_ENGINE_SHAPE);
-static void
-_pango_core_text_shape_engine_shape (PangoEngineShape    *engine G_GNUC_UNUSED,
-				 PangoFont           *font,
-				 const char          *item_text,
-				 unsigned int         item_length,
-				 const PangoAnalysis *analysis,
-				 PangoGlyphString    *glyphs,
-				 const char          *paragraph_text,
-				 unsigned int         paragraph_length)
-{
-  _pango_core_text_shape (font, item_text, item_length, analysis, glyphs,
-		      paragraph_text, paragraph_length);
-}
-static void
-pango_core_text_shape_engine_class_init (PangoEngineShapeClass *class)
-{
-  class->script_shape = _pango_core_text_shape_engine_shape;
-}
-static void
-pango_core_text_shape_engine_init (PangoEngineShape *object)
-{
-}
-
-static PangoEngineShape *
-pango_core_text_font_find_shaper (PangoFont     *font,
-                                  PangoLanguage *language G_GNUC_UNUSED,
-                                  guint32        ch)
-{
-  static PangoEngineShape *shaper;
-  if (g_once_init_enter (&shaper))
-    g_once_init_leave (&shaper, g_object_new (pango_core_text_shape_engine_get_type(), NULL));
-  return shaper;
-}
-
 static PangoFontMap *
 pango_core_text_font_get_font_map (PangoFont *font)
 {
@@ -208,12 +169,30 @@ pango_core_text_font_get_font_map (PangoFont *font)
   return ctfont->priv->fontmap;
 }
 
+static hb_font_t *
+pango_core_text_font_create_hb_font (PangoFont *font)
+{
+  PangoCoreTextFont *ctfont = (PangoCoreTextFont *)font;
+
+  if (ctfont->priv->font_ref)
+    {
+      hb_font_t *hb_font;
+      int size;
+
+      size = pango_core_text_font_key_get_size (ctfont->priv->key);
+      hb_font = hb_coretext_font_create (ctfont->priv->font_ref);
+      hb_font_set_scale (hb_font, size, size);
+
+      return hb_font;
+    }
+
+  return hb_font_get_empty ();
+}
+
 static void
 pango_core_text_font_init (PangoCoreTextFont *ctfont)
 {
-  ctfont->priv = G_TYPE_INSTANCE_GET_PRIVATE (ctfont,
-                                              PANGO_TYPE_CORE_TEXT_FONT,
-                                              PangoCoreTextFontPrivate);
+  ctfont->priv = pango_core_text_font_get_instance_private (ctfont);
 }
 
 static void
@@ -227,10 +206,8 @@ pango_core_text_font_class_init (PangoCoreTextFontClass *class)
   font_class->describe = pango_core_text_font_describe;
   /* font_class->describe_absolute is left virtual for PangoCairoCoreTextFont. */
   font_class->get_coverage = pango_core_text_font_get_coverage;
-  font_class->find_shaper = pango_core_text_font_find_shaper;
   font_class->get_font_map = pango_core_text_font_get_font_map;
-
-  g_type_class_add_private (object_class, sizeof (PangoCoreTextFontPrivate));
+  font_class->create_hb_font = pango_core_text_font_create_hb_font;
 }
 
 void

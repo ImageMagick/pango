@@ -48,6 +48,7 @@
 #include "pango-features.h"
 #include "pango-impl-utils.h"
 #include "pango-utils-internal.h"
+#include "pango-utils-private.h"
 
 #include <glib/gstdio.h>
 
@@ -255,7 +256,7 @@ pango_split_file_list (const char *str)
 /**
  * pango_read_line:
  * @stream: a stdio stream
- * @str: (out): #GString buffer into which to write the result
+ * @str: #GString buffer into which to write the result
  *
  * Reads an entire line from a file into a buffer. Lines may
  * be delimited with '\n', '\r', '\n\r', or '\r\n'. The delimiter
@@ -391,7 +392,7 @@ pango_skip_space (const char **pos)
 /**
  * pango_scan_word:
  * @pos: (inout): in/out string position
- * @out: (out): a #GString into which to write the result
+ * @out: a #GString into which to write the result
  *
  * Scans a word into a #GString buffer. A word consists
  * of [A-Za-z_] followed by zero or more [A-Za-z_0-9]
@@ -435,7 +436,7 @@ pango_scan_word (const char **pos, GString *out)
 /**
  * pango_scan_string:
  * @pos: (inout): in/out string position
- * @out: (out): a #GString into which to write the result
+ * @out: a #GString into which to write the result
  *
  * Scans a string into a #GString buffer. The string may either
  * be a sequence of non-white-space characters, or a quoted
@@ -599,6 +600,64 @@ pango_config_key_get (const char *key)
   return NULL;
 }
 
+/**
+ * pango_get_sysconf_subdirectory:
+ *
+ * Returns the name of the "pango" subdirectory of SYSCONFDIR
+ * (which is set at compile time).
+ *
+ * Return value: the Pango sysconf directory. The returned string should
+ * not be freed.
+ *
+ * Deprecated: 1.38
+ */
+const char *
+pango_get_sysconf_subdirectory (void)
+{
+  static const gchar *result = NULL; /* MT-safe */
+
+  if (g_once_init_enter (&result))
+    {
+      const char *tmp_result = NULL;
+      const char *sysconfdir = g_getenv ("PANGO_SYSCONFDIR");
+      if (sysconfdir != NULL)
+	tmp_result = g_build_filename (sysconfdir, "pango", NULL);
+      else
+	tmp_result = SYSCONFDIR "/pango";
+      g_once_init_leave(&result, tmp_result);
+    }
+  return result;
+}
+
+/**
+ * pango_get_lib_subdirectory:
+ *
+ * Returns the name of the "pango" subdirectory of LIBDIR
+ * (which is set at compile time).
+ *
+ * Return value: the Pango lib directory. The returned string should
+ * not be freed.
+ *
+ * Deprecated: 1.38
+ */
+const char *
+pango_get_lib_subdirectory (void)
+{
+  static const gchar *result = NULL; /* MT-safe */
+
+  if (g_once_init_enter (&result))
+    {
+      const gchar *tmp_result = NULL;
+      const char *libdir = g_getenv ("PANGO_LIBDIR");
+      if (libdir != NULL)
+	tmp_result = g_build_filename (libdir, "pango", NULL);
+      else
+	tmp_result = LIBDIR "/pango";
+      g_once_init_leave(&result, tmp_result);
+    }
+  return result;
+}
+
 
 static gboolean
 parse_int (const char *word,
@@ -713,6 +772,68 @@ _pango_parse_enum (GType       type,
   return ret;
 }
 
+gboolean
+pango_parse_flags (GType        type,
+                   const char  *str,
+                   int         *value,
+                   char       **possible_values)
+{
+  GFlagsClass *class = NULL;
+  gboolean ret = TRUE;
+  GFlagsValue *v = NULL;
+
+  class = g_type_class_ref (type);
+
+  v = g_flags_get_value_by_nick (class, str);
+
+  if (v)
+    {
+      *value = v->value;
+    }
+  else if (!parse_int (str, value))
+    {
+      char **strv = g_strsplit (str, "|", 0);
+      int i;
+
+      *value = 0;
+
+      for (i = 0; strv[i]; i++)
+        {
+          strv[i] = g_strstrip (strv[i]);
+          v = g_flags_get_value_by_nick (class, strv[i]);
+          if (!v)
+            {
+              ret = FALSE;
+              break;
+            }
+          *value |= v->value;
+        }
+      g_strfreev (strv);
+
+      if (!ret && possible_values)
+	{
+	  int i;
+	  GString *s = g_string_new (NULL);
+
+          for (i = 0; i < class->n_values; i++)
+            {
+              v = &class->values[i];
+              if (i)
+                g_string_append_c (s, '/');
+              g_string_append (s, v->value_nick);
+            }
+
+          *possible_values = s->str;
+
+          g_string_free (s, FALSE);
+	}
+    }
+
+  g_type_class_unref (class);
+
+  return ret;
+}
+
 /**
  * pango_lookup_aliases:
  * @fontname: an ascii string
@@ -735,9 +856,12 @@ pango_lookup_aliases (const char   *fontname,
   *n_families = 0;
 }
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+
 /**
  * pango_find_base_dir:
- * @text:   the text to process
+ * @text:   the text to process. Must be valid UTF-8
  * @length: length of @text in bytes (may be -1 if @text is nul-terminated)
  *
  * Searches a string the first character that has a strong
@@ -772,6 +896,8 @@ pango_find_base_dir (const gchar *text,
 
   return dir;
 }
+
+#pragma GCC diagnostic pop
 
 /**
  * pango_is_zero_width:

@@ -24,6 +24,7 @@
 
 #include "pango-glyph-item.h"
 #include "pango-impl-utils.h"
+#include "pango-attributes-private.h"
 
 #define LTR(glyph_item) (((glyph_item)->item->analysis.level % 2) == 0)
 
@@ -316,7 +317,7 @@ pango_glyph_item_iter_next_cluster (PangoGlyphItemIter *iter)
 
   iter->end_glyph = glyph_index;
 
-  g_assert (iter->start_char < iter->end_char);
+  g_assert (iter->start_char <= iter->end_char);
   g_assert (iter->end_char <= item->num_chars);
 
   return TRUE;
@@ -409,7 +410,7 @@ pango_glyph_item_iter_prev_cluster (PangoGlyphItemIter *iter)
 
   iter->start_glyph = glyph_index;
 
-  g_assert (iter->start_char < iter->end_char);
+  g_assert (iter->start_char <= iter->end_char);
   g_assert (0 <= iter->start_char);
 
   return TRUE;
@@ -584,7 +585,7 @@ pango_glyph_item_apply_attrs (PangoGlyphItem   *glyph_item,
 			      const char       *text,
 			      PangoAttrList    *list)
 {
-  PangoAttrIterator *iter = pango_attr_list_get_iterator (list);
+  PangoAttrIterator iter;
   GSList *result = NULL;
   ApplyAttrsState state;
   gboolean start_new_segment = FALSE;
@@ -607,15 +608,16 @@ pango_glyph_item_apply_attrs (PangoGlyphItem   *glyph_item,
 
   /* Advance the attr iterator to the start of the item
    */
+  _pango_attr_list_get_iterator (list, &iter);
   do
     {
-      pango_attr_iterator_range (iter, &range_start, &range_end);
+      pango_attr_iterator_range (&iter, &range_start, &range_end);
       if (range_end > glyph_item->item->offset)
 	break;
     }
-  while (pango_attr_iterator_next (iter));
+  while (pango_attr_iterator_next (&iter));
 
-  state.segment_attrs = pango_attr_iterator_get_attrs (iter);
+  state.segment_attrs = pango_attr_iterator_get_attrs (&iter);
 
   is_ellipsis = (glyph_item->item->analysis.flags & PANGO_ANALYSIS_FLAG_IS_ELLIPSIS) != 0;
 
@@ -644,7 +646,7 @@ pango_glyph_item_apply_attrs (PangoGlyphItem   *glyph_item,
 	{
 	  result = g_slist_prepend (result,
 				    split_before_cluster_start (&state));
-	  state.segment_attrs = pango_attr_iterator_get_attrs (iter);
+	  state.segment_attrs = pango_attr_iterator_get_attrs (&iter);
 	}
 
       start_new_segment = FALSE;
@@ -663,8 +665,8 @@ pango_glyph_item_apply_attrs (PangoGlyphItem   *glyph_item,
 	   */
 	  start_new_segment = TRUE;
 
-	  have_next = pango_attr_iterator_next (iter);
-	  pango_attr_iterator_range (iter, &range_start, &range_end);
+	  have_next = pango_attr_iterator_next (&iter);
+	  pango_attr_iterator_range (&iter, &range_start, &range_end);
 
 	  if (range_start >= state.iter.end_index) /* New range doesn't intersect this cluster */
 	    {
@@ -688,7 +690,7 @@ pango_glyph_item_apply_attrs (PangoGlyphItem   *glyph_item,
 	    }
 
 	  state.segment_attrs = g_slist_concat (state.segment_attrs,
-						pango_attr_iterator_get_attrs (iter));
+						pango_attr_iterator_get_attrs (&iter));
 	}
       while (have_next);
     }
@@ -702,7 +704,7 @@ pango_glyph_item_apply_attrs (PangoGlyphItem   *glyph_item,
   if (LTR (glyph_item))
     result = g_slist_reverse (result);
 
-  pango_attr_iterator_destroy (iter);
+  _pango_attr_iterator_destroy (&iter);
 
   return result;
 }

@@ -23,7 +23,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "pangofc-fontmap.h"
+#include "pangofc-fontmap-private.h"
 #include "pangoxft.h"
 #include "pangoxft-private.h"
 
@@ -233,11 +233,6 @@ pango_xft_get_font_map (Display *display,
   fontmap = pango_xft_find_font_map (display, screen);
   if (fontmap)
     return fontmap;
-
-#if !GLIB_CHECK_VERSION (2, 35, 3)
-  /* Make sure that the type system is initialized */
-  g_type_init ();
-#endif
 
   xftfontmap = (PangoXftFontMap *)g_object_new (PANGO_TYPE_XFT_FONT_MAP, NULL);
 

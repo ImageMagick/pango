@@ -26,6 +26,7 @@
 
 #include "pangocairo.h"
 #include "pangocairo-private.h"
+#include "pango-font-private.h"
 #include "pango-impl-utils.h"
 
 #define PANGO_CAIRO_FONT_PRIVATE(font)		\
@@ -142,7 +143,7 @@ done:
  * The scaled font can be referenced and kept using
  * cairo_scaled_font_reference().
  *
- * Return value: (nullable): the #cairo_scaled_font_t used by @font,
+ * Return value: (transfer none) (nullable): the #cairo_scaled_font_t used by @font,
  *               or %NULL if @font is %NULL.
  *
  * Since: 1.18
@@ -223,6 +224,7 @@ _pango_cairo_font_get_metrics (PangoFont     *font,
   PangoCairoFontPrivate *cf_priv = PANGO_CAIRO_FONT_PRIVATE (font);
   PangoCairoFontMetricsInfo *info = NULL; /* Quiet gcc */
   GSList *tmp_list;
+  static int in_get_metrics;
 
   const char *sample_str = pango_language_get_sample_string (language);
 
@@ -292,35 +294,43 @@ _pango_cairo_font_get_metrics (PangoFont     *font,
 
 	  info->metrics->ascent *= xscale;
 	  info->metrics->descent *= xscale;
+	  info->metrics->height *= xscale;
 	  info->metrics->underline_position *= xscale;
 	  info->metrics->underline_thickness *= xscale;
 	  info->metrics->strikethrough_position *= xscale;
 	  info->metrics->strikethrough_thickness *= xscale;
 	}
 
-
       /* Set the matrix on the context so we don't have to adjust the derived
        * metrics. */
       pango_context_set_matrix (context, &pango_matrix);
 
-      /* Update approximate_*_width now */
-      layout = pango_layout_new (context);
-      desc = pango_font_describe_with_absolute_size (font);
-      pango_layout_set_font_description (layout, desc);
-      pango_font_description_free (desc);
+      /* Ugly. We need to prevent recursion when we call into
+       * PangoLayout to determine approximate char width.
+       */
+      if (!in_get_metrics)
+        {
+          in_get_metrics = 1;
 
-      pango_layout_set_text (layout, sample_str, -1);
-      pango_layout_get_extents (layout, NULL, &extents);
+          /* Update approximate_*_width now */
+          layout = pango_layout_new (context);
+          desc = pango_font_describe_with_absolute_size (font);
+          pango_layout_set_font_description (layout, desc);
+          pango_font_description_free (desc);
 
-      sample_str_width = pango_utf8_strwidth (sample_str);
-      g_assert (sample_str_width > 0);
-      info->metrics->approximate_char_width = extents.width / sample_str_width;
+          pango_layout_set_text (layout, sample_str, -1);
+          pango_layout_get_extents (layout, NULL, &extents);
 
-      pango_layout_set_text (layout, "0123456789", -1);
-      info->metrics->approximate_digit_width = max_glyph_width (layout);
+          sample_str_width = pango_utf8_strwidth (sample_str);
+          g_assert (sample_str_width > 0);
+          info->metrics->approximate_char_width = extents.width / sample_str_width;
 
-      g_object_unref (layout);
+          pango_layout_set_text (layout, "0123456789", -1);
+          info->metrics->approximate_digit_width = max_glyph_width (layout);
 
+          g_object_unref (layout);
+          in_get_metrics = 0;
+        }
 
       /* We may actually reuse ascent/descent we got from cairo here.  that's
        * in cf_priv->font_extents.
@@ -662,6 +672,45 @@ _pango_cairo_font_private_is_metrics_hinted (PangoCairoFontPrivate *cf_priv)
 }
 
 static void
+get_space_extents (PangoCairoFontPrivate *cf_priv,
+                   PangoRectangle        *ink_rect,
+                   PangoRectangle        *logical_rect)
+{
+  const char hexdigits[] = "0123456789ABCDEF";
+  char c[2] = {0, 0};
+  int i;
+  double hex_width;
+  int width;
+
+  /* we don't render missing spaces as hex boxes,
+   * so come up with some width to use. For lack
+   * of anything better, use average hex digit width.
+   */
+
+  hex_width = 0;
+  for (i = 0 ; i < 16 ; i++)
+    {
+      cairo_text_extents_t extents;
+
+      c[0] = hexdigits[i];
+      cairo_scaled_font_text_extents (cf_priv->scaled_font, c, &extents);
+      hex_width += extents.width;
+    }
+  width = pango_units_from_double (hex_width / 16);
+
+  if (ink_rect)
+    {
+      ink_rect->x = ink_rect->y = ink_rect->height = 0;
+      ink_rect->width = width;
+    }
+  if (logical_rect)
+    {
+      *logical_rect = cf_priv->font_extents;
+      logical_rect->width = width;
+    }
+}
+
+static void
 _pango_cairo_font_private_get_glyph_extents_missing (PangoCairoFontPrivate *cf_priv,
 						     PangoGlyph             glyph,
 						     PangoRectangle        *ink_rect,
@@ -671,6 +720,14 @@ _pango_cairo_font_private_get_glyph_extents_missing (PangoCairoFontPrivate *cf_p
   gunichar ch;
   gint rows, cols;
 
+  ch = glyph & ~PANGO_GLYPH_UNKNOWN_FLAG;
+
+  if (ch == 0x20 || ch == 0x2423)
+    {
+      get_space_extents (cf_priv, ink_rect, logical_rect);
+      return;
+    }
+
   hbi = _pango_cairo_font_private_get_hex_box_info (cf_priv);
   if (!hbi)
     {
@@ -678,13 +735,20 @@ _pango_cairo_font_private_get_glyph_extents_missing (PangoCairoFontPrivate *cf_p
       return;
     }
 
-  ch = glyph & ~PANGO_GLYPH_UNKNOWN_FLAG;
-
-  rows = hbi->rows;
   if (G_UNLIKELY (glyph == PANGO_GLYPH_INVALID_INPUT || ch > 0x10FFFF))
-    cols = 1;
+    {
+      rows = hbi->rows;
+      cols = 1;
+    }
+  else if (pango_get_ignorable_size (ch, &rows, &cols))
+    {
+      /* We special-case ignorables when rendering hex boxes */
+    }
   else
-    cols = ((glyph & ~PANGO_GLYPH_UNKNOWN_FLAG) > 0xffff ? 6 : 4) / rows;
+    {
+      rows = hbi->rows;
+      cols = ((glyph & ~PANGO_GLYPH_UNKNOWN_FLAG) > 0xffff ? 6 : 4) / rows;
+    }
 
   if (ink_rect)
     {
@@ -757,6 +821,7 @@ _pango_cairo_font_private_glyph_extents_cache_init (PangoCairoFontPrivate *cf_pr
 
   return TRUE;
 }
+
 
 /* Fills in the glyph extents cache entry
  */
