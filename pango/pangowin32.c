@@ -40,7 +40,7 @@
 #include "pango-impl-utils.h"
 #include "pangowin32.h"
 #include "pangowin32-private.h"
-#include "gconstructor.h"
+#include "../../glib/glib/gconstructor.h"
 
 #define MAX_FREED_FONTS 256
 

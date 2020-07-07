@@ -24,7 +24,7 @@
 #include "pangocairo.h"
 #include "pangocairo-private.h"
 #include "pango-impl-utils.h"
-#include "gconstructor.h"
+#include "../../glib/glib/gconstructor.h"
 
 #if defined (HAVE_CORE_TEXT) && defined (HAVE_CAIRO_QUARTZ)
 #  include "pangocairo-coretext.h"
