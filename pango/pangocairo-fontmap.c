@@ -24,6 +24,7 @@
 #include "pangocairo.h"
 #include "pangocairo-private.h"
 #include "pango-impl-utils.h"
+#include "gconstructor.h"
 
 #if defined (HAVE_CORE_TEXT) && defined (HAVE_CAIRO_QUARTZ)
 #  include "pangocairo-coretext.h"
@@ -295,4 +296,17 @@ pango_cairo_font_map_get_font_type (PangoCairoFontMap *fontmap)
   g_return_val_if_fail (PANGO_IS_CAIRO_FONT_MAP (fontmap), CAIRO_FONT_TYPE_TOY);
 
   return (* PANGO_CAIRO_FONT_MAP_GET_IFACE (fontmap)->get_font_type) (fontmap);
+}
+
+G_DEFINE_DESTRUCTOR(pango_fontmap_dtor)
+
+static void
+pango_fontmap_dtor(void)
+{
+  PangoFontMap *fontmap = g_private_get(&default_font_map);
+  if (fontmap == NULL)
+    return;
+
+  g_object_unref(fontmap);
+  g_private_set(&default_font_map, NULL);
 }

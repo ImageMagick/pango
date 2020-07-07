@@ -40,6 +40,7 @@
 #include "pango-impl-utils.h"
 #include "pangowin32.h"
 #include "pangowin32-private.h"
+#include "gconstructor.h"
 
 #define MAX_FREED_FONTS 256
 
@@ -1282,4 +1283,16 @@ pango_win32_font_create_hb_font (PangoFont *font)
   hb_face_destroy (face);
 
   return hb_font;
+}
+
+G_DEFINE_DESTRUCTOR(pango_win32_dtor)
+
+static void
+pango_win32_dtor(void)
+{
+  HDC hdc = g_private_get(&display_dc_key);
+  if (hdc == NULL)
+    return;
+
+  g_private_set(&display_dc_key, NULL);
 }
