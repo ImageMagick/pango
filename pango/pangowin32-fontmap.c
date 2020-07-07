@@ -1844,6 +1844,7 @@ pango_win32_font_map_load_fontset (PangoFontMap                 *fontmap,
   /* (Copied directly from pango-fontmap.c) */
   PangoFontDescription *tmp_desc = pango_font_description_copy_static (desc);
   const char *family;
+  char *new_family;
   char **families;
   int i;
   PangoFontsetSimple *fonts;
@@ -1861,11 +1862,23 @@ pango_win32_font_map_load_fontset (PangoFontMap                 *fontmap,
   fonts = pango_fontset_simple_new (language);
 
   for (i = 0; families[i]; i++)
+  {
+    if (families[i][0] == '"' || families[i][0] == '\'')
+      {
+        size_t length=strlen(families[i]);
+        if (length > 2)
+          {
+            new_family = g_strndup(families[i]+1, length-2);
+            g_free (families[i]);
+            families[i] = new_family;
+          }
+      }
     pango_win32_font_map_fontset_add_fonts (fontmap,
                                             context,
                                             fonts,
                                             tmp_desc,
                                             families[i]);
+  }
 
   g_strfreev (families);
 
