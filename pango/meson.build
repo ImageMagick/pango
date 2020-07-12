@@ -494,14 +494,14 @@ if cairo_dep.found()
     pangocairo_deps += libpangowin32_dep
   endif
 
-  if host_system == 'darwin' and pango_font_backends.contains('quartz')
-    pangocairo_sources += [
-      'pangocoretext.c',
-      'pangocoretext-fontmap.c',
-      'pangocairo-coretextfont.c',
-      'pangocairo-coretextfontmap.c',
-    ]
-  endif
+  #if host_system == 'darwin' and pango_font_backends.contains('quartz')
+  #  pangocairo_sources += [
+  #    'pangocoretext.c',
+  #    'pangocoretext-fontmap.c',
+  #    'pangocairo-coretextfont.c',
+  #    'pangocairo-coretextfontmap.c',
+  #  ]
+  #endif
 
   install_headers(pangocairo_headers, subdir: pango_api_path)
 

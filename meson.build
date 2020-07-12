@@ -348,20 +348,20 @@ if xft_dep.found() and fontconfig_dep.found() and freetype_dep.found()
   pango_deps += xft_dep
 endif
 
-if host_system == 'darwin'
-  has_core_text = cc.links('''#include <Carbon/Carbon.h>
-                              int main (void) {
-                                CTGetCoreTextVersion ();
-                                return 0;
-                              }''',
-                           name: 'CoreText availability',
-                           dependencies: dependency('appleframeworks', modules: 'ApplicationServices'))
-  if has_core_text
-    pango_conf.set('HAVE_CORE_TEXT', 1)
-  endif
-
-  pango_deps += dependency('appleframeworks', modules: [ 'CoreFoundation', 'ApplicationServices' ])
-endif
+#if host_system == 'darwin'
+#  has_core_text = cc.links('''#include <Carbon/Carbon.h>
+#                              int main (void) {
+#                                CTGetCoreTextVersion ();
+#                                return 0;
+#                              }''',
+#                           name: 'CoreText availability',
+#                           dependencies: dependency('appleframeworks', modules: 'ApplicationServices'))
+#  if has_core_text
+#    pango_conf.set('HAVE_CORE_TEXT', 1)
+#  endif
+#
+#  pango_deps += dependency('appleframeworks', modules: [ 'CoreFoundation', 'ApplicationServices' ])
+#endif
 
 cairo_found_type = ''
 cairo_dep = dependency('cairo', version: cairo_req_version, required: false)
