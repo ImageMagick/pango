@@ -1608,6 +1608,7 @@ pango_fc_make_pattern (const  PangoFontDescription *description,
   PangoGravity gravity;
   FcBool vertical;
   char **families;
+  char *new_family;
   int i;
   int width;
 
@@ -1649,7 +1650,19 @@ pango_fc_make_pattern (const  PangoFontDescription *description,
       families = g_strsplit (pango_font_description_get_family (description), ",", -1);
 
       for (i = 0; families[i]; i++)
-	FcPatternAddString (pattern, FC_FAMILY, (FcChar8*) families[i]);
+      {    
+        if (families[i][0] == '"' || families[i][0] == '\'')
+        {
+          size_t length=strlen(families[i]);
+          if (length > 2)
+            {
+              new_family = g_strndup(families[i]+1, length-2);
+              g_free (families[i]);
+              families[i] = new_family;
+            }
+        }
+        FcPatternAddString (pattern, FC_FAMILY, (FcChar8*) families[i]);
+      }
 
       g_strfreev (families);
     }
