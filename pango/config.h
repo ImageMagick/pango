@@ -25,5 +25,11 @@
 
 #define PANGO_VERSION_MINOR 45
 
-#define _PANGO_EXTERN __declspec(dllexport) extern
+#if defined(_DLL)
+#  if defined(PANGO_COMPILATION)
+#    define _PANGO_EXTERN __declspec(dllexport)
+#  else
+#    define _PANGO_EXTERN __declspec(dllimport)
+#  endif
+#endif
 
