@@ -17,6 +17,8 @@ HAVE_CAIRO_WIN32
 pango
 
 [INCLUDES]
+.
+pango
 cairo->src
 fribidi->lib
 glib->.
