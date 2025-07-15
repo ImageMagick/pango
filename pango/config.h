@@ -25,7 +25,7 @@
 
 #define PANGO_VERSION_MINOR 45
 
-#if defined(_DLL)
+#if !defined(_LIB)
 #  if defined(PANGO_COMPILATION)
 #    define _PANGO_EXTERN __declspec(dllexport)
 #  else
