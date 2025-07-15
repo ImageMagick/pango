@@ -1,10 +1,7 @@
-[DLL]
+[DYNAMIC_LIBRARY]
 
 [LICENSE]
 COPYING
-
-[DEFINES_LIB]
-FRIBIDI_LIB_STATIC
 
 [DEFINES]
 PANGO_COMPILATION
@@ -12,60 +9,47 @@ PANGO_ENABLE_BACKEND
 PANGO_ENABLE_ENGINE
 HAVE_CAIRO_WIN32
 
-[DIRECTORIES]
-.
-pango
+[STATIC_DEFINES]
+FRIBIDI_LIB_STATIC
 
 [INCLUDES]
 .
 pango
-cairo->src
-fribidi->lib
-glib->.
-glib->glib
-glib->gmodule
-harfbuzz->src
+
+[INCLUDE_ARTIFACTS]
+pango -> pango
+pango\pango-attributes.h -> pango
 
 [EXCLUDES]
-emoji_presentation_scanner.c
-modules.c
-pango.rc
-pangocairo.rc
-pangocairo-coretextfont.c
-pangocairo-coretextfontmap.c
-pangocairo-fcfont.c
-pangocairo-fcfontmap.c
-pangocoretext.c
-pangocoretext-fontmap.c
-pangocoretext-shape.c
-pango-ot-buffer.c
-pango-ot-info.c
-pango-ot-ruleset.c
-pango-ot-tag.c
-pangofc-decoder.c
-pangofc-font.c
-pangofc-fontmap.c
-pangoft2.c
-pangoft2.rc
-pangoft2-fontmap.c
-pangoft2-render.c
-pangowin32.rc
-pangoxft.rc
-pangoxft-font.c
-pangoxft-fontmap.c
-pangoxft-render.c
+docs\
+examples\
+pango\emoji_presentation_scanner.c
+pango\modules.c
+pango\pango-ot
+pango\pangocairo-coretextfont.c
+pango\pangocairo-coretextfontmap.c
+pango\pangocairo-fcfont.c
+pango\pangocairo-fcfontmap.c
+pango\pangocoretext
+pango\pangofc-decoder.c
+pango\pangofc-font.c
+pango\pangofc-fontmap.c
+pango\pangoxft
+pango\pangoft2
+subprojects\
+tests\
+tools\
+utils\
 
-[DEPENDENCIES]
+[REFERENCES]
 cairo
+freetype
 fribidi
 glib
 harfbuzz
 pixman
 
-[LIBRARIES]
-usp10.lib
-
-[CONFIG_DEFINE]
+[MAGICK_BASECONFIG_DEFINE]
 /*
   Define to use the Pango/Cairo library
 */
