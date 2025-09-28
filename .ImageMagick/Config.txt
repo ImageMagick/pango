@@ -1,10 +1,28 @@
 [DYNAMIC_LIBRARY]
 
+[VERSION]
+1.45.3
+
+[RELEASE_DATE]
+2020-06-22
+
+[PRODUCT_NAME]
+pango
+
+[COMPANY_NAME]
+Red Hat Software
+
+[URL]
+https://gitlab.gnome.org/GNOME/pango
+
+[COPYRIGHT]
+Copyright (C) 2006 Red Hat Software
+
 [LICENSE_FILE]
 COPYING
 
 [LICENSE_IDENTIFIER]
-LGPL-2.0-or-later
+LGPL-2.0-only
 
 [DEFINES]
 PANGO_COMPILATION
